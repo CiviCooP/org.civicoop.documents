@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/contact/view/documents</path>
+    <page_callback>CRM_Documenten_Page_ContactDocuments</page_callback>
+    <title>ContactDocuments</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

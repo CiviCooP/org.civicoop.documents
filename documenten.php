@@ -106,3 +106,22 @@ function documenten_civicrm_caseTypes(&$caseTypes) {
 function documenten_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _documenten_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
+
+/**
+ * Implementatio of hook__civicrm_tabs
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
+ */
+function documenten_civicrm_tabs( &$tabs, $contactID ) { 
+    // add a tab with the linked cities
+    $url = CRM_Utils_System::url( 'civicrm/contact/view/documents',
+                                  "cid=$contactID&snippet=1" );
+    
+    //Count number of documents
+    $DocumentCount = 2;
+    
+    $tabs[] = array( 'id'    => 'contact_documents',
+                     'url'   => $url,
+                     'count' => $DocumentCount,
+                     'title' => ts('Documents'),
+                     'weight' => 1 );
+}
