@@ -6,4 +6,10 @@
     <title>ContactDocuments</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/documents/add</path>
+    <page_callback>CRM_Documenten_Form_AddDocument</page_callback>
+    <title>AddDocument</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

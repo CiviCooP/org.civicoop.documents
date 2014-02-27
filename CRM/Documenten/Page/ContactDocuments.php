@@ -3,13 +3,28 @@
 require_once 'CRM/Core/Page.php';
 
 class CRM_Documenten_Page_ContactDocuments extends CRM_Core_Page {
+  
+  protected $_contactId;
+  
   function run() {
-    // Example: Set the page-title dynamically; alternatively, declare a static title in xml/Menu/*.xml
-    CRM_Utils_System::setTitle(ts('ContactDocuments'));
-
-    // Example: Assign a variable for use in a template
-    $this->assign('currentTime', date('Y-m-d H:i:s'));
-
+    $this->preProcess();
+    
+    CRM_Utils_System::setTitle(ts('Documents'));
+    
+    $this->assign('permission', 'edit');
     parent::run();
+  }
+  
+  protected function preProcess() {
+    $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $this->assign('contactId', $this->_contactId);
+    
+    $this->setUserContext();
+  }
+  
+  protected function setUserContext() {
+    $session = CRM_Core_Session::singleton();
+    $userContext = CRM_Utils_System::url('civicrm/contact/view', 'cid='.$this->_contactId.'&selectedChild=contact_documents&reset=1');
+    $session->pushUserContext($userContext);
   }
 }
