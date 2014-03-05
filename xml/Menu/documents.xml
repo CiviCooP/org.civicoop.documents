@@ -2,14 +2,14 @@
 <menu>
   <item>
     <path>civicrm/contact/view/documents</path>
-    <page_callback>CRM_Documenten_Page_ContactDocuments</page_callback>
+    <page_callback>CRM_Documents_Page_ContactDocuments</page_callback>
     <title>ContactDocuments</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/documents/add</path>
-    <page_callback>CRM_Documenten_Form_AddDocument</page_callback>
-    <title>AddDocument</title>
+    <page_callback>CRM_Documents_Form_AddDocument</page_callback>
+    <title>Document</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>

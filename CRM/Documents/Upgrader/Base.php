@@ -5,7 +5,7 @@
 /**
  * Base class which provides helpers to execute upgrade logic
  */
-class CRM_Documenten_Upgrader_Base {
+class CRM_Documents_Upgrader_Base {
 
   /**
    * @var varies, subclass of htis
@@ -38,7 +38,7 @@ class CRM_Documenten_Upgrader_Base {
   static public function instance() {
     if (! self::$instance) {
       // FIXME auto-generate
-      self::$instance = new CRM_Documenten_Upgrader(
+      self::$instance = new CRM_Documents_Upgrader(
         'nl.pum.documenten',
         realpath(__DIR__ .'/../../../')
       );

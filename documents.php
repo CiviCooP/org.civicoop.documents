@@ -1,14 +1,14 @@
 <?php
 
-require_once 'documenten.civix.php';
+require_once 'documents.civix.php';
 
 /**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
-function documenten_civicrm_config(&$config) {
-  _documenten_civix_civicrm_config($config);
+function documents_civicrm_config(&$config) {
+  _documents_civix_civicrm_config($config);
 }
 
 /**
@@ -18,8 +18,8 @@ function documenten_civicrm_config(&$config) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
  */
-function documenten_civicrm_xmlMenu(&$files) {
-  _documenten_civix_civicrm_xmlMenu($files);
+function documents_civicrm_xmlMenu(&$files) {
+  _documents_civix_civicrm_xmlMenu($files);
 }
 
 /**
@@ -27,8 +27,8 @@ function documenten_civicrm_xmlMenu(&$files) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
-function documenten_civicrm_install() {
-  return _documenten_civix_civicrm_install();
+function documents_civicrm_install() {
+  return _documents_civix_civicrm_install();
 }
 
 /**
@@ -36,8 +36,8 @@ function documenten_civicrm_install() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
  */
-function documenten_civicrm_uninstall() {
-  return _documenten_civix_civicrm_uninstall();
+function documents_civicrm_uninstall() {
+  return _documents_civix_civicrm_uninstall();
 }
 
 /**
@@ -45,8 +45,8 @@ function documenten_civicrm_uninstall() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
-function documenten_civicrm_enable() {
-  return _documenten_civix_civicrm_enable();
+function documents_civicrm_enable() {
+  return _documents_civix_civicrm_enable();
 }
 
 /**
@@ -54,8 +54,8 @@ function documenten_civicrm_enable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
  */
-function documenten_civicrm_disable() {
-  return _documenten_civix_civicrm_disable();
+function documents_civicrm_disable() {
+  return _documents_civix_civicrm_disable();
 }
 
 /**
@@ -69,8 +69,8 @@ function documenten_civicrm_disable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
-function documenten_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _documenten_civix_civicrm_upgrade($op, $queue);
+function documents_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
+  return _documents_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -81,8 +81,8 @@ function documenten_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
  */
-function documenten_civicrm_managed(&$entities) {
-  return _documenten_civix_civicrm_managed($entities);
+function documents_civicrm_managed(&$entities) {
+  return _documents_civix_civicrm_managed($entities);
 }
 
 /**
@@ -94,8 +94,8 @@ function documenten_civicrm_managed(&$entities) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function documenten_civicrm_caseTypes(&$caseTypes) {
-  _documenten_civix_civicrm_caseTypes($caseTypes);
+function documents_civicrm_caseTypes(&$caseTypes) {
+  _documents_civix_civicrm_caseTypes($caseTypes);
 }
 
 /**
@@ -103,15 +103,15 @@ function documenten_civicrm_caseTypes(&$caseTypes) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
  */
-function documenten_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _documenten_civix_civicrm_alterSettingsFolders($metaDataFolders);
+function documents_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
+  _documents_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
 /**
  * Implementatio of hook__civicrm_tabs
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
  */
-function documenten_civicrm_tabs( &$tabs, $contactID ) { 
+function documents_civicrm_tabs( &$tabs, $contactID ) { 
     // add a tab with the linked cities
     $url = CRM_Utils_System::url( 'civicrm/contact/view/documents',
                                   "cid=$contactID&snippet=1" );

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<extension key="nl.pum.documenten" type="module">
-  <file>documenten</file>
+<extension key="nl.pum.documents" type="module">
+  <file>documents</file>
   <name>Documenten</name>
   <description>Documenten opslag in CiviCRM voor PUM</description>
   <license>AGPL-3.0</license>
@@ -16,6 +16,6 @@
   </compatibility>
   <comments>This is a new, undeveloped module</comments>
   <civix>
-    <namespace>CRM/Documenten</namespace>
+    <namespace>CRM/Documents</namespace>
   </civix>
 </extension>

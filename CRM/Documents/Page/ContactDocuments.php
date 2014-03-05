@@ -2,7 +2,7 @@
 
 require_once 'CRM/Core/Page.php';
 
-class CRM_Documenten_Page_ContactDocuments extends CRM_Core_Page {
+class CRM_Documents_Page_ContactDocuments extends CRM_Core_Page {
   
   protected $_contactId;
   
@@ -10,6 +10,12 @@ class CRM_Documenten_Page_ContactDocuments extends CRM_Core_Page {
     $this->preProcess();
     
     CRM_Utils_System::setTitle(ts('Documents'));
+    
+    $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
+    $documents = $documentRepo->getDocumentsByContactId($this->_contactId);
+    
+    
+    $this->assign('documents', $documents);
     
     $this->assign('permission', 'edit');
     parent::run();

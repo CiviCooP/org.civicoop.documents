@@ -3,7 +3,7 @@
 /**
  * Collection of upgrade steps
  */
-class CRM_Documenten_Upgrader extends CRM_Documenten_Upgrader_Base {
+class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
 
   // By convention, functions that look like "function upgrade_NNNN()" are
   // upgrade tasks. They are executed in order (like Drupal's hook_update_N).
@@ -14,63 +14,9 @@ class CRM_Documenten_Upgrader extends CRM_Documenten_Upgrader_Base {
    * Install the Document activity (if it doesn't exist already
    */
   public function install() {
-    $this->addActivityType('document', 'Document', array(
-        'description' => 'Documenten opslag voor PUM',
-        'is_reserved' => 1, 
-        'is_active' => 1,
-    ));
+    $this->executeSqlFile('sql/install.sql');
   }
   
-  
-  /**
-   * Add an activity type to CiviCRM
-   * 
-   * @param String $name
-   * @param String $label
-   * @param (optional) array $params additional parameters for the activity type (e.g. 'reserved' => 1)
-   * @return type
-   */
-  protected function addActivityType($name, $label, $params = array()) {
-    //try {
-      if ($this->activity_type_group_id === false) {
-        $this->loadActivityTypeGroupId();
-      }
-      
-      $checkParams['option_group_id'] = $this->activity_type_group_id;
-      $checkParams['name'] = $name;
-      $checkResult = civicrm_api3('OptionValue', 'get', $checkParams);
-      if (isset($checkResult['id']) && $checkResult['id']) {
-        //activity type exists, update this one
-        $params['id'] = $checkResult['id'];
-      } else {
-         //if ID is set then unset the id parameter so that we create a new one
-        if (isset($params['id'])) {
-          unset($params['id']);
-        }
-      }
-      $params['option_group_id'] = $this->activity_type_group_id;
-      $params['name'] = $name;
-      $params['label'] = $label;
-      
-      civicrm_api3('OptionValue', 'Create', $params);
-      
-    //} catch (Exception $ex) {
-    //   return; 
-   // }
-  }
-  
-  /**
-   * Get the id of the activity type option group
-   * 
-   * @throws Exception when api call fails
-   */
-  private function loadActivityTypeGroupId() {
-    $result = civicrm_api3('OptionGroup', 'getsingle', array('name' => 'activity_type'));
-    if (isset($result['id'])) {
-      $this->activity_type_group_id = $result['id'];
-    }
-  }
-
   /**
    * Example: Run an external SQL script when the module is uninstalled
    *
