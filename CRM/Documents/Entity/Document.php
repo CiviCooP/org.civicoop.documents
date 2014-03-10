@@ -171,7 +171,16 @@ class CRM_Documents_Entity_Document {
     $this->subject = $subject;
   }
   
-  
+  public function getFormattedContacts() {
+    $contacts = '';
+    foreach($this->contactIds as $cid) {
+      if (strlen($contacts)) {
+        $contacts .= ', ';
+      }
+      $contacts .= $this->formatContact($cid);
+    }
+    return $contacts;
+  }
   
   public function getFormattedDateAdded() {
     return $this->formateDate($this->getDateAdded());
@@ -194,7 +203,7 @@ class CRM_Documents_Entity_Document {
     if ($cid) {
       $display_name = CRM_Contact_BAO_Contact::displayName($cid);
       if ($link) {
-        $return = '<a class="" href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $cid) . '" >'.$display_name.'</a>';
+        $return = '<a class="" href="' . CRM_Utils_System::url('civicrm/documents/add', 'reset=1&cid=' . $cid) . '" >'.$display_name.'</a>';
       } else {
         $return = $display_name;
       }
