@@ -7,28 +7,64 @@ require_once 'CRM/Core/Form.php';
  *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
  */
-class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
+class CRM_Documents_Form_Document extends CRM_Core_Form {
   
   protected $document;
   
   protected $cid;
   
+  protected $documentId = false;
+  
+  protected $_action;
+  
   function preProcess() {
     parent::preProcess();
+    
+    $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+    $this->add('hidden', 'id', $this->documentId);
     
     $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->add('hidden', 'cid', $this->cid);
     
-    $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-    $this->document = $documentsRepo->getDocumentById(-1); //@todo we should replace this function ;-)
-    $this->document->setContactIds(array($this->cid));
+    //retrieve action
+    $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this);
+    $this->assign('action', $this->_action);
     
+    if ($this->documentId) {
+      $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
+      $this->document = $documentsRepo->getDocumentById($this->documentId);       
+    } else {
+      $this->document = new CRM_Documents_Entity_Document;
+      $this->document->setContactIds(array($this->cid));
+    }
+    $this->assign('document', $this->document);
     
     $this->assign('selectedContacts', implode(",", $this->document->getContactIds()));
+    
+    
+  }
+  
+  function setDefaultValues() {
+    parent::setDefaultValues();
+    
   }
   
   function buildQuickForm() {
-    
+    if ($this->_action == CRM_Core_Action::DELETE) {
+      $this->addButtons(array(
+        array(
+          'type' => 'next',
+          'name' => ts('Delete'),
+          'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+          'isDefault' => TRUE
+        ),
+        array(
+          'type' => 'cancel',
+          'name' => ts('Cancel')
+        )
+      ));
+      return;
+    }
     $this->add(
          'text', 
         'subject', 
@@ -40,16 +76,6 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
         ),
         true
     ); 
-    
-
-    // add form elements
-    /*$this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      true // is required
-    );*/
     
     $this->addButtons(array(
       array(
@@ -76,6 +102,18 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
 
   function postProcess() {
     $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      //delete the attachment
+      CRM_Core_BAO_File::deleteEntityFile('civicrm_document', $this->document->getId());
+      //delete the document
+      $documentsRepo->remove($this->document);
+      
+      CRM_Core_Session::setStatus(ts("Selected document has been deleted successfully."), ts('Record Deleted'), 'success');
+      return;
+    }
+    
+    
+    
     $values = $this->controller->exportValues();
     
     $contact_ids = array();

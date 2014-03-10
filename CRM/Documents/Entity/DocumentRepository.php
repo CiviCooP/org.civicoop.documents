@@ -79,6 +79,16 @@ class CRM_Documents_Entity_DocumentRepository {
     if ($dao->date_updated) {
       $doc->setDateUpdated(new DateTime($dao->date_updated));
     }
+    
+    //load contact ID's
+    $sql = "SELECT * FROM `civicrm_document_contact` WHERE `document_id` = %1";
+    $contactDao = CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($doc->getId(), 'Integer')
+    ));
+    
+    while($contactDao->fetch()) {
+      $doc->addContactId($contactDao->contact_id);
+    }
   }
   
   /**
@@ -91,7 +101,21 @@ class CRM_Documents_Entity_DocumentRepository {
   public function getDocumentById($id) {
     $doc = new CRM_Documents_Entity_Document();
     
-    //throw new CRM_Documents_Exception_NotFound("Document with id: ".$id." not found");
+    $dao = new CRM_Documents_DAO_Document();
+    $sql = "SELECT * FROM `civicrm_document` `doc`  WHERE `doc`.`id` = %1";
+    $docsDao = $dao->executeQuery(
+        $sql, array(
+          '1' => array($id, 'Integer')
+        )
+    );
+    if($docsDao->fetch()) {
+      $doc = new CRM_Documents_Entity_Document();
+      $this->loadDocByDao($doc, $docsDao);
+    } else {
+      //document not found
+      throw new CRM_Documents_Exception_NotFound("Document with id: ".$id." not found");
+    }
+    
     return $doc;
   }
   
@@ -112,6 +136,21 @@ class CRM_Documents_Entity_DocumentRepository {
       $dao->updated_by = $document->getUpdatedBy();
     }
     
+    //prepare for hook
+    $op = 'create';
+    if ($dao->id) {
+      $op = 'edit';
+    }
+    
+    //pre hook: copy values into array
+    $params = array();
+    CRM_Documents_DAO_Document::storeValues($dao, $params);    
+    //call pre hook
+    CRM_Utils_Hook::pre($op, 'Document', $dao->id, $params);
+    //pre hook: copy array back to dao
+    $dao->copyValues($params);
+    
+    //do the actuall save
     $dao->save();
     $document->setId($dao->id);
     
@@ -128,6 +167,49 @@ class CRM_Documents_Entity_DocumentRepository {
     }
     $sql .= ";";
     CRM_Core_DAO::executeQuery($sql);
+    
+    //post hook, copy values into array and call post hook
+    $params = array();
+    CRM_Documents_DAO_Document::storeValues($dao, $params);
+    CRM_Utils_Hook::post($op, 'Document', $dao->id, $params);
+  }
+  
+  public function remove(CRM_Documents_Entity_Document $document) {
+    //remove document
+    $sql = "DELETE FROM `civicrm_document_contact` WHERE `document_id` = %1";
+    CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+    ));
+    
+    
+    $dao = new CRM_Documents_DAO_Document();
+    $sql = "SELECT * FROM `civicrm_document` WHERE `id` = %1";
+    $docsDao = $dao->executeQuery(
+        $sql, array(
+          '1' => array($document->getId(), 'Integer')
+        )
+    );
+    if ($docsDao->fetch()) {
+      //pre hook: copy values into array
+      $params = array();
+      //CRM_Documents_DAO_Document::storeValues($docsDao, $params);    
+      //call pre hook
+      CRM_Utils_Hook::pre('delete', 'Document', $docsDao->id, $params);
+      //pre hook: copy array back to dao
+      //$docsDao->copyValues($params);
+      
+      $sql = "DELETE FROM `civicrm_document` WHERE `id` = %1";
+      CRM_Core_DAO::executeQuery(
+        $sql, array(
+          '1' => array($document->getId(), 'Integer')
+        )
+      );
+            
+      //call post hook
+      $params = array();
+      //CRM_Documents_DAO_Document::storeValues($docsDao, $params);
+      CRM_Utils_Hook::post('delete', 'Document', $docsDao->id, $params);
+    }
   }
     
   

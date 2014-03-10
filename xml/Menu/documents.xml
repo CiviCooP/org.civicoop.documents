@@ -8,7 +8,7 @@
   </item>
   <item>
     <path>civicrm/documents/add</path>
-    <page_callback>CRM_Documents_Form_AddDocument</page_callback>
+    <page_callback>CRM_Documents_Form_Document</page_callback>
     <title>Document</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>

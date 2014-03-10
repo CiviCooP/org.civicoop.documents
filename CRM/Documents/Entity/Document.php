@@ -113,6 +113,12 @@ class CRM_Documents_Entity_Document {
     }
   }
   
+  public function addContactId($contact_id) {
+    if (!in_array($contact_id, $this->contactIds)) {
+      $this->contactIds[] = $contact_id;
+    }
+  }
+  
   public function getContactIds() {
     return $this->contactIds;
   }
