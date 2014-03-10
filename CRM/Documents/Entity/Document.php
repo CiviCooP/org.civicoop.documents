@@ -215,7 +215,7 @@ class CRM_Documents_Entity_Document {
     $return = '';
     if ($date) {
       $config = CRM_Core_Config::singleton();
-      $return = CRM_Utils_Date::customFormat($date->format('Y-m-d H:i:s'));
+      $return = CRM_Utils_Date::customFormat($date->format('Y-m-d'));
     }
     return $return;
   }

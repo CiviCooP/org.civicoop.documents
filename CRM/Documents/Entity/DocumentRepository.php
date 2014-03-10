@@ -124,13 +124,13 @@ class CRM_Documents_Entity_DocumentRepository {
     $dao->id = $document->getId();
     $dao->subject = $document->getSubject();
     if ($document->getDateAdded()) {
-      $dao->date_added = $document->getDateAdded()->format('Y-m-d H:i:s');
+      $dao->date_added = $document->getDateAdded()->format('Ymd');
     }
     if ($document->getAddedBy()) {
       $dao->added_by = $document->getAddedBy();
     }
     if ($document->getDateUpdated()) {
-      $dao->date_updated = $document->getDateUpdated()->format('Y-m-d H:i:s');
+      $dao->date_updated = $document->getDateUpdated()->format('Ymd');
     }
     if ($document->getUpdatedBy()) {
       $dao->updated_by = $document->getUpdatedBy();
