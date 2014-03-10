@@ -53,7 +53,7 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
     
     $this->addButtons(array(
       array(
-        'type' => 'done',
+        'type' => 'upload',
         'name' => ts('Submit'),
         'isDefault' => TRUE,
       ),
@@ -76,8 +76,8 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
 
   function postProcess() {
     $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-   
-    $values = $this->exportValues();
+    $values = $this->controller->exportValues();
+    
     $contact_ids = array();
     // format with contact (target contact) values
     if (isset($values['contact'][1])) {
@@ -97,7 +97,6 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
     
     //save document
     $documentsRepo->persist($this->document);
-    
     CRM_Core_BAO_File::processAttachment($params, 'civicrm_document', $this->document->getId());
     
     /*$options = $this->getColorOptions();
@@ -110,20 +109,6 @@ class CRM_Documents_Form_AddDocument extends CRM_Core_Form {
     /*$session = CRM_Core_Session::singleton();
     $url = $session->popUserContext();
     CRM_Utils_System::redirect($url);*/
-  }
-
-  function getColorOptions() {
-    $options = array(
-      '' => ts('- select -'),
-      '#f00' => ts('Red'),
-      '#0f0' => ts('Green'),
-      '#00f' => ts('Blue'),
-      '#f0f' => ts('Purple'),
-    );
-    foreach (array('1','2','3','4','5','6','7','8','9','a','b','c','d','e') as $f) {
-      $options["#{$f}{$f}{$f}"] = ts('Grey (%1)', array(1 => $f));
-    }
-    return $options;
   }
 
   /**
