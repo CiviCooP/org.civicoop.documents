@@ -176,6 +176,11 @@ class CRM_Documents_Form_Search_DocumentSearch extends CRM_Contact_Form_Search_C
     $doc = new CRM_Documents_Entity_Document();
     $this->convertRowToDoc($row, $doc);
     
+    $row['date_added'] = $doc->getFormattedDateAdded();
+    $row['added_by'] = $doc->getFormattedAddedBy();
+    $row['updated_by'] = $doc->getFormattedUpdatedBy();
+    $row['date_updated'] = $doc->getFormattedDateUpdated();
+    
     $row['contacts'] = $doc->getFormattedContacts();
     $row['doc'] = $doc;
     $row['cid'] = $cid;
