@@ -51,6 +51,12 @@ class CRM_Documents_Entity_Document {
    */
   protected $attachment;
   
+  /**
+   *
+   * @var array of CRM_Documents_Entity_DocumentVersion 
+   */
+  protected $versions;
+  
   public function __construct() {
     $this->setDefaults();
   }
@@ -68,6 +74,7 @@ class CRM_Documents_Entity_Document {
     unset($this->updatedBy);
     $this->subject = '';
     $this->attachment = new CRM_Documents_Entity_DocumentFile();
+    $this->version = array();
   }
   
   public function getId() {
@@ -174,51 +181,70 @@ class CRM_Documents_Entity_Document {
   }
   
   public function getFormattedContacts() {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
     $contacts = '';
     foreach($this->contactIds as $cid) {
       if (strlen($contacts)) {
         $contacts .= ', ';
       }
-      $contacts .= $this->formatContact($cid);
+      $contacts .= $formatter->formatContact($cid);
     }
     return $contacts;
   }
   
   public function getFormattedDateAdded() {
-    return $this->formateDate($this->getDateAdded());
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formateDate($this->getDateAdded());
   }
   
   public function getFormattedDateUpdated() {
-    return $this->formateDate($this->getDateUpdated());
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formateDate($this->getDateUpdated());
   }
   
   public function getFormattedAddedBy($link=TRUE) {
-    return $this->formatContact($this->getAddedBy(), $link);
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formatContact($this->getAddedBy(), $link);
   }
   
   public function getFormattedUpdatedBy($link=TRUE) {
-    return $this->formatContact($this->getUpdatedBy(), $link);
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formatContact($this->getUpdatedBy(), $link);
   }
   
-  private function formatContact($cid, $link=TRUE) {
-    $return = '';
-    if ($cid) {
-      $display_name = CRM_Contact_BAO_Contact::displayName($cid);
-      if ($link) {
-        $return = '<a class="" href="' . CRM_Utils_System::url('civicrm/documents/add', 'reset=1&cid=' . $cid) . '" >'.$display_name.'</a>';
-      } else {
-        $return = $display_name;
-      }
-    }
-    return $return;
+  public function getVersions() {
+    ksort($this->versions);
+    return $this->versions;
   }
   
-  private function formateDate($date) {
-    $return = '';
-    if ($date) {
-      $config = CRM_Core_Config::singleton();
-      $return = CRM_Utils_Date::customFormat($date->format('Y-m-d'));
+  public function addVersion(CRM_Document_Entity_DocumentVersion $version) {
+    $vid = $version->getVersion();
+    if (!$vid || isset($this->version[$vid])) {
+      Throw new Exception("Invalid version");
     }
-    return $return;
+    $this->versions[$vid] = $version;
   }
+  
+  public function getCurrentVersion() {
+    ksort($this->versions);
+    $lastVersion = end($this->versions);
+    if ($lastVersion === false) {
+     $lastVersion = $this->addNewVersion(); 
+    }
+    return $lastVersion;
+  }
+  
+  public function addNewVersion() {
+    $version = new CRM_Document_Entity_DocumentVersion($this);
+    $vid = 1;
+    ksort($this->versions);
+    $lastVersion = end($this->versions);
+    if ($lastVersion) {
+      $vid = $lastVersion->getVersion();
+      $vid ++;
+    }
+    $this->versions[$vid] = $version;
+    return $version; 
+  } 
+  
 }

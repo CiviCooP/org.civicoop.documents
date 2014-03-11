@@ -105,7 +105,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     
    CRM_Contact_Form_NewContact::buildQuickForm($this);
    
-   CRM_Core_BAO_File::buildAttachment($this, 'civicrm_document', $this->document->getId(), 1, TRUE);
+   CRM_Core_BAO_File::buildAttachment($this, 'civicrm_document_version', $this->document->getCurrentVersion()->getId(), 1, TRUE);
     
     parent::buildQuickForm();
   }
@@ -137,24 +137,16 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     // add attachments as needed
     CRM_Core_BAO_File::formatAttachment($values,
       $params,
-      'civicrm_document',
-      $this->document->getId()
+      'civicrm_document_version',
+      $this->document->getCurrentVersion()->getId()
     );
     
     //save document
     $documentsRepo->persist($this->document);
-    CRM_Core_BAO_File::processAttachment($params, 'civicrm_document', $this->document->getId());
+    CRM_Core_BAO_File::processAttachment($params, 'civicrm_document_version', $this->document->getCurrentVersion()->getId());
     
-    /*$options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']]
-    )));*/
     parent::postProcess();
     
-    //redirect
-    /*$session = CRM_Core_Session::singleton();
-    $url = $session->popUserContext();
-    CRM_Utils_System::redirect($url);*/
   }
 
   /**

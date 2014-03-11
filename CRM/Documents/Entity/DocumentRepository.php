@@ -100,14 +100,33 @@ class CRM_Documents_Entity_DocumentRepository {
       $doc->addContactId($contactDao->contact_id);
     }
     
-    //load only the first attachment because there should be only one attachment available
-    $attachments = CRM_Core_BAO_File::getEntityFile('civicrm_document', $doc->getId());
-    if (!empty($attachments)) {
-      $attachment = reset($attachments);
-      $file = new CRM_Documents_Entity_DocumentFile();
-      $file->setFromArray($attachment);
-      $doc->setAttachment($file);
+    //load versions
+    $sql = "SELECT * FROM `civicrm_document_version` WHERE `document_id` = %1 ORDER BY `version` ASC";
+    $contactDao = CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($doc->getId(), 'Integer')
+    ));
+    
+    while($contactDao->fetch()) {
+      $version = new CRM_Documents_Entity_DocumentVersion($doc);
+      $version->setId($dao->id);
+      $version->setDescription($dao->description);
+      $version->setDateUpdated(new DateTime($dao->date_updated));
+      $version->setUpdatedBy($dao->updated_by);
+      $version->setVersion($dao->version);
+      
+      //load only the first attachment because there should be only one attachment available
+      $attachments = CRM_Core_BAO_File::getEntityFile('civicrm_document_version', $version->getId());
+      if (!empty($attachments)) {
+        $attachment = reset($attachments);
+        $file = new CRM_Documents_Entity_DocumentFile();
+        $file->setFromArray($attachment);
+        $version->setAttachment($file);
+      }
+      
+      $doc->addVersion($version);
     }
+    
+    
   }
   
   /**
@@ -151,6 +170,7 @@ class CRM_Documents_Entity_DocumentRepository {
       $document->setDateAdded(new DateTime());
     }
     
+    //copy document into dao
     $dao->id = $document->getId();
     $dao->subject = $document->getSubject();
     if ($document->getDateAdded()) {
@@ -184,6 +204,67 @@ class CRM_Documents_Entity_DocumentRepository {
     $dao->save();
     $document->setId($dao->id);
     
+    $this->persistContacts($document);
+    
+    //only persist the current version into the database 
+    //because other versions are already persisted
+    $this->persistCurrentVersion($document);
+
+    //post hook, copy values into array and call post hook
+    $params = array();
+    CRM_Documents_DAO_Document::storeValues($dao, $params);
+    CRM_Utils_Hook::post($op, 'Document', $dao->id, $params);
+  }
+  
+  public function remove(CRM_Documents_Entity_Document $document) {    
+    if ($document->getId()) {
+      
+      //pre hook
+      $params = array();
+      CRM_Utils_Hook::pre('delete', 'Document', $document->getId(), $params);
+      
+      //remove version
+      $this->removeVersions($document);
+    
+      //remove document contacts
+      $this->removeContacts($document);
+      
+      $sql = "DELETE FROM `civicrm_document` WHERE `id` = %1";
+      CRM_Core_DAO::executeQuery(
+        $sql, array(
+          '1' => array($document->getId(), 'Integer')
+        )
+      );
+            
+      //call post hook
+      $params = array();
+      CRM_Utils_Hook::post('delete', 'Document', $document->getId(), $params);
+    }
+  }
+  
+  protected function removeContacts(CRM_Documents_Entity_Document $document) {
+    $sql = "DELETE FROM `civicrm_document_contact` WHERE `document_id` = %1";
+    CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+    ));
+  }
+  
+  protected function removeVersions(CRM_Documents_Entity_Document $document) {
+    foreach($document->getVersions() as $version) {
+      if ($version->getId()) {
+        CRM_Core_BAO_File::deleteEntityFile('civicrm_document_version', $version->getId());
+      }
+    }
+    
+    if ($document->getId()) {
+      $sql = "DELETE FROM `civicrm_document_version` WHERE `document_id` = %1";
+      CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+      ));
+    }
+  }
+  
+  protected function persistContacts(CRM_Documents_Entity_Document $document) {
     //update the document_contact table
     $sql = "DELETE FROM `civicrm_document_contact` WHERE `document_id` = %1";
     CRM_Core_DAO::executeQuery($sql, array(
@@ -197,54 +278,24 @@ class CRM_Documents_Entity_DocumentRepository {
     }
     $sql .= ";";
     CRM_Core_DAO::executeQuery($sql);
-    
-    //post hook, copy values into array and call post hook
-    $params = array();
-    CRM_Documents_DAO_Document::storeValues($dao, $params);
-    CRM_Utils_Hook::post($op, 'Document', $dao->id, $params);
   }
   
-  public function remove(CRM_Documents_Entity_Document $document) {
-    //remove attachments
-    CRM_Core_BAO_File::deleteEntityFile('civicrm_document', $document->getId());
-
-    //remove document
-    $sql = "DELETE FROM `civicrm_document_contact` WHERE `document_id` = %1";
-    CRM_Core_DAO::executeQuery($sql, array(
-        '1' => array($document->getId(), 'Integer')
-    ));
-    
-    
-    $dao = new CRM_Documents_DAO_Document();
-    $sql = "SELECT * FROM `civicrm_document` WHERE `id` = %1";
-    $docsDao = $dao->executeQuery(
-        $sql, array(
-          '1' => array($document->getId(), 'Integer')
-        )
-    );
-    if ($docsDao->fetch()) {
-      //pre hook: copy values into array
-      $params = array();
-      //CRM_Documents_DAO_Document::storeValues($docsDao, $params);    
-      //call pre hook
-      CRM_Utils_Hook::pre('delete', 'Document', $docsDao->id, $params);
-      //pre hook: copy array back to dao
-      //$docsDao->copyValues($params);
-      
-      $sql = "DELETE FROM `civicrm_document` WHERE `id` = %1";
-      CRM_Core_DAO::executeQuery(
-        $sql, array(
-          '1' => array($document->getId(), 'Integer')
-        )
-      );
-            
-      //call post hook
-      $params = array();
-      //CRM_Documents_DAO_Document::storeValues($docsDao, $params);
-      CRM_Utils_Hook::post('delete', 'Document', $docsDao->id, $params);
+  protected function persistCurrentVersion(CRM_Documents_Entity_Document $document) {
+    $version = $document->getCurrentVersion();
+    $version->setUpdatedBy($session->get('userID'));
+    $version->setDateUpdated(new DateTime());
+    $vdao = new CRM_Documents_DAO_DocumentVersion();
+    $vdao->id = $version->getId();
+    $vdao->description = $version->getDescription();
+    $vdao->version = $version->version();
+    $vdao->document_id = $doc->getId();
+    if ($version->getDateUpdated()) {
+      $vdao->date_updated = $version->getDateUpdated()->format('Ymd');
+    }
+    if ($version->getUpdatedBy()) {
+      $vdao->updated_by = $version->getUpdatedBy();
     }
   }
-    
   
 }
 
