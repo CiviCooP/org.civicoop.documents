@@ -29,7 +29,7 @@
                 <td>{$doc->getFormattedUpdatedBy()}</td>
                 <td>
                     <span>
-                        {*include file=CRM/Documents/actionlinks.tpl*}
+                        {include file=CRM/Documents/actionlinks.tpl}
                     </span>
                 </td>
             </tr>

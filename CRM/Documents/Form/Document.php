@@ -116,7 +116,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       //delete the document
       $documentsRepo->remove($this->document);
       
-      CRM_Core_Session::setStatus(ts("Selected document has been deleted successfully."), ts('Record Deleted'), 'success');
+      CRM_Core_Session::setStatus(ts("Selected document has been successfully deleted."), ts('Record Deleted'), 'success');
       return;
     }
     

@@ -74,7 +74,7 @@ class CRM_Documents_Entity_Document {
     unset($this->updatedBy);
     $this->subject = '';
     $this->attachment = new CRM_Documents_Entity_DocumentFile();
-    $this->version = array();
+    $this->versions = array();
   }
   
   public function getId() {
@@ -217,17 +217,20 @@ class CRM_Documents_Entity_Document {
     return $this->versions;
   }
   
-  public function addVersion(CRM_Document_Entity_DocumentVersion $version) {
+  public function addVersion(CRM_Documents_Entity_DocumentVersion $version) {
     $vid = $version->getVersion();
-    if (!$vid || isset($this->version[$vid])) {
+    if ((!$vid) || isset($this->versions[$vid])) {
       Throw new Exception("Invalid version");
     }
     $this->versions[$vid] = $version;
   }
   
   public function getCurrentVersion() {
-    ksort($this->versions);
-    $lastVersion = end($this->versions);
+    $lastVersion = false;
+    if (ksort($this->versions)) {
+      $lastVersion = end($this->versions);
+    }
+
     if ($lastVersion === false) {
      $lastVersion = $this->addNewVersion(); 
     }
@@ -235,13 +238,14 @@ class CRM_Documents_Entity_Document {
   }
   
   public function addNewVersion() {
-    $version = new CRM_Document_Entity_DocumentVersion($this);
+    $version = new CRM_Documents_Entity_DocumentVersion($this);
     $vid = 1;
-    ksort($this->versions);
-    $lastVersion = end($this->versions);
-    if ($lastVersion) {
-      $vid = $lastVersion->getVersion();
-      $vid ++;
+    if (ksort($this->versions)) {
+      $lastVersion = end($this->versions);
+      if ($lastVersion) {
+        $vid = $lastVersion->getVersion();
+        $vid ++;
+      }
     }
     $this->versions[$vid] = $version;
     return $version; 

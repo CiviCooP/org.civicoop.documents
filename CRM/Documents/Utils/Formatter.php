@@ -59,7 +59,7 @@ class CRM_Documents_Utils_Formatter {
    * @param DateTime $date
    * @return String
    */
-  public function formateDate(DateTime $date) {
+  public function formateDate(DateTime $date=null) {
     $return = '';
     if ($date) {
       $config = CRM_Core_Config::singleton();

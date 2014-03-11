@@ -102,17 +102,17 @@ class CRM_Documents_Entity_DocumentRepository {
     
     //load versions
     $sql = "SELECT * FROM `civicrm_document_version` WHERE `document_id` = %1 ORDER BY `version` ASC";
-    $contactDao = CRM_Core_DAO::executeQuery($sql, array(
+    $versionDao = CRM_Core_DAO::executeQuery($sql, array(
         '1' => array($doc->getId(), 'Integer')
     ));
     
-    while($contactDao->fetch()) {
+    while($versionDao->fetch()) {
       $version = new CRM_Documents_Entity_DocumentVersion($doc);
-      $version->setId($dao->id);
-      $version->setDescription($dao->description);
-      $version->setDateUpdated(new DateTime($dao->date_updated));
-      $version->setUpdatedBy($dao->updated_by);
-      $version->setVersion($dao->version);
+      $version->setId($versionDao->id);
+      $version->setDescription($versionDao->description);
+      $version->setDateUpdated(new DateTime($versionDao->date_updated));
+      $version->setUpdatedBy($versionDao->updated_by);
+      $version->setVersion($versionDao->version);
       
       //load only the first attachment because there should be only one attachment available
       $attachments = CRM_Core_BAO_File::getEntityFile('civicrm_document_version', $version->getId());
@@ -281,20 +281,25 @@ class CRM_Documents_Entity_DocumentRepository {
   }
   
   protected function persistCurrentVersion(CRM_Documents_Entity_Document $document) {
+    $session = CRM_Core_Session::singleton();
     $version = $document->getCurrentVersion();
     $version->setUpdatedBy($session->get('userID'));
     $version->setDateUpdated(new DateTime());
     $vdao = new CRM_Documents_DAO_DocumentVersion();
     $vdao->id = $version->getId();
     $vdao->description = $version->getDescription();
-    $vdao->version = $version->version();
-    $vdao->document_id = $doc->getId();
+    $vdao->version = $version->getVersion();
+    $vdao->document_id = $document->getId();
     if ($version->getDateUpdated()) {
       $vdao->date_updated = $version->getDateUpdated()->format('Ymd');
     }
     if ($version->getUpdatedBy()) {
       $vdao->updated_by = $version->getUpdatedBy();
     }
+    
+    $vdao->save();
+    
+    $version->setId($vdao->id);
   }
   
 }

@@ -72,7 +72,7 @@ class CRM_Documents_Entity_DocumentVersion {
   }
   
   public function getDescription() {
-    return $this->description();
+    return $this->description;
   }
   
   public function setDateUpdated(DateTime $date) {
