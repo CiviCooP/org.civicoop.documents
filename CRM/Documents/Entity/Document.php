@@ -45,38 +45,14 @@ class CRM_Documents_Entity_Document {
    */
   protected $subject;
   
+  /**
+   *
+   * @var CRM_Documents_Entity_DocumentFile 
+   */
+  protected $attachment;
+  
   public function __construct() {
     $this->setDefaults();
-  }
-  
-  public function setFromArray($data) {
-    if (isset($data['id'])) {
-      $this->id = $data['id'];
-    }
-    
-    if (isset($data['contact_ids'])) {
-      $this->contactIds = explode(",", $data['contact_ids']);
-    }
-    
-    if (isset($data['date_added'])) {
-      $this->dateAdded = new DateTime($data['date_added']);
-    }
-    
-    if (isset($data['added_by'])) {
-      $this->addedBy = $data['added_by'];
-    }
-    
-    if (isset($data['date_updated'])) {
-      $this->dateUpdated = new DateTime($data['date_updated']);
-    }
-    
-    if (isset($data['updated_by'])) {
-      $this->addedBy = $data['updated_by'];
-    }
-    
-    if (isset($data['subject'])) {
-      $this->subject = $data['subject'];
-    }
   }
   
   /**
@@ -91,6 +67,7 @@ class CRM_Documents_Entity_Document {
     unset($this->dateUpdated);
     unset($this->updatedBy);
     $this->subject = '';
+    $this->attachment = new CRM_Documents_Entity_DocumentFile();
   }
   
   public function getId() {
@@ -122,6 +99,31 @@ class CRM_Documents_Entity_Document {
   public function getContactIds() {
     return $this->contactIds;
   }
+  
+  public function setAttachment(CRM_Documents_Entity_DocumentFile $file) {
+    $this->attachment = $file;
+  }
+  
+  public function getAttachment() {
+    return $this->attachment;
+  }
+  
+  /**
+   * Returns a download link (including the <a href> tag
+   * 
+   * @param String $title
+   * @param String $classes
+   * @return String
+   */
+  public function getAttachmentDownloadLink($title='', $classes='') {
+    $t = $this->attachment->cleanname;
+    if (strlen($title)) {
+      $t = $title;
+    }
+    var_dump('<a href="'.$this->attachment->url.'" title="'.$this->attachment->cleanname.'" class="'.$classes.'">'.$t.'</a>'); exit();
+    
+  }
+  
   
   public function setAddedBy($addedBy) {
     $this->addedBy = $addedBy;

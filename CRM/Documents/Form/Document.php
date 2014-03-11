@@ -103,8 +103,6 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   function postProcess() {
     $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
     if ($this->_action & CRM_Core_Action::DELETE) {
-      //delete the attachment
-      CRM_Core_BAO_File::deleteEntityFile('civicrm_document', $this->document->getId());
       //delete the document
       $documentsRepo->remove($this->document);
       

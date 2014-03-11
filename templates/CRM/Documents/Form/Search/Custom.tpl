@@ -108,8 +108,6 @@
                 <tr id='rowid{$row.id}' class="{cycle values="odd-row,even-row"}">
                     {assign var=doc value=$row.doc}
                     {assign var=cbName value=$row.checkbox}
-                    {capture assign="docId"}{$doc->getId()}{/capture}
-                    {capture assign=delDocumentURL}{crmURL p="civicrm/documents/add" q="reset=1&action=delete&cid=`$row.cid`&id=`$docId`"}{/capture}
 
                     <td>{$form.$cbName.html}</td>
                     {foreach from=$columnHeaders item=header}
@@ -121,9 +119,7 @@
                         {/if}
                     {/foreach}
                     <td>
-                        <a href="#" class="action-item action-item-first">{ts}Download{/ts}</a>
-                        <a href="#" class="action-item">{ts}Upload new version{/ts}</a>
-                        <a href="{$delDocumentURL}" class="action-item">{ts}Delete{/ts}</a>
+                        {inlcude file="CRM/Documents/actionlinks.tpl" doc=$doc contactId=$row.contact_id}
                     </td>
                 </tr>
             {/foreach}

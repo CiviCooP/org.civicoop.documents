@@ -21,9 +21,6 @@
      <tbody>
         
         {foreach from=$documents item=doc}
-            {capture assign="docId"}{$doc->getId()}{/capture}
-            {capture assign=delDocumentURL}{crmURL p="civicrm/documents/add" q="reset=1&action=delete&cid=`$contactId`&id=`$docId`"}{/capture}
-
             <tr class="{cycle values="odd,even"}">
                 <td>{$doc->getSubject()}</td>
                 <td>{$doc->getFormattedDateAdded()}</td>
@@ -32,9 +29,7 @@
                 <td>{$doc->getFormattedUpdatedBy()}</td>
                 <td>
                     <span>
-                    <a href="#" class="action-item action-item-first">{ts}Download{/ts}</a>
-                    <a href="#" class="action-item">{ts}Upload new version{/ts}</a>
-                    <a href="{$delDocumentURL}" class="action-item">{ts}Delete{/ts}</a>
+                        {include file=CRM/Documents/actionlinks.tpl}
                     </span>
                 </td>
             </tr>

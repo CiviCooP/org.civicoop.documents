@@ -80,6 +80,15 @@ class CRM_Documents_Entity_DocumentRepository {
       $doc->setDateUpdated(new DateTime($dao->date_updated));
     }
     
+    $this->loadAdditionalDocData($doc);
+  }
+  
+  /**
+   * Load additional data for the documents, such as the linked contacts and the linked file
+   * 
+   * @param CRM_Documents_Entity_Document $doc
+   */
+  public function loadAdditionalDocData(CRM_Documents_Entity_Document $doc) {
     //load contact ID's
     $sql = "SELECT * FROM `civicrm_document_contact` WHERE `document_id` = %1";
     $contactDao = CRM_Core_DAO::executeQuery($sql, array(
@@ -88,6 +97,15 @@ class CRM_Documents_Entity_DocumentRepository {
     
     while($contactDao->fetch()) {
       $doc->addContactId($contactDao->contact_id);
+    }
+    
+    //load only the first attachment because there should be only one attachment available
+    $attachments = CRM_Core_BAO_File::getEntityFile('civicrm_document', $doc->getId());
+    if (!empty($attachments)) {
+      $attachment = reset($attachments);
+      $file = new CRM_Documents_Entity_DocumentFile();
+      $file->setFromArray($attachment);
+      $doc->setAttachment($file);
     }
   }
   
@@ -175,6 +193,9 @@ class CRM_Documents_Entity_DocumentRepository {
   }
   
   public function remove(CRM_Documents_Entity_Document $document) {
+    //remove attachments
+    CRM_Core_BAO_File::deleteEntityFile('civicrm_document', $document->getId());
+
     //remove document
     $sql = "DELETE FROM `civicrm_document_contact` WHERE `document_id` = %1";
     CRM_Core_DAO::executeQuery($sql, array(
