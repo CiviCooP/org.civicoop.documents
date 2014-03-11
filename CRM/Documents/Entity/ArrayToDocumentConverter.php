@@ -4,7 +4,7 @@
  * This class converts an array to a document and loads additional data
  */
 
-class CRM_Documents_Entity_ArrayToDocumentsConvertor {
+class CRM_Documents_Entity_ArrayToDocumentConverter {
   
   /**
    * Converts an array to a document

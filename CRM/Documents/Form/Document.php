@@ -32,7 +32,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     
     if ($this->documentId) {
       $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-      $this->document = $documentsRepo->getDocumentById($this->documentId);       
+      $this->document = $documentsRepo->getDocumentById($this->documentId);
     } else {
       $this->document = new CRM_Documents_Entity_Document;
       $this->document->setContactIds(array($this->cid));
@@ -41,6 +41,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     
     $this->assign('selectedContacts', implode(",", $this->document->getContactIds()));
     
+    //Set page title based on action
+    $this->setPageTitle();
     
   }
   
@@ -165,5 +167,14 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       }
     }
     return $elementNames;
+  }
+  
+  protected function setPageTitle() {
+    CRM_Utils_System::setTitle(ts('Add new document'));
+    if ($this->_action == CRM_Core_Action::DELETE) {
+      CRM_Utils_System::setTitle(ts("Delete document '".$this->document->getSubject()."'"));
+    } else if ($this->document->getId()) {
+      CRM_Utils_System::setTitle(ts("Edit document '".$this->document->getSubject()."'"));
+    }
   }
 }

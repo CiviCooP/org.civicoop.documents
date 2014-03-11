@@ -27,7 +27,7 @@
 
         <tr class="crm-activity-form-block-attachment">
           <td colspan="2">
-          {include file="CRM/Documents/Form/attachment.tpl"}
+          {include file="CRM/Documents/Form/attachment.tpl" showDelete=0}
           </td>
         </tr>
     </table>

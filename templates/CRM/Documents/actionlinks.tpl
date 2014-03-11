@@ -8,9 +8,10 @@
  *}
 
 {assign var=document_id value=$doc->getId()}
+{capture assign=editDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
 {capture assign=delDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=delete&cid=`$contactId`&id=`$document_id`"}{/capture}
 {assign var=attachment value=$doc->getAttachment()}
 
 <a href="{$attachment->url}" title="{$attachment->cleanname}" class="action-item action-item-first">{ts}Download{/ts}</a>
-<a href="#" class="action-item">{ts}Upload new version{/ts}</a>
+<a href="{$editDocumentURL}" class="action-item">{ts}Edit{/ts}</a>
 <a href="{$delDocumentURL}" class="action-item">{ts}Delete{/ts}</a>

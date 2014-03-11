@@ -106,7 +106,7 @@
             {counter start=0 skip=1 print=false}
             {foreach from=$rows item=row}
                 <tr id='rowid{$row.id}' class="{cycle values="odd-row,even-row"}">
-                    {assign var=doc value=$row.doc}
+                    {assign var=contactId value=$row.contact_id}
                     {assign var=cbName value=$row.checkbox}
 
                     <td>{$form.$cbName.html}</td>
@@ -119,7 +119,7 @@
                         {/if}
                     {/foreach}
                     <td>
-                        {inlcude file="CRM/Documents/actionlinks.tpl" doc=$doc contactId=$row.contact_id}
+                        {include file=CRM/Documents/actionlinks.tpl contactId=$row.contact_id doc=$row.doc}
                     </td>
                 </tr>
             {/foreach}

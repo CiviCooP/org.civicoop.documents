@@ -55,16 +55,16 @@
         {/literal}
       {/if}
       {if $currentAttachmentInfo}
-        <tr class="attachment-fieldset"><td colspan="2"></td></tr>
+        
         <tr>
-            <td class="label">{ts}Current Attachment(s){/ts}</td>
+            <td class="label">{ts}Current Attachment{/ts}</td>
             <td class="view-value">
           {foreach from=$currentAttachmentInfo key=attKey item=attVal}
                 <div id="attachStatusMesg" class="status hiddenElement"></div>
                 <div id="attachFileRecord_{$attVal.fileID}">
                   <strong><a href="{$attVal.url}">{$attVal.cleanName}</a></strong>
                   {if $attVal.description}&nbsp;-&nbsp;{$attVal.description}{/if}
-                  {if $attVal.deleteURLArgs}
+                  {if $attVal.deleteURLArgs && $showDelete}
                    <a href="#" onclick="showDeleteAttachment('{$attVal.cleanName}', '{$attVal.deleteURLArgs}', {$attVal.fileID}, '#attachStatusMesg', '#attachFileRecord_{$attVal.fileID}'); return false;" title="{ts}Delete this attachment{/ts}"><span class="icon red-icon delete-icon" style="margin:0px 0px -5px 20px" title="{ts}Delete this attachment{/ts}"></span></a>
                   {/if}
                   {if !empty($attVal.tag)}
@@ -76,12 +76,14 @@
           {/foreach}
             </td>
         </tr>
+        {if $showDelete}
         <tr>
             <td class="label">&nbsp;</td>
             <td>{$form.is_delete_attachment.html}&nbsp;{$form.is_delete_attachment.label}<br />
                 <span class="description">{ts}Click the red trash-can next to a file name to delete a specific attachment. If you want to delete ALL attachments, check the box above and click Save.{/ts}</span>
             </td>
         </tr>
+        {/if}
       {/if}
       </table>
     </div>

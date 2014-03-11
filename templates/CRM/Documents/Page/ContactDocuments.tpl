@@ -1,5 +1,5 @@
 {if $permission EQ 'edit'}
-    {capture assign=newDocumentURL}{crmURL p="civicrm/documents/add" q="reset=1&action=add&cid=`$contactId`"}{/capture}
+    {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`"}{/capture}
     <div class="action-link">
         <a accesskey="N" href="{$newDocumentURL}" class="button">
             <span><div class="icon add-icon"></div>{ts}New document{/ts}</span>

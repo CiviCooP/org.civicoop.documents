@@ -173,7 +173,7 @@ class CRM_Documents_Form_Search_DocumentSearch extends CRM_Contact_Form_Search_C
     $session = CRM_Core_Session::singleton();
     $cid = $session->get('userID');
     
-    $doc = CRM_Documents_Entity_ArrayToDocumentsConvertor::convert($row);
+    $doc = CRM_Documents_Entity_ArrayToDocumentConverter::convert($row);
     
     $row['date_added'] = $doc->getFormattedDateAdded();
     $row['added_by'] = $doc->getFormattedAddedBy();
@@ -184,12 +184,5 @@ class CRM_Documents_Form_Search_DocumentSearch extends CRM_Contact_Form_Search_C
     $row['doc'] = $doc;
     $row['cid'] = $cid;
     
-  }
-  
-  private function convertRowToDoc($row, CRM_Documents_Entity_Document $doc) {
-    
-    
-    $doc->setFromArray($row);
-    $repo->loadAdditionalDocData($doc); //load data such as the linked contacts and the linked attachment
   }
 }
