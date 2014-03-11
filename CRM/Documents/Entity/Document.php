@@ -247,6 +247,7 @@ class CRM_Documents_Entity_Document {
         $vid ++;
       }
     }
+    $version->setVersion($vid);
     $this->versions[$vid] = $version;
     return $version; 
   } 

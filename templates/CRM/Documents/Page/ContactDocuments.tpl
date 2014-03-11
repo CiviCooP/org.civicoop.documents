@@ -28,9 +28,7 @@
                 <td>{$doc->getFormattedDateUpdated()}</td>
                 <td>{$doc->getFormattedUpdatedBy()}</td>
                 <td>
-                    <span>
-                        {include file=CRM/Documents/actionlinks.tpl}
-                    </span>
+                    {include file=CRM/Documents/actionlinks.tpl}
                 </td>
             </tr>
         {/foreach}

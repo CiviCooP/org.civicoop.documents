@@ -106,4 +106,14 @@ class CRM_Documents_Entity_DocumentVersion {
   public function getAttachment() {
     return $this->attachment;
   }
+  
+  public function getFormattedUpdatedBy($link=TRUE) {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formatContact($this->getUpdatedBy(), $link);
+  }
+  
+  public function getFormattedDateUpdated() {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    return $formatter->formateDate($this->getDateUpdated());
+  }
 }

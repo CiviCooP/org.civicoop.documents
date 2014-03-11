@@ -33,9 +33,9 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
           'required' => true,
         ) ,
         'description' => array(
-          'name' => 'subject',
+          'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Subject') ,
+          'title' => ts('Description') ,
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,

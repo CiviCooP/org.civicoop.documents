@@ -12,4 +12,16 @@
     <title>Document</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/documents/newversion</path>
+    <page_callback>CRM_Documents_Form_NewVersion</page_callback>
+    <title>Upload new version</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/documents/versions</path>
+    <page_callback>CRM_Documents_Page_Versions</page_callback>
+    <title>View all versions</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
