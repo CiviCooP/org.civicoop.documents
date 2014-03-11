@@ -47,7 +47,7 @@ class CRM_Documents_Entity_DocumentRepository {
     $documents = array();
     
     $dao = new CRM_Documents_DAO_Document();
-    $sql = "SELECT DISTINCT `doc`.`id`, `doc`.*, `doc_contact`.* FROM `civicrm_document` `doc` INNER JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id` WHERE `doc`.`added_by` = %1 OR `doc`.`updated_by` = %1 OR `doc_contact`.`contact_id` = %1";
+    $sql = "SELECT DISTINCT `doc`.`id`, `doc`.* FROM `civicrm_document` `doc` INNER JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id` WHERE `doc`.`added_by` = %1 OR `doc`.`updated_by` = %1 OR `doc_contact`.`contact_id` = %1";
     $docsDao = $dao->executeQuery(
         $sql, array(
           '1' => array($contactId, 'Integer')
@@ -69,6 +69,7 @@ class CRM_Documents_Entity_DocumentRepository {
    * @param CRM_Core_DAO $dao
    */
   protected function loadDocByDao(CRM_Documents_Entity_Document $doc, CRM_Core_DAO $dao) {
+    
     $doc->setId($dao->id);
     $doc->setAddedBy($dao->added_by);
     $doc->setSubject($dao->subject);
@@ -138,7 +139,18 @@ class CRM_Documents_Entity_DocumentRepository {
   }
   
   public function persist(CRM_Documents_Entity_Document $document) {
+    $session = CRM_Core_Session::singleton();
     $dao = new CRM_Documents_DAO_Document();
+    
+    //set the new updated information, if it is a new document
+    if ($document->getId()) {
+      $document->setUpdatedBy($session->get('userID'));
+      $document->setDateUpdated(new DateTime());
+    } else {
+      $document->setAddedBy($session->get('userID'));
+      $document->setDateAdded(new DateTime());
+    }
+    
     $dao->id = $document->getId();
     $dao->subject = $document->getSubject();
     if ($document->getDateAdded()) {

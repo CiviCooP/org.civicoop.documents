@@ -20,6 +20,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   function preProcess() {
     parent::preProcess();
     
+    $session = CRM_Core_Session::singleton();
+    
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->add('hidden', 'id', $this->documentId);
     
@@ -32,7 +34,13 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     
     if ($this->documentId) {
       $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-      $this->document = $documentsRepo->getDocumentById($this->documentId);
+      try {
+        $this->document = $documentsRepo->getDocumentById($this->documentId);
+      } catch (Exception $e) {
+        CRM_Core_Session::setStatus('Error during opening document', '', 'error');
+        $url = $session->popUserContext();
+        CRM_Utils_System::redirect($url);
+      }
     } else {
       $this->document = new CRM_Documents_Entity_Document;
       $this->document->setContactIds(array($this->cid));
