@@ -1,13 +1,15 @@
 {assign var=document_id value=$document->getId()}
+<div class="action-link">
 {if $permission EQ 'edit'}
     {capture assign=newDocumentURL}{crmURL p="civicrm/documents/newversion" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
-    <div class="action-link">
-        <a accesskey="N" href="{$newDocumentURL}" class="button">
-            <span><div class="icon add-icon"></div>{ts}Upload new version{/ts}</span>
-        </a>
-    </div>
-
+    <a accesskey="N" href="{$newDocumentURL}" class="button">
+        <span><div class="icon add-icon"></div>{ts}Upload new version{/ts}</span>
+    </a>
 {/if}
+{if $goBackUrl}
+    <a class="button cancel" href="{$goBackUrl}">{ts}Go back{/ts}</a>
+{/if}
+</div>
 
 <table>
     <thead>

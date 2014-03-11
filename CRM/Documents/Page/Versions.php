@@ -33,12 +33,17 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
     
     $this->assign('document', $this->document);
     
+    //set to url for the back button
+    $session = CRM_Core_Session::singleton();
+    $goBackUrl = $session->readUserContext();
+    $this->assign('goBackUrl', $goBackUrl);
+    
     $this->setUserContext();
   }
   
   protected function setUserContext() {
     $session = CRM_Core_Session::singleton();
-    $userContext = CRM_Utils_System::url('civicrm/contact/view', 'cid='.$this->_contactId.'&selectedChild=contact_documents&reset=1');
+    $userContext = CRM_Utils_System::url('civicrm/contact/versions', 'cid='.$this->_contactId.'&id='&$this->document->getId().'&reset=1');
     $session->pushUserContext($userContext);
   }
 }
