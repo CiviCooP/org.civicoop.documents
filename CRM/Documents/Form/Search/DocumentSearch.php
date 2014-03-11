@@ -39,6 +39,11 @@ class CRM_Documents_Form_Search_DocumentSearch extends CRM_Contact_Form_Search_C
     $form->assign('elements', array('subject'));
     
     CRM_Contact_Form_NewContact::buildQuickForm($form);
+    
+    //push the current context
+    /*$url = CRM_Utils_System::currentPath();
+    $session = CRM_Core_Session::singleton();
+    $session->pushUserContext($url);*/
   }
 
   /**
