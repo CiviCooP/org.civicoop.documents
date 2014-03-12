@@ -329,10 +329,14 @@ class CRM_Documents_Entity_DocumentRepository {
     
     $sql = "INSERT INTO `civicrm_document_case` (`document_id`, `case_id`) VALUES";
     
+    $values = "";
     foreach($document->getCaseIds() as $caseId) {
-      $sql .= " ('".$document->getId()."', '".$caseId."')";
+      if (strlen($values)) {
+        $values .= ", ";
+      }
+      $values .= " ('".$document->getId()."', '".$caseId."')";
     }
-    $sql .= ";";
+    $values .= ";";
     CRM_Core_DAO::executeQuery($sql);
   }
   
