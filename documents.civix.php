@@ -169,7 +169,7 @@ function _documents_civix_civicrm_managed(&$entities) {
     $es = include $file;
     foreach ($es as $e) {
       if (empty($e['module'])) {
-        $e['module'] = 'nl.pum.documents';
+        $e['module'] = 'org.civicoop.documents';
       }
       $entities[] = $e;
     }
@@ -198,7 +198,7 @@ function _documents_civix_civicrm_caseTypes(&$caseTypes) {
       // throw new CRM_Core_Exception($errorMessage);
     }
     $caseTypes[$name] = array(
-      'module' => 'nl.pum.documents',
+      'module' => 'org.civicoop.documents',
       'name' => $name,
       'file' => $file,
     );
