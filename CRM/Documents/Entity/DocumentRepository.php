@@ -126,7 +126,23 @@ class CRM_Documents_Entity_DocumentRepository {
       $doc->addVersion($version);
     }
     
+    $this->loadCases($doc);
+  }
+  
+  /**
+   * Loads case information for this document
+   * 
+   * @param CRM_Documents_Entity_Document $doc
+   */
+  protected function loadCases(CRM_Documents_Entity_Document $doc) {
+    $sql = "SELECT * FROM `civicrm_document_case` WHERE `document_id` = %1";
+    $caseDao = CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($doc->getId(), 'Integer')
+    ));
     
+    while($caseDao->fetch()) {
+      $doc->addCaseId($caseDao->case_id);
+    }
   }
   
   /**
@@ -209,6 +225,9 @@ class CRM_Documents_Entity_DocumentRepository {
     //only persist the current version into the database 
     //because other versions are already persisted
     $this->persistCurrentVersion($document);
+    
+    //persist the linked cases
+    $this->persistCases($document);
 
     //post hook, copy values into array and call post hook
     $params = array();
@@ -228,6 +247,9 @@ class CRM_Documents_Entity_DocumentRepository {
     
       //remove document contacts
       $this->removeContacts($document);
+      
+      //remove cases
+      $this->removeCases($document);
       
       $sql = "DELETE FROM `civicrm_document` WHERE `id` = %1";
       CRM_Core_DAO::executeQuery(
@@ -249,6 +271,13 @@ class CRM_Documents_Entity_DocumentRepository {
     ));
   }
   
+  protected function removeCases(CRM_Documents_Entity_Document $document) {
+    $sql = "DELETE FROM `civicrm_document_case` WHERE `document_id` = %1";
+    CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+    ));
+  }
+  
   protected function removeVersions(CRM_Documents_Entity_Document $document) {
     foreach($document->getVersions() as $version) {
       if ($version->getId()) {
@@ -262,6 +291,22 @@ class CRM_Documents_Entity_DocumentRepository {
         '1' => array($document->getId(), 'Integer')
       ));
     }
+  }
+  
+  protected function persistCases(CRM_Documents_Entity_Document $document) {
+    //update the document_contact table
+    $sql = "DELETE FROM `civicrm_document_case` WHERE `document_id` = %1";
+    CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+    ));
+    
+    $sql = "INSERT INTO `civicrm_document_case` (`document_id`, `case_id`) VALUES";
+    
+    foreach($document->getCaseIds() as $caseId) {
+      $sql .= " ('".$document->getId()."', '".$caseId."')";
+    }
+    $sql .= ";";
+    CRM_Core_DAO::executeQuery($sql);
   }
   
   protected function persistContacts(CRM_Documents_Entity_Document $document) {

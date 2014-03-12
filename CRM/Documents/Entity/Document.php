@@ -47,6 +47,12 @@ class CRM_Documents_Entity_Document {
   
   /**
    *
+   * @var int 
+   */
+  protected $caseIds;
+  
+  /**
+   *
    * @var CRM_Documents_Entity_DocumentFile 
    */
   protected $attachment;
@@ -73,6 +79,7 @@ class CRM_Documents_Entity_Document {
     unset($this->dateUpdated);
     unset($this->updatedBy);
     $this->subject = '';
+    $this->caseIds = array();
     $this->attachment = new CRM_Documents_Entity_DocumentFile();
     $this->versions = array();
   }
@@ -113,6 +120,24 @@ class CRM_Documents_Entity_Document {
   
   public function getAttachment() {
     return $this->attachment;
+  }
+  
+  public function getCaseIds() {
+    return $this->caseIds;
+  }
+  
+  public function setCaseIds($case_ids) {
+    if (is_array($case_ids)) {
+      $this->case_ids = $case_ids;
+    } else {
+      $this->case_ids = explode(",".$case_ids);
+    }
+  }
+  
+  public function addCaseId($caseId) {
+    if (!in_array($caseId, $this->caseIds)) {
+     $this->caseIds[] = $caseId; 
+    }
   }
   
   /**
