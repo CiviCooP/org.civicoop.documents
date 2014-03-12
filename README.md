@@ -1,15 +1,33 @@
-Documenten opslag in CiviCRM voor PUM
-=====================================
+# Document storage in CiviCRM
 
-Documenten opslag in CiviCRM voor PUM
+## Functionality
 
-Het volgende gaat als eerste gerealiseerd worden
+* Store documents on the contact cart
+* A document can be linked to more than one contact
+* Version management with a document
+* Custom search to find documents
 
-1. In de achtergrond activiteitstype Document aanmaken
-2. Op contactpagina een tab met overzicht van alle documenten
-3. Op contactpagina een knop met een nieuw document
+## Technical background
 
-Motivatie
----------
+There is an entity **CRM_Documents_Entity_Document** which contains 
+all the information for a document. E.g. the linked contact ID's. 
+Every document contains one or more **CRM_Documents_Entity_DocumentVersion** 
+for a version of the document. A Document version contains a link to the file
+which is a **civicrm_entity_file** item.
 
-De motivatie hierachter is dat er documenten centraal opgeslagen moeten worden. Zonder dat het te complex wordt en een zwaar document management systeem wordt.
+## Roadmap
+
+### Beta2
+
+* Link documents to cases
+
+### Future (dreaming)
+
+* Add hooks for linking documents to custum entities (e.g. campaigns)
+* Add a connection with ownCloud for interacting with documents
+* Add functionality to work together on a document with the webODF functionality
+
+
+
+
+

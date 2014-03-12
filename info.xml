@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<extension key="nl.pum.documents" type="module">
+<extension key="org.civicoop.documents" type="module">
   <file>documents</file>
   <name>Documenten</name>
   <description>Documenten opslag in CiviCRM voor PUM</description>
