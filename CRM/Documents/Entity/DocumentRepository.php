@@ -273,10 +273,14 @@ class CRM_Documents_Entity_DocumentRepository {
     
     $sql = "INSERT INTO `civicrm_document_contact` (`document_id`, `contact_id`) VALUES";
     
+    $values = "";
     foreach($document->getContactIds() as $contactId) {
-      $sql .= " ('".$document->getId()."', '".$contactId."')";
+      if (strlen($values)) {
+        $values .= ", ";
+      }
+      $values .= " ('".$document->getId()."', '".$contactId."')";
     }
-    $sql .= ";";
+    $sql .= $values.";";
     CRM_Core_DAO::executeQuery($sql);
   }
   

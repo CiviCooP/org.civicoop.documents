@@ -11,6 +11,7 @@
     <thead>
         <tr>
             <th class="ui-state-default">{ts}Subject{/ts}</th>
+            <th class="ui-state-default">{ts}Contacts{/ts}</th>
             <th class="ui-state-default">{ts}Date added{/ts}</th>
             <th class="ui-state-default">{ts}Added by{/ts}</th>
             <th class="ui-state-default">{ts}Date updated{/ts}</th>
@@ -23,6 +24,7 @@
         {foreach from=$documents item=doc}
             <tr class="{cycle values="odd,even"}">
                 <td>{$doc->getSubject()}</td>
+                <td>{$doc->getFormattedContacts()}</td>
                 <td>{$doc->getFormattedDateAdded()}</td>
                 <td>{$doc->getFormattedAddedBy()}</td>
                 <td>{$doc->getFormattedDateUpdated()}</td>

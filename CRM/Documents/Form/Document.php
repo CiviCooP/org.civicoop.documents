@@ -129,7 +129,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     if (isset($values['contact'][1])) {
       $contact_ids = explode(',', $values['contact'][1]);
     }
-    
+
     $this->document->setSubject($this->exportValue('subject'));
     $this->document->setContactIds($contact_ids);
         
