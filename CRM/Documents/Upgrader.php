@@ -7,8 +7,6 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
 
   // By convention, functions that look like "function upgrade_NNNN()" are
   // upgrade tasks. They are executed in order (like Drupal's hook_update_N).
-  
-  protected $activity_type_group_id = false;
 
   /**
    * Install the Document activity (if it doesn't exist already
@@ -62,6 +60,19 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     $this->ctx->log->info('Applying update 1001');
     // this path is relative to the extension base dir
     $this->executeSqlFile('sql/upgrade_1001.sql');
+    return TRUE;
+  } //
+  
+  /**
+   * Example: Run an external SQL script
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_1002() {
+    $this->ctx->log->info('Applying update 1001');
+    // this path is relative to the extension base dir
+    $this->executeSqlFile('sql/upgrade_1002.sql');
     return TRUE;
   } //
 

@@ -126,3 +126,8 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
                      'title' => ts('Documents'),
                      'weight' => 1 );
 }
+
+function documents_civicrm_caseSummary($caseId) {
+  $content = '<h3>Hier komen de documenten</h3>';
+  return array('documents' => array('value' => $content));
+}
