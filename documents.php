@@ -127,7 +127,14 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
                      'weight' => 1 );
 }
 
+/**
+ * Display the documents linked to a case
+ * 
+ * Implementatio of hook_civicrm_caseSummary
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseSummary
+ */
 function documents_civicrm_caseSummary($caseId) {
-  $content = '<h3>Hier komen de documenten</h3>';
+  $page = new CRM_Documents_Page_CaseDocuments($caseId);
+  $content = $page->run();
   return array('documents' => array('value' => $content));
 }
