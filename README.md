@@ -17,9 +17,12 @@ which is a **civicrm_entity_file** item.
 
 ## Roadmap
 
-### Beta2
+### Beta3
 
 * ~~Link documents to cases~~
+* Links to contacts doesn't always seem to work well
+* Store the user context upon search (e.g. for going back on a edit form)
+* Store the user context in the case (e.g. for going back after adding/editing a document in the case context) 
 * Document appears twice in search result when added to more than one contact
 * Removing contact from document when a contact is removed
 * Update a document which is linked to a case when the client of the case are changed
