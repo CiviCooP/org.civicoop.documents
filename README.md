@@ -19,7 +19,15 @@ which is a **civicrm_entity_file** item.
 
 ### Beta2
 
-* Link documents to cases
+* ~~Link documents to cases~~
+* Document appears twice in search result when added to more than one contact
+* Removing contact from document when a contact is removed
+* Update a document which is linked to a case when the client of the case are changed
+* Update a document when a case is removed
+* Add tagging to to a document
+* Search with tags
+* Search with a modified date range
+
 
 ### Future (dreaming)
 
