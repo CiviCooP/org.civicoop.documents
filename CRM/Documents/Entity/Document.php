@@ -140,20 +140,16 @@ class CRM_Documents_Entity_Document {
     }
   }
   
-  /**
-   * Returns a download link (including the <a href> tag
-   * 
-   * @param String $title
-   * @param String $classes
-   * @return String
-   */
-  public function getAttachmentDownloadLink($title='', $classes='') {
-    $t = $this->attachment->cleanname;
-    if (strlen($title)) {
-      $t = $title;
+  public function getCaseIdsFormatted() {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    $return = '';
+    foreach($this->caseIds as $caseId) {
+      if (strlen($return)) {
+        $return .= ', ';
+      }
+      $return .= $formatter->formatCaseId($caseId);
     }
-    var_dump('<a href="'.$this->attachment->url.'" title="'.$this->attachment->cleanname.'" class="'.$classes.'">'.$t.'</a>'); exit();
-    
+    return $return;
   }
   
   

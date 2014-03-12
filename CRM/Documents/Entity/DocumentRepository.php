@@ -336,7 +336,7 @@ class CRM_Documents_Entity_DocumentRepository {
       }
       $values .= " ('".$document->getId()."', '".$caseId."')";
     }
-    $values .= ";";
+    $sql .= $values.";";
     CRM_Core_DAO::executeQuery($sql);
   }
   

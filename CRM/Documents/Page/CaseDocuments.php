@@ -46,7 +46,7 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
   protected function preProcess() {
     //retrieve the client contactId
     
-    $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$this->caseID ));
+    $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$this->caseId ));
     $this->clientId = reset($case['client_id']);
   }
   

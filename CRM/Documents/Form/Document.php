@@ -17,10 +17,15 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   
   protected $_action;
   
+  protected $context;
+  
   function preProcess() {
     parent::preProcess();
     
     $session = CRM_Core_Session::singleton();
+    
+    $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, TRUE, 'contact');
+    $this->add('hidden', 'context', $this->context);
     
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->add('hidden', 'id', $this->documentId);
@@ -43,7 +48,19 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       }
     } else {
       $this->document = new CRM_Documents_Entity_Document;
-      $this->document->setContactIds(array($this->cid));
+      
+      //if it is a case set the caseID and set the clients as contactId's
+      if ($this->context == 'case') {
+        $caseId = CRM_Utils_Request::retrieve('case_id', 'Positive', $this, TRUE); 
+        $this->add('hidden', 'case_id', $caseId);
+        $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$caseId ));
+        $this->document->addCaseid($caseId);
+        $this->document->setContactIds($case['client_id']);
+      } else {
+         //set the contactId
+        $this->document->setContactIds(array($this->cid));
+      }      
+      
     }
     $this->assign('document', $this->document);
     

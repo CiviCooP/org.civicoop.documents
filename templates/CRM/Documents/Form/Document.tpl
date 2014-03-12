@@ -13,6 +13,12 @@
 {else}
 
     <table class="form-layout">
+        {if count($document->getCaseIds())}
+        <tr>
+            <td class="label">{ts}Case(s){/ts}</td>
+            <td>{$document->getCaseIdsFormatted()}</td>
+        </tr>
+        {/if}
         <tr>
             <td class="label">{ts}Contacts{/ts}</td>
             <td>{include file="CRM/Contact/Form/NewContact.tpl" noLabel=true skipBreak=true multiClient=true parent="document" showNewSelect=false}</td>

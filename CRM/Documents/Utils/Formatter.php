@@ -54,6 +54,15 @@ class CRM_Documents_Utils_Formatter {
   }
   
   /**
+   * Formats a caseId to a text (subject of the case)
+   * 
+   * @param type $caseId
+   */
+  public function formatCaseId($caseId) {
+    return CRM_Core_DAO::getFieldValue('CRM_Case_BAO_Case', $caseId, 'subject');
+  }
+  
+  /**
    * Format a date
    * 
    * @param DateTime $date
