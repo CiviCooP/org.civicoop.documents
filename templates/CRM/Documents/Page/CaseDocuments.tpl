@@ -4,7 +4,7 @@
  *}
 
 {if $permission EQ 'edit'}
-    {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`&context=case&case_id=`$caseId`"}{/capture}
+    {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$clientId`&context=case&case_id=`$caseId`"}{/capture}
     <div class="action-link">
         <a accesskey="N" href="{$newDocumentURL}" class="button">
             <span><div class="icon add-icon"></div>{ts}New document{/ts}</span>
@@ -35,7 +35,7 @@
                 <td>{$doc->getFormattedDateUpdated()}</td>
                 <td>{$doc->getFormattedUpdatedBy()}</td>
                 <td>
-                    {include file=CRM/Documents/actionlinks.tpl}
+                    {include file=CRM/Documents/actionlinks.tpl contactId=$clientId}
                 </td>
             </tr>
         {/foreach}

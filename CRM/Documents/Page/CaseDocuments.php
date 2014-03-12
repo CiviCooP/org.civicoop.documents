@@ -9,6 +9,8 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
   
   protected $caseId;
   
+  protected $clientId;
+  
   public function __construct($caseId) {
     parent::__construct();
     
@@ -26,6 +28,7 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     $documents = $documentRepo->getDocumentsByCaseId($this->caseId);
         
     $this->assign('caseId', $this->caseId);
+    $this->assign('clientId', $this->clientId);
     $this->assign('documents', $documents);    
     $this->assign('permission', 'edit');
     
@@ -41,7 +44,10 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
   }
   
   protected function preProcess() {
+    //retrieve the client contactId
     
+    $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$this->caseID ));
+    $this->clientId = reset($case['client_id']);
   }
   
 }
