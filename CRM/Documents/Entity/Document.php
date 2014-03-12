@@ -53,12 +53,6 @@ class CRM_Documents_Entity_Document {
   
   /**
    *
-   * @var CRM_Documents_Entity_DocumentFile 
-   */
-  protected $attachment;
-  
-  /**
-   *
    * @var array of CRM_Documents_Entity_DocumentVersion 
    */
   protected $versions;
@@ -80,7 +74,6 @@ class CRM_Documents_Entity_Document {
     unset($this->updatedBy);
     $this->subject = '';
     $this->caseIds = array();
-    $this->attachment = new CRM_Documents_Entity_DocumentFile();
     $this->versions = array();
   }
   
@@ -112,14 +105,6 @@ class CRM_Documents_Entity_Document {
   
   public function getContactIds() {
     return $this->contactIds;
-  }
-  
-  public function setAttachment(CRM_Documents_Entity_DocumentFile $file) {
-    $this->attachment = $file;
-  }
-  
-  public function getAttachment() {
-    return $this->attachment;
   }
   
   public function getCaseIds() {
