@@ -174,8 +174,8 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
   }
   
   function groupBy() {
-    return "";
-    //return "GROUP BY `doc`.`id`";
+    //return "";
+    return "GROUP BY `doc`.`id`";
   }
 
   /**
@@ -208,7 +208,12 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
    * @access public
    */
   function getTotalCount($action) {
-    return 10;
+    $sql = "SELECT COUNT(DISTINCT `doc`.`id`) as `total` ".$this->from().$this->where();
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    if ($dao->fetch()) {
+      return $dao->total;
+    }
+    return 0;
   }
 
   /**
