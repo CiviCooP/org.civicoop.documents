@@ -20,6 +20,7 @@ which is a **civicrm_entity_file** item.
 ### Beta3
 
 * ~~Link documents to cases~~
+* Search document by case type
 * Links to contacts doesn't always seem to work well
 * Store the user context upon search (e.g. for going back on a edit form)
 * Store the user context in the case (e.g. for going back after adding/editing a document in the case context) 
