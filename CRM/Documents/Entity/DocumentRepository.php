@@ -211,6 +211,8 @@ class CRM_Documents_Entity_DocumentRepository {
     } else {
       $document->setAddedBy($session->get('userID'));
       $document->setDateAdded(new DateTime());
+      $document->setUpdatedBy($session->get('userID'));
+      $document->setDateUpdated(new DateTime());
     }
     
     //copy document into dao

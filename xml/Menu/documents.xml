@@ -24,4 +24,12 @@
     <title>View all versions</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/documents/search</path>
+    <title>Find Documents</title>
+    <page_callback>CRM_Documents_Controller_Search</page_callback>
+    <access_arguments>access CiviCRM</access_arguments>
+    <page_type>1</page_type>
+    <weight>510</weight>
+  </item>
 </menu>
