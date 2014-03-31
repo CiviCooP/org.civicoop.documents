@@ -17,10 +17,8 @@
         <tr>
             <th class="ui-state-default">{ts}Subject{/ts}</th>
             <th class="ui-state-default">{ts}Contacts{/ts}</th>
-            <th class="ui-state-default">{ts}Date added{/ts}</th>
-            <th class="ui-state-default">{ts}Added by{/ts}</th>
-            <th class="ui-state-default">{ts}Date updated{/ts}</th>
-            <th class="ui-state-default">{ts}Updated by{/ts}</th>
+            <th class="ui-state-default">{ts}Date modified{/ts}</th>
+            <th class="ui-state-default">{ts}Modified by{/ts}</th>
             <th class="no-sort ui-state-default"></th>
         </tr>
      </thead>
@@ -30,8 +28,6 @@
             <tr class="{cycle values="odd,even"}">
                 <td>{$doc->getSubject()}</td>
                 <td>{$doc->getFormattedContacts()}</td>
-                <td>{$doc->getFormattedDateAdded()}</td>
-                <td>{$doc->getFormattedAddedBy()}</td>
                 <td>{$doc->getFormattedDateUpdated()}</td>
                 <td>{$doc->getFormattedUpdatedBy()}</td>
                 <td>

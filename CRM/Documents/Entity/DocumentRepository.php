@@ -204,6 +204,17 @@ class CRM_Documents_Entity_DocumentRepository {
     $session = CRM_Core_Session::singleton();
     $dao = new CRM_Documents_DAO_Document();
     
+    /* 
+     * check if document is in use.
+     * If document is not use, don't save it but deleted it
+     */
+    $docstatus = CRM_Documents_Entity_DocumentStatus::singleton();
+    $status = $docstatus->getStatusOfDocument($document);
+    if ($status == CRM_Documents_Entity_DocumentStatus::UNUSED) {
+      $this->remove($document);
+      return; //document is not linked to anything, so don't save it
+    }
+    
     //set the new updated information, if it is a new document
     if ($document->getId()) {
       $document->setUpdatedBy($session->get('userID'));
@@ -338,8 +349,10 @@ class CRM_Documents_Entity_DocumentRepository {
       }
       $values .= " ('".$document->getId()."', '".$caseId."')";
     }
-    $sql .= $values.";";
-    CRM_Core_DAO::executeQuery($sql);
+    if (strlen($values)) {
+      $sql .= $values.";";
+      CRM_Core_DAO::executeQuery($sql);
+    }
   }
   
   protected function persistContacts(CRM_Documents_Entity_Document $document) {

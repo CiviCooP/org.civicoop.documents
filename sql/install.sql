@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_document_contact` (
 
 CREATE TABLE IF NOT EXISTS `civicrm_document_version` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL default '',
   `document_id` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `date_updated` datetime DEFAULT NULL,

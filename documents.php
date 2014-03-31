@@ -138,3 +138,26 @@ function documents_civicrm_caseSummary($caseId) {
   $content = $page->run();
   return array('documents' => array('value' => $content));
 }
+
+
+
+
+
+function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
+  if ($objectName == 'Individual' || $objectName == 'Household' || $objectName == 'Organization') {
+    if ($op == 'delete') {
+      try {
+        $contact = civicrm_api3('Contact', 'getsingle', array('contact_id' => $id, 'is_deleted' => '1'));
+        //contact is in trash so this deletes the contact permanenty
+        $repo = CRM_Documents_Entity_DocumentRepository::singleton();
+        $docs = $repo->getDocumentsByContactId($id);
+        foreach($docs as $doc) {
+          $doc->removeContactId($id);
+          $repo->persist($doc);
+        }
+      } catch (Exception $e) {
+        //contact not found, or contact is in transh
+      }
+    }
+  }
+}

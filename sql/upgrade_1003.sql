@@ -1,0 +1,1 @@
+ALTER TABLE  `civicrm_document_version` CHANGE  `description`  `description` VARCHAR( 255 ) NOT NULL DEFAULT  '';

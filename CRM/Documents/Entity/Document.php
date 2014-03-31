@@ -103,6 +103,12 @@ class CRM_Documents_Entity_Document {
     }
   }
   
+  public function removeContactId($contact_id) {
+    if(($key = array_search($contact_id, $this->contactIds)) !== false) {
+      unset($this->contactIds[$key]);
+    }
+  }
+  
   public function getContactIds() {
     return $this->contactIds;
   }
