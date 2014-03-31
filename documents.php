@@ -86,6 +86,21 @@ function documents_civicrm_managed(&$entities) {
 }
 
 /**
+ * Implementation of hook_civicrm_navigationMenu
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
+ */
+function documents_civicrm_navigationMenu( &$params ) {  
+  $item = array (
+    "name"=> ts('Find documents'),
+    "url"=> "civicrm/documents/search",
+    "permission" => "administer CiviCRM",
+    "weight" => 5,
+  );
+  _documents_civix_insert_navigation_menu($params, "Search...", $item);
+}
+
+/**
  * Implementation of hook_civicrm_caseTypes
  *
  * Generate a list of case-types
