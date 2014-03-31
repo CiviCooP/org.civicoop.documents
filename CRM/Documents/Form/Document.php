@@ -24,7 +24,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     
     $session = CRM_Core_Session::singleton();
     
-    $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, TRUE, 'contact');
+    $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'contact');
     $this->add('hidden', 'context', $this->context);
     
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
