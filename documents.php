@@ -139,10 +139,14 @@ function documents_civicrm_caseSummary($caseId) {
   return array('documents' => array('value' => $content));
 }
 
-
-
-
-
+/**
+ * Removes the contact from a document as soon as a contact is deleted permanently.
+ * 
+ * @param type $op
+ * @param type $objectName
+ * @param type $id
+ * @param type $params
+ */
 function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
   if ($objectName == 'Individual' || $objectName == 'Household' || $objectName == 'Organization') {
     if ($op == 'delete') {
