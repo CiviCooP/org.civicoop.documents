@@ -184,7 +184,7 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
 function documents_civicrm_postSave_civicrm_case($dao) {
   $repo = CRM_Documents_Entity_DocumentRepository::singleton();
   if (!$dao->id) {
-    var_dump($dao->id); exit();
+    return;
   }
   $case = civicrm_api('Case', 'getsingle', array('id' => $dao->id, 'version' => 3));
 
