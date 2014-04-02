@@ -163,12 +163,12 @@ function documents_civicrm_caseSummary($caseId) {
  * @param type $params
  */
 function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
+  $repo = CRM_Documents_Entity_DocumentRepository::singleton();
   if ($objectName == 'Individual' || $objectName == 'Household' || $objectName == 'Organization') {
     if ($op == 'delete') {
       try {
         $contact = civicrm_api3('Contact', 'getsingle', array('contact_id' => $id, 'is_deleted' => '1'));
         //contact is in trash so this deletes the contact permanenty
-        $repo = CRM_Documents_Entity_DocumentRepository::singleton();
         $docs = $repo->getDocumentsByContactId($id);
         foreach($docs as $doc) {
           $doc->removeContactId($id);
@@ -179,4 +179,22 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
       }
     }
   }
+  if ($objectName == 'Case') {
+    if ($op == 'delete') {
+      $case = civicrm_api3('Case', 'getsingle', array('id' => $id));
+      
+      $repo = CRM_Documents_Entity_DocumentRepository::singleton();
+      $docs = $repo->getDocumentsByCaseId($id);
+      foreach($docs as $doc) {
+        foreach($case['client_id'] as $cid) {
+          $doc->removeContactId($cid);
+        }
+        $doc->removeCaseId($id);
+        $repo->persist($doc);
+      }
+    }
+  }
+}
+
+function documents_civicrm_post_case_merge($mainContactId, $mainCaseId = NULL, $otherContactId = NULL, $otherCaseId = NULL, $changeClient = FALSE) { 
 }

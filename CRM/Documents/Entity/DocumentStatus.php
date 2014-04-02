@@ -54,6 +54,7 @@ class CRM_Documents_Entity_DocumentStatus {
       );
     
     $status = CRM_Documents_Entity_DocumentStatus::UNUSED;
+    
     if ($hookStatus == CRM_Documents_Entity_DocumentStatus::USED) {
       $status = CRM_Documents_Entity_DocumentStatus::USED;
     } elseif (count($doc->getContactIds())) {

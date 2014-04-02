@@ -131,6 +131,12 @@ class CRM_Documents_Entity_Document {
     }
   }
   
+  public function removeCaseId($caseId) {
+    if(($key = array_search($caseId, $this->caseIds)) !== false) {
+      unset($this->caseIds[$key]);
+    }
+  }
+  
   public function getCaseIdsFormatted() {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     $return = '';

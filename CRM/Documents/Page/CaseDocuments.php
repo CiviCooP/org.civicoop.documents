@@ -11,6 +11,10 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
   
   protected $clientId;
   
+  protected $context;
+  
+  protected $action;
+  
   public function __construct($caseId) {
     parent::__construct();
     
@@ -48,7 +52,18 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     
     $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$this->caseId ));
     $this->clientId = reset($case['client_id']);
+    
+    $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'home');
+    $this->action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, CRM_Core_Action::VIEW);
+    
+    $this->setUserContext();
   }
   
+  protected function setUserContext() {    
+    $action = CRM_Core_Action::description($this->action);
+    $session = CRM_Core_Session::singleton();
+    $userContext = CRM_Utils_System::url('civicrm/contact/view/case', 'action='.$action.'&cid='.$this->clientId.'&&reset=1&id='.$this->caseId.'&context='.$this->context);
+    $session->pushUserContext($userContext);
+  }
 }
 

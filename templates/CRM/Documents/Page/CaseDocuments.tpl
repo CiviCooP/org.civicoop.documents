@@ -3,6 +3,11 @@
  *
  *}
 
+<div id="case-documents" class="crm-accordion-wrapper collapsed">
+
+<div class="crm-accordion-header">{ts}Documents{/ts}</div>
+
+<div class="crm-accordion-body">
 {if $permission EQ 'edit'}
     {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$clientId`&context=case&case_id=`$caseId`"}{/capture}
     <div class="action-link">
@@ -37,3 +42,15 @@
         {/foreach}
     </tbody>
 </table>
+
+</div>
+</div>
+
+<script type="text/javascript">
+{literal}
+cj(function() {
+    var caseDocs = cj('#case-documents').detach();
+    cj('#view-related-cases').after(caseDocs);
+});
+{/literal}
+</script>

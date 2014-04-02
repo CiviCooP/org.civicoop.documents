@@ -45,7 +45,7 @@ class CRM_Documents_Utils_Formatter {
     if ($contactId) {
       $display_name = CRM_Contact_BAO_Contact::displayName($contactId);
       if ($link) {
-        $return = '<a class="" href="' . CRM_Utils_System::url('civicrm/documents/add', 'reset=1&cid=' . $contactId) . '" >'.$display_name.'</a>';
+        $return = '<a class="" href="' . CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $contactId) . '" >'.$display_name.'</a>';
       } else {
         $return = $display_name;
       }
