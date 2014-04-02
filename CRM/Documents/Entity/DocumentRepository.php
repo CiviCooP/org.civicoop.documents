@@ -371,8 +371,10 @@ class CRM_Documents_Entity_DocumentRepository {
       }
       $values .= " ('".$document->getId()."', '".$contactId."')";
     }
-    $sql .= $values.";";
-    CRM_Core_DAO::executeQuery($sql);
+    if (strlen($values)) {
+      $sql .= $values.";";
+      CRM_Core_DAO::executeQuery($sql);
+    }
   }
   
   protected function persistCurrentVersion(CRM_Documents_Entity_Document $document) {

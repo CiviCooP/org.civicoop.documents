@@ -179,20 +179,27 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
       }
     }
   }
-  if ($objectName == 'Case') {
-    if ($op == 'delete') {
-      $case = civicrm_api3('Case', 'getsingle', array('id' => $id));
-      
-      $repo = CRM_Documents_Entity_DocumentRepository::singleton();
-      $docs = $repo->getDocumentsByCaseId($id);
-      foreach($docs as $doc) {
-        foreach($case['client_id'] as $cid) {
-          $doc->removeContactId($cid);
-        }
-        $doc->removeCaseId($id);
-        $repo->persist($doc);
+}
+
+function documents_civicrm_postSave_civicrm_case($dao) {
+  $repo = CRM_Documents_Entity_DocumentRepository::singleton();
+  if (!$dao->id) {
+    var_dump($dao->id); exit();
+  }
+  $case = civicrm_api('Case', 'getsingle', array('id' => $dao->id, 'version' => 3));
+
+  $docs = $repo->getDocumentsByCaseId($dao->id);
+  foreach($docs as $doc) {
+    //only remove the contacts from the document because the case is never completly deleted
+    //so that we can set the contacts on a restore of a case
+    foreach($case['client_id'] as $cid) {
+      if ($case['is_deleted']) {
+        $doc->removeContactId($cid);
+      } else {
+        $doc->addContactId($cid);
       }
-    }
+    }        
+    $repo->persist($doc);
   }
 }
 
