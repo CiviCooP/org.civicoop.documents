@@ -34,7 +34,7 @@ The following hooks are available in this module
 * ~~Removing contact from document when a contact is removed~~
 * Removing document on a merge of duplicate contacts
 * Update a document which is linked to a case when the client of the case are changed
-* Update a document when a case is removed
+* ~~Update a document when a case is removed~~
 * ~~Search with a modified date range~~
 
 
