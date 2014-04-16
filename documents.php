@@ -203,5 +203,31 @@ function documents_civicrm_postSave_civicrm_case($dao) {
   }
 }
 
+/**
+ * This hook is available through a patch from issue #CRM-14409
+ * 
+ * @link https://issues.civicrm.org/jira/browse/CRM-14409
+ * 
+ * @param type $mainContactId
+ * @param type $mainCaseId
+ * @param type $otherContactId
+ * @param type $otherCaseId
+ * @param type $changeClient
+ */
 function documents_civicrm_post_case_merge($mainContactId, $mainCaseId = NULL, $otherContactId = NULL, $otherCaseId = NULL, $changeClient = FALSE) { 
+  $repo = CRM_Documents_Entity_DocumentRepository::singleton();
+  if (!empty($mainCaseId) && !empty($otherCaseId)) {
+    $docs = $repo->getDocumentsByCaseId($otherCaseId);
+    $case = civicrm_api('Case', 'getsingle', array('id' => $otherCaseId, 'version' => 3));
+    foreach($docs as $doc) {
+      $doc->addCaseId($mainCaseId);
+      if ($changeClient) {
+        $doc->removeCaseId($otherCaseId); //remove the old case
+      }
+      foreach($case['client_id'] as $cid) {
+        $doc->addContactId($cid);
+      }      
+      $repo->persist($doc);
+    }
+  }
 }
