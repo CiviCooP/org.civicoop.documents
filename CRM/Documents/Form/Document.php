@@ -47,7 +47,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
         CRM_Utils_System::redirect($url);
       }
     } else {
-      $this->document = new CRM_Documents_Entity_Document;
+      $this->document = new CRM_Documents_Entity_Document();
       
       //if it is a case set the caseID and set the clients as contactId's
       if ($this->context == 'case') {
