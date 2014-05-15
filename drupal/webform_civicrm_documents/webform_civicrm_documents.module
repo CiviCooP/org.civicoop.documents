@@ -1,0 +1,13 @@
+<?php
+
+require_once 'WebformCiviCRMDocuments.inc';
+
+function webform_civicrm_documents_webform_submission_insert($node, $submission) {
+  $d = new WebformCiviCRMDocuments($node->nid, $submission->sid);
+  $d->saveDocuments();
+}
+
+function webform_civicrm_documents_webform_submission_update($node, $submission) {
+  $d = new WebformCiviCRMDocuments($node->nid, $submission->sid);
+  $d->saveDocuments();
+}

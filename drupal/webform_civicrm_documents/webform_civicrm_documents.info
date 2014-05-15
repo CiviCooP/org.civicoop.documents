@@ -1,0 +1,7 @@
+name = CiviCRM Webform upload to CiviCRM Document
+description = Create documents from CiviCRM Webform uploaded files.
+core = 7.x
+package = CiviCRM
+dependencies[] = civicrm (>=4.4)
+dependencies[] = webform_civicrm (>=4.6)
+dependencies[] = webform (>=4.0-beta1)
