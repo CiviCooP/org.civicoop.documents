@@ -27,10 +27,51 @@ class WebformCiviCRMDocuments {
     }
 
     foreach ($this->node->webform['components'] as $cid => $field) {
-      if ($field['type'] == 'file' && isset($this->submission->data[$cid])) {
-        $this->saveFiles($field['name'], $this->submission->data[$cid]);
+      if ($this->checkComponentForDocument($cid, $field)) {
+        $this->saveFiles($field['name'], $this->submission->data[$cid], $field);
       }
     }
+  }
+  
+  /**
+   * Returns what to do when a document exist
+   * e.g. create a new document or create a new version of the document
+   * 
+   * @param type $component
+   * @return string
+   */
+  protected function getExistingAction($component) {
+    $existing = 'new_version';
+    if (isset($component['extra']['webform_civicrm_documents_existing'])) {
+      if ($component['extra']['webform_civicrm_documents_existing'] == 'new_document') {
+        $existing = 'new_document';
+      }
+    }
+    return $existing;
+  }
+  
+  /**
+   * Returns if this component is a valid field for adding documents to civicrm
+   * 
+   * @param type $cid
+   * @param type $component
+   * @return boolean
+   */
+  protected function checkComponentForDocument($cid, $component) {
+    if ($component['type'] != 'file') {
+      return false;
+    }
+    if (!isset($this->submission->data[$cid])) {
+      return false;
+    }
+    
+    if (!isset($component['extra']['webform_civicrm_documents_enabled'])) {
+      return false;
+    }
+    if (!$component['extra']['webform_civicrm_documents_enabled']) {
+      return false;
+    }
+    return true;
   }
   
   /**
@@ -70,29 +111,29 @@ class WebformCiviCRMDocuments {
     return true;
   }
 
-  protected function saveFiles($subject, $submission) {
+  protected function saveFiles($subject, $submission, $component) {
     if (count($submission) == 1) {
       //single file
       $fid = reset($submission);
-      $this->saveFileAsDocument($fid, $subject);
+      $this->saveFileAsDocument($fid, $subject, $component);
     } elseif (count($submission) > 1) {
       //multiple files
       $i = 1;
       foreach ($submission as $fid) {
-        $this->saveFileAsDocument($fid, $subject.' '.$i);
+        $this->saveFileAsDocument($fid, $subject.' '.$i, $component);
         $i ++;
       }
     }
   }
   
-  protected function saveFileAsDocument($fid, $subject) {
+  protected function saveFileAsDocument($fid, $subject, $component) {
     $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
        
     $file = file_load($fid);
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $filepath = $wrapper->realpath();
         
-    $doc = $this->createDocument($subject);
+    $doc = $this->createDocument($subject, $component);
     $documentsRepo->persist($doc);
     
     CRM_Documents_Utils_File::copyFileToDocument($filepath, $file->filemime, $doc);
@@ -101,8 +142,13 @@ class WebformCiviCRMDocuments {
   /**
    * Returns a new or an existing document
    */
-  protected function createDocument($subject) {
-    $doc = $this->findDocument($subject);
+  protected function createDocument($subject, $component) {
+    $existingAction = $this->getExistingAction($component);
+    if ($existingAction == 'new_document') {
+      $doc = new CRM_Documents_Entity_Document();
+    } else {
+      $doc = $this->findDocument($subject);
+    }
     
     foreach($this->submission->civicrm['contact_id'] as $contact_id) {
       $doc->addContactId($contact_id);

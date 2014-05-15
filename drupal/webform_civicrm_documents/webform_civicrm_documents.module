@@ -11,3 +11,56 @@ function webform_civicrm_documents_webform_submission_update($node, $submission)
   $d = new WebformCiviCRMDocuments($node->nid, $submission->sid);
   $d->saveDocuments();
 }
+
+function webform_civicrm_documents_form_webform_component_edit_form_alter(&$form, &$form_state) {
+  $component = $form_state['build_info']['args'][1];
+  if (!in_array($component['type'], array('file'))) {
+    return;
+  }
+  $form['webform_civicrm_documents'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('CiviCRM Documents'),
+    '#weight' => 10,
+  );
+  $form['webform_civicrm_documents']['enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Save this file as a document in civicrm'),
+    '#description' => t("The file is saved as document in civicrm by its name"),
+    '#default_value' => _webform_civicrm_documents_get_enabled($component),
+  );
+  $form['webform_civicrm_documents']['existing'] = array(
+    '#type' => 'select',
+    '#title' => t('What to do when document already exist'),
+    '#options' => array('new_version' => t('Upload new version'), 'new_document' => t('Create new document')),
+    '#default_value' => _webform_civicrm_documents_get_existing($component),
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="webform_civicrm_documents[enabled]"]' => array('checked' => false),
+      ),
+    ),
+  );
+}
+
+function webform_civicrm_documents_webform_component_presave(&$component) {
+  if (!isset($component['webform_civicrm_documents']['enabled'])) {
+    return;
+  }
+  $component['extra']['webform_civicrm_documents_enabled'] = $component['webform_civicrm_documents']['enabled'] ? true : false;
+  $component['extra']['webform_civicrm_documents_existing'] = $component['webform_civicrm_documents']['existing'];
+}
+
+function _webform_civicrm_documents_get_enabled(array $component) {
+  $enabled = false;
+  if (isset($component['extra']['webform_civicrm_documents_enabled'])) {
+    $enabled = (bool) $component['extra']['webform_civicrm_documents_enabled'];
+  }
+  return $enabled;
+}
+
+function _webform_civicrm_documents_get_existing(array $component) {
+  $existing = false;
+  if (isset($component['extra']['webform_civicrm_documents_existing'])) {
+    $existing = $component['extra']['webform_civicrm_documents_existing'];
+  }
+  return $existing;
+}
