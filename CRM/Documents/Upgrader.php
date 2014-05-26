@@ -88,6 +88,19 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     $this->executeSqlFile('sql/upgrade_1003.sql');
     return TRUE;
   } //
+  
+  /**
+   * Example: Run an external SQL script
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_1004() {
+    $this->ctx->log->info('Applying update 1004');
+    // this path is relative to the extension base dir
+    $this->executeSqlFile('sql/upgrade_1004.sql');
+    return TRUE;
+  } //
 
 
   /**

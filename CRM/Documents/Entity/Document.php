@@ -53,6 +53,21 @@ class CRM_Documents_Entity_Document {
   
   /**
    *
+   * 
+   * @var array of CRM_Documents_Entity_DocumentEntity 
+   */
+  protected $entities;
+  
+  /**
+   *
+   * 
+   * @var array of CRM_Documents_Entity_DocumentEntity 
+   */
+  protected $removedEntities;
+  
+  
+  /**
+   *
    * @var array of CRM_Documents_Entity_DocumentVersion 
    */
   protected $versions;
@@ -75,6 +90,8 @@ class CRM_Documents_Entity_Document {
     $this->subject = '';
     $this->caseIds = array();
     $this->versions = array();
+    $this->entities = array();
+    $this->removedEntities = array();
   }
   
   public function getId() {
@@ -228,6 +245,39 @@ class CRM_Documents_Entity_Document {
   public function getFormattedUpdatedBy($link=TRUE) {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     return $formatter->formatContact($this->getUpdatedBy(), $link);
+  }
+  
+  public function getEntities() {
+    return $this->entities;
+  }
+  
+  public function addNewEntity($entity_table, $entity_id) {
+    $entity = new CRM_Documents_Entity_DocumentEntity($this);
+    $entity->setEntityId($entity_id);
+    $entity->setEntityTable($entity_table);
+    $this->addEntity($entity); 
+  }
+  
+  public function addEntity(CRM_Documents_Entity_DocumentEntity $entity) {
+    foreach($this->entities as $e) {
+      if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
+        return;
+      }
+    }
+    $this->entities[] = $entity;
+  }
+  
+  public function removeEntity(CRM_Documents_DAO_DocumentEntity $entity) {
+    foreach($this->entities as $key => $e) {
+      if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
+        $this->removedEntities[] = $e;
+        unset($this->entities[$key]);
+      }
+    }
+  }
+  
+  public function getRemovedEntities() {
+    return $this->removedEntities;
   }
   
   public function getVersions() {

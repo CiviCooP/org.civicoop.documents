@@ -1,6 +1,6 @@
 <?php
 
-Class CRM_Documents_DAO_Document extends CRM_Core_DAO {
+Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
   
   /**
    * static instance to hold the field values
@@ -23,7 +23,25 @@ Class CRM_Documents_DAO_Document extends CRM_Core_DAO {
    * empty definition for virtual function
    */
   static function getTableName() {
-    return 'civicrm_document';
+    return 'civicrm_document_entity';
+  }
+  
+  /**
+   * return foreign keys and entity references
+   *
+   * @static
+   * @access public
+   * @return array of CRM_Core_EntityReference
+   */
+  static function getReferenceColumns()
+  {
+    if (!self::$_links) {
+      self::$_links = array(
+        new CRM_Core_EntityReference(self::getTableName() , 'document_id', 'civicrm_document', 'id') ,
+        new CRM_Core_EntityReference(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table') ,
+      );
+    }
+    return self::$_links;
   }
   
   /**
@@ -41,33 +59,23 @@ Class CRM_Documents_DAO_Document extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
-        'subject' => array(
-          'name' => 'subject',
+        'document_id' => array(
+          'name' => 'document_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'FKClassName' => 'CRM_Documents_DAO_Document',
+        ) ,
+        'entity_table' => array(
+          'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Subject') ,
+          'title' => ts('Entity Table') ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ) ,
+        'entity_id' => array(
+          'name' => 'entity_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Entity ID') ,
           'required' => true,
-          'maxlength' => 255,
-          'size' => CRM_Utils_Type::HUGE,
-        ) ,
-        'added_by' => array(
-          'name' => 'added_by',
-          'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'date_added' => array(
-          'name' => 'date_added',
-          'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Date Added') ,
-        ) ,
-        'updated_by' => array(
-          'name' => 'updated_by',
-          'type' => CRM_Utils_Type::T_INT,
-          'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ) ,
-        'date_updated' => array(
-          'name' => 'date_updated',
-          'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Date Added') ,
         ) ,
 
       );
@@ -86,11 +94,9 @@ Class CRM_Documents_DAO_Document extends CRM_Core_DAO {
     if (!(self::$_fieldKeys)) {
       self::$_fieldKeys = array(
         'id' => 'id',
-        'subject' => 'subject',
-        'added_by' => 'added_by',
-        'date_added' => 'date_added',
-        'updated_by' => 'updated_by',
-        'date_updated' => 'date_updated',
+        'document_id' => 'document_id',
+        'entity_table' => 'entity_table',
+        'entity_id' => 'entity_id',
       );
     }
     return self::$_fieldKeys;
@@ -106,4 +112,5 @@ Class CRM_Documents_DAO_Document extends CRM_Core_DAO {
   {
     return self::$_log;
   }
+  
 }

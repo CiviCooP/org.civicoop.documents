@@ -11,6 +11,15 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
   static $_fields = null;
   
   /**
+   * static value to see if we should log any modifications to
+   * this table in the civicrm_log table
+   *
+   * @var boolean
+   * @static
+   */
+  static $_log = false;
+  
+  /**
    * empty definition for virtual function
    */
   static function getTableName() {
@@ -84,6 +93,17 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
       );
     }
     return self::$_fieldKeys;
+  }
+  
+  /**
+   * returns if this table needs to be logged
+   *
+   * @access public
+   * @return boolean
+   */
+  function getLog()
+  {
+    return self::$_log;
   }
   
 }

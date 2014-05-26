@@ -212,6 +212,21 @@ class CRM_Documents_Entity_DocumentRepository {
     }
     
     $this->loadCases($doc);
+    
+    //load entities
+    $sql = "SELECT * FROM `civicrm_document_entity` WHERE `document_id` = %1 ORDER BY `entity_table` ASC, `entity_id` ASC";
+    $entityDAO = CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($doc->getId(), 'Integer')
+      ), TRUE, 'CRM_Documents_DAO_DocumentEntity');
+    
+    while($entityDAO->fetch()) {
+      $entity = new CRM_Documents_Entity_DocumentEntity($doc);
+      $entity->setId($entityDAO->id);
+      $entity->setEntityId($entityDAO->entity_id);
+      $entity->setEntityTable($entityDAO->entity_table);
+      
+      $doc->addEntity($entity);
+    }
   }
   
   /**
@@ -324,6 +339,9 @@ class CRM_Documents_Entity_DocumentRepository {
     //because other versions are already persisted
     $this->persistCurrentVersion($document);
     
+    //persist the document entity links (e.g. the links to other civicrm entities).
+    $this->persistEntities($document);
+    
     //persist the linked cases
     $this->persistCases($document);
 
@@ -349,6 +367,9 @@ class CRM_Documents_Entity_DocumentRepository {
       //remove cases
       $this->removeCases($document);
       
+      //remove link to entities
+      $this->removeEntities($document);
+      
       $sql = "DELETE FROM `civicrm_document` WHERE `id` = %1";
       CRM_Core_DAO::executeQuery(
         $sql, array(
@@ -371,6 +392,13 @@ class CRM_Documents_Entity_DocumentRepository {
   
   protected function removeCases(CRM_Documents_Entity_Document $document) {
     $sql = "DELETE FROM `civicrm_document_case` WHERE `document_id` = %1";
+    CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($document->getId(), 'Integer')
+    ));
+  }
+  
+  protected function removeEntities(CRM_Documents_Entity_Document $document) {
+    $sql = "DELETE FROM `civicrm_document_entity` WHERE `document_id` = %1";
     CRM_Core_DAO::executeQuery($sql, array(
         '1' => array($document->getId(), 'Integer')
     ));
@@ -406,6 +434,35 @@ class CRM_Documents_Entity_DocumentRepository {
         $values .= ", ";
       }
       $values .= " ('".$document->getId()."', '".$caseId."')";
+    }
+    if (strlen($values)) {
+      $sql .= $values.";";
+      CRM_Core_DAO::executeQuery($sql);
+    }
+  }
+  
+  protected function persistEntities(CRM_Documents_Entity_Document $document) {
+    $removedIds = array();
+    foreach($document->getRemovedEntities() as $entity) {
+      if ($entity->getId()) {
+        $removedIds[] = $entity->getId();
+      }
+    }
+    if (count($removedIds)) {
+      $sql = "DELETE FROM `civicrm_document_entity` WHERE `id` IN (".implode(", ", $removedIds).");";
+      CRM_Core_DAO::executeQuery($sql);
+    }
+    
+    $sql = "INSERT INTO `civicrm_document_entity` (`document_id`, `entity_id`, `entity_table`) VALUES";
+    
+    $values = "";
+    foreach($document->getEntities() as $entity) {
+      if (!$entity->getId()) {
+        if (strlen($values)) {
+          $values .= ", ";
+        }
+        $values .= " ('".$document->getId()."', '".$entity->getEntityId()."', '".$entity->getEntityTable()."'))"; 
+      }
     }
     if (strlen($values)) {
       $sql .= $values.";";
