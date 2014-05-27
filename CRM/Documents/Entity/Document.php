@@ -264,10 +264,16 @@ class CRM_Documents_Entity_Document {
         return;
       }
     }
+    foreach($this->removedEntities as $e) {
+      if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
+        $this->entities[] = $e;
+        return;
+      }
+    }
     $this->entities[] = $entity;
   }
   
-  public function removeEntity(CRM_Documents_DAO_DocumentEntity $entity) {
+  public function removeEntity(CRM_Documents_Entity_DocumentEntity $entity) {
     foreach($this->entities as $key => $e) {
       if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
         $this->removedEntities[] = $e;

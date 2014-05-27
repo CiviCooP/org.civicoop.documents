@@ -180,8 +180,6 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       return;
     }
     
-    
-    
     $values = $this->controller->exportValues();
     
     $contact_ids = array();
@@ -192,6 +190,39 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
 
     $this->document->setSubject($this->exportValue('subject'));
     $this->document->setContactIds($contact_ids);
+    
+    $entityRefs = CRM_Documents_Utils_EntityRef::singleton();
+    $refs = $entityRefs->getRefs();
+    foreach($refs as $ref) {
+      if (isset($values[$ref->getSystemName()])) {
+        //remove all entities of this type because a new one is submitted
+        foreach($this->document->getEntities() as $entity) {
+          if ($entity->getEntityTable() == $ref->getEntityTableName()) {
+            $this->document->removeEntity($entity);
+          }
+        }
+        
+        if (is_array($values[$ref->getSystemName()])) {
+          foreach($values[$ref->getSystemName()] as $entity_id) {
+            $this->document->addNewEntity($ref->getEntityTableName(), $entity_id);
+          }
+        } else {
+          $this->document->addNewEntity($ref->getEntityTableName(), $values[$ref->getSystemName()]);
+        }
+      }
+    }
+    
+    foreach($this->document->getEntities() as $entity) {
+      $ref = $entityRefs->getRefByTableName($entity->getEntityTable());
+      if ($ref) {
+        //remove all entities from this ref spec
+        if ($ref->isSingleEntity()) {
+          $return[$ref->getSystemName()] = $entity->getEntityId();
+        } else {
+          $return[$ref->getSystemName()][] = $entity->getEntityId();
+        }
+      }
+    }
         
     $params = array(); //used for attachments
     // add attachments as needed

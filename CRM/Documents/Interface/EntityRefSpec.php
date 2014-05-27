@@ -22,6 +22,13 @@ interface CRM_Documents_Interface_EntityRefSpec {
   public function getSystemName();
   
   /**
+   * Returns the object name as used in the pre and post hooks
+   * 
+   * @return string
+   */
+  public function getObjectName();
+  
+  /**
    * Returns the name of the BAO/DAO of this entity
    * E.g. CRM_Case_BAO_Case 
    * 

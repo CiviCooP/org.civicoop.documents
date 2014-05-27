@@ -17,7 +17,7 @@ which is a **civicrm_entity_file** item.
 
 ## Hooks
 
-See [doc/hooks.ms](available hooks) for the documentation of the hooks in this extension
+See [available hooks](doc/hooks.md) for the documentation of the hooks in this extension
 
 ## Roadmap
 

@@ -47,6 +47,15 @@ class CRM_Documents_Utils_EntityRef {
     return false;
   }
   
+  public function getRefByObjectName($objectName) {
+    foreach($this->entity_refs as $ref) {
+      if ($ref->getObjectName() == $objectName) {
+        return $ref;
+      }
+    }
+    return false;
+  }
+  
   protected function loadEntityRefs() {
     unset($this->entity_refs);
     $this->entity_refs = array();

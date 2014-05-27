@@ -179,6 +179,22 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
       }
     }
   }
+  
+  if ($op == 'delete') {
+    $refspec = CRM_Documents_Utils_EntityRef::singleton();
+    $ref = $refspec->getRefByObjectName($objectName);
+    if ($ref) {
+      $documents = $repo->getDocumentsByEntityId($ref->getEntityTableName(), $id);
+      foreach($documents as $doc) {
+        $entity = new CRM_Documents_Entity_DocumentEntity($doc);
+        $entity->setEntityId($id);
+        $entity->setEntityTable($ref->getEntityTableName());
+        $doc->removeEntity($entity);
+        
+        $repo->persist($doc);
+      }
+    }
+  }
 }
 
 function documents_civicrm_postSave_civicrm_case($dao) {
