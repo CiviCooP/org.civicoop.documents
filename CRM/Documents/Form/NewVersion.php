@@ -27,7 +27,7 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->add('hidden', 'id', $this->documentId);
     
-    $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, false, false);
     $this->add('hidden', 'cid', $this->cid);
     
     //retrieve action
@@ -134,7 +134,6 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     
     //save document
     $documentsRepo->persist($this->document);
-      
     CRM_Core_BAO_File::processAttachment($params, 'civicrm_document_version', $version->getId());
     
     parent::postProcess();

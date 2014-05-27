@@ -4,16 +4,24 @@
  *
  * Variables to pass to this template are
  * - $contactId: the id of the contact (current user, or the current viewed contact)
+ * - $entity: optional 
+ * - $entity_id: optional
  * - $doc: the Document
  *}
 
+{if (!isset($entity))}
+    {assign var=entity value=''}
+{/if}
+{if (!isset($entity_id))}
+    {assign var=entity_id value=''}
+{/if}
 
 {assign var=document_id value=$doc->getId()}
 {assign var=version value=$doc->getCurrentVersion()}
 {capture assign=newVersionUrl}{crmURL p="civicrm/documents/newversion" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
-{capture assign=editDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
+{capture assign=editDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`&entity=`$entity`&entity_id=`$entity_id`"}{/capture}
 {capture assign=viewVersionsURL}{crmURL p="civicrm/documents/versions" q="reset=1&cid=`$contactId`&id=`$document_id`"}{/capture}
-{capture assign=delDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=delete&cid=`$contactId`&id=`$document_id`"}{/capture}
+{capture assign=delDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=delete&cid=`$contactId`&id=`$document_id`&entity=`$entity`&entity_id=`$entity_id`"}{/capture}
 {assign var=attachment value=$version->getAttachment()}
 
 {assign var=first value="action-item-first"}

@@ -61,6 +61,8 @@ class CRM_Documents_Entity_DocumentStatus {
       $status = CRM_Documents_Entity_DocumentStatus::USED;
     } elseif (count($doc->getCaseIds())) {
       $status = CRM_Documents_Entity_DocumentStatus::USED;
+    } elseif (count($doc->getEntities())) {
+      $status = CRM_Documents_Entity_DocumentStatus::USED;
     }
     
     return $status;

@@ -19,10 +19,13 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   
   protected $context;
   
+  protected $entity = false;
+  
   function preProcess() {
     parent::preProcess();
     
     $session = CRM_Core_Session::singleton();
+    $entityRefs = CRM_Documents_Utils_EntityRef::singleton();
     
     $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'contact');
     $this->add('hidden', 'context', $this->context);
@@ -30,7 +33,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->add('hidden', 'id', $this->documentId);
     
-    $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
     $this->add('hidden', 'cid', $this->cid);
     
     //retrieve action
@@ -64,6 +67,33 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     }
     $this->assign('document', $this->document);
     
+    $this->entity = false;
+    $entity = CRM_Utils_Request::retrieve('entity', 'String', $this, FALSE);
+    $entity_id = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this, FALSE);
+    $this->add('hidden','entity', $entity);
+    $this->add('hidden','entity_id', $entity_id);
+    $ref = false;
+    if ($entity && $entity_id) {
+      $ref = $entityRefs->getRefBySystemName($entity);
+      if ($ref) {
+        $this->document->addNewEntity($ref->getEntityTableName(), $entity_id);
+      }
+    }
+    
+    //if there is no link to anything not even a contact throw an error
+    if ($ref === false && !$this->cid) {
+      throw new Exception('Could find valid value for cid');
+    }
+    
+    if ($ref) {
+      $active_entities = array(' -- Select '.$ref->getHumanName().' --') + $ref->getActiveEntities();
+      $attributes = array();
+      if (!$ref->isSingleEntity()) {
+        $attributes['multiple'] = 'multiple';
+      }
+      $this->add('select', $ref->getSystemName(), $ref->getHumanName(), $active_entities, false, $attributes);
+    }
+    
     $this->assign('selectedContacts', implode(",", $this->document->getContactIds()));
     
     //Set page title based on action
@@ -72,8 +102,21 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   }
   
   function setDefaultValues() {
-    parent::setDefaultValues();
+    $return = parent::setDefaultValues();
     
+    $entityRefs = CRM_Documents_Utils_EntityRef::singleton();
+    foreach($this->document->getEntities() as $entity) {
+      $ref = $entityRefs->getRefByTableName($entity->getEntityTable());
+      if ($ref) {
+        if ($ref->isSingleEntity()) {
+          $return[$ref->getSystemName()] = $entity->getEntityId();
+        } else {
+          $return[$ref->getSystemName()][] = $entity->getEntityId();
+        }
+      }
+    }
+    
+    return $return;
   }
   
   function buildQuickForm() {

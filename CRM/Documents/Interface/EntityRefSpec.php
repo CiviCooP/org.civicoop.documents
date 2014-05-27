@@ -5,7 +5,7 @@
  * 
  */
 
-interface CRM_Documents_Interface_EntityTable {
+interface CRM_Documents_Interface_EntityRefSpec {
   
   /**
    * Returns the entity table name, e.g. civicrm_case
@@ -13,6 +13,13 @@ interface CRM_Documents_Interface_EntityTable {
    * @return string
    */
   public function getEntityTableName();
+  
+  /**
+   * Returns the system name of an entity e.g. case
+   * 
+   * @return string
+   */
+  public function getSystemName();
   
   /**
    * Returns the name of the BAO/DAO of this entity
@@ -49,5 +56,13 @@ interface CRM_Documents_Interface_EntityTable {
    * @return string
    */
   public function getEntityLabelByEntityId($entity_id);
+  
+  /**
+   * Returns if a document could be linked to one particulair entity e.g. one case at a time
+   * Or returns false when the document could be linked to mutiple entities
+   * 
+   * @return bool
+   */
+  public function isSingleEntity();
 }
 

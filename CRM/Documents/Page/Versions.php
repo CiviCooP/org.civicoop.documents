@@ -24,7 +24,7 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   }
   
   protected function preProcess() {
-    $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, false, false);
     $this->assign('contactId', $this->_contactId);
     
     $docId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);

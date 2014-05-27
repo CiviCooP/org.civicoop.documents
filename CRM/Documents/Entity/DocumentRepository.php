@@ -489,7 +489,7 @@ class CRM_Documents_Entity_DocumentRepository {
         if (strlen($values)) {
           $values .= ", ";
         }
-        $values .= " ('".$document->getId()."', '".$entity->getEntityId()."', '".$entity->getEntityTable()."'))"; 
+        $values .= " ('".$document->getId()."', '".$entity->getEntityId()."', '".$entity->getEntityTable()."')"; 
       }
     }
     if (strlen($values)) {
@@ -509,10 +509,12 @@ class CRM_Documents_Entity_DocumentRepository {
     
     $values = "";
     foreach($document->getContactIds() as $contactId) {
-      if (strlen($values)) {
-        $values .= ", ";
+      if ($contactId) {
+        if (strlen($values)) {
+          $values .= ", ";
+        }
+        $values .= " ('".$document->getId()."', '".$contactId."')";
       }
-      $values .= " ('".$document->getId()."', '".$contactId."')";
     }
     if (strlen($values)) {
       $sql .= $values.";";
