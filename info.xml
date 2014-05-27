@@ -8,8 +8,8 @@
     <author>CiviCooP</author>
     <email>helpdesk@civicoop.org</email>
   </maintainer>
-  <releaseDate>2014-02-25</releaseDate>
-  <version>beta2</version>
+  <releaseDate>2014-05-27</releaseDate>
+  <version>beta5</version>
   <develStage>alpha</develStage>
   <compatibility>
     <ver>4.2</ver>
