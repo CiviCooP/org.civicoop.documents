@@ -148,6 +148,34 @@ class CRM_Documents_Entity_DocumentRepository {
   }
   
   /**
+   * Returns a list with CRM_Documents_Entity_Document
+   * 
+   * When no documents are found an empty array is returns
+   * 
+   * @param int $caseId
+   * @return array
+   */
+  public function getDocumentsByEntityId($entity_table, $entity_id) {
+    $documents = array();
+    
+    $dao = new CRM_Documents_DAO_Document();
+    $sql = "SELECT DISTINCT `doc`.`id`, `doc`.* FROM `civicrm_document` `doc` INNER JOIN `civicrm_document_entity` `doc_entity` ON `doc`.`id` = `doc_entity`.`document_id` WHERE `doc_entity`.`entity_id` = %1 AND `doc_entity`.`entity_table` = %2";
+    $docsDao = $dao->executeQuery(
+        $sql, array(
+          '1' => array($entity_id, 'Integer'),
+          '2' => array($entity_table, 'String'),
+        )
+    );
+    while($docsDao->fetch()) {
+      $doc = new CRM_Documents_Entity_Document();
+      $this->loadDocByDao($doc, $docsDao);
+      $documents[] = $doc;
+    }
+    
+    return $documents;
+  }
+  
+  /**
    * Load a Document entity object from DAO resultset
    * 
    * @param CRM_Documents_Entity_Document $doc
