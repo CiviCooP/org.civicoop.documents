@@ -4,16 +4,16 @@
 
 This hook is called the retrieve the status of a document. A status indicates if a document is (un)used and therefore should be kept or could be deleted
 
-### Spec
+**Spec**
 
     hook_documents_get_status($doc, &$status);
 
-### Parameters
+**Parameters**
 
-- ~$doc~ the document
-- ~$status~ The returned status is 0 (for doc is not in use) or 1 (document is in use).
+- `$doc` the document
+- `$status` The returned status is 0 (for doc is not in use) or 1 (document is in use).
 
-### Return value
+**Return value**
 
 The return value is passed by the parameter status.
 
@@ -21,21 +21,21 @@ The return value is passed by the parameter status.
 
 This hook returns specifications for linking a document to an entity (e.g. a case or an activity etc...)
 
-### Spec
+**Spec**
 
     hook_civicrm_documents_entity_ref_spec();
 
-### Parameters
+**Parameters**
 
 *None*
 
-### Return value
+**Return value**
 
 Returns an array with instances of classes which implements the interface ~CRM_Documents_Interface_EntityRefSpec~
 
-### Example
+**Example**
 
-**Entity ref spec for projects**
+*Entity ref spec for projects*
     
     class CRM_ThreepeasDocuments_ProjectRefSpec implements CRM_Documents_Interface_EntityRefSpec {
 
@@ -80,7 +80,7 @@ Returns an array with instances of classes which implements the interface ~CRM_D
     }
 
 
-**The hook**
+*The hook*
 
     function mymodule_civicrm_documents_entity_ref_spec() {
         return array('project' => new CRM_ThreepeasDocuments_ProjectRefSpec());
