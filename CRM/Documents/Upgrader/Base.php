@@ -39,7 +39,7 @@ class CRM_Documents_Upgrader_Base {
     if (! self::$instance) {
       // FIXME auto-generate
       self::$instance = new CRM_Documents_Upgrader(
-        'nl.pum.documenten',
+        'org.civicoop.documents',
         realpath(__DIR__ .'/../../../')
       );
     }
