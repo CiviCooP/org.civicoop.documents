@@ -51,6 +51,22 @@ class WebformCiviCRMDocuments {
   }
   
   /**
+   * Returns what at which contacts the documents should be saved
+   * 
+   * @param type $component
+   * @return array
+   */
+  protected function getContactsForSave($component) {
+    if (!empty($component['extra']['webform_civicrm_documents_contacts'])) {
+      $return = unserialize($component['extra']['webform_civicrm_documents_contacts']);
+      if (is_array($return)) {
+        return $return;
+      }
+    }
+    return array();
+  }
+  
+  /**
    * Returns if this component is a valid field for adding documents to civicrm
    * 
    * @param type $cid
@@ -58,7 +74,7 @@ class WebformCiviCRMDocuments {
    * @return boolean
    */
   protected function checkComponentForDocument($cid, $component) {
-    if ($component['type'] != 'file') {
+    if ($component['type'] != 'file' && $component['type'] != 'multifile') {
       return false;
     }
     if (!isset($this->submission->data[$cid])) {
@@ -128,7 +144,18 @@ class WebformCiviCRMDocuments {
   
   protected function saveFileAsDocument($fid, $subject, $component) {
     $documentsRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-       
+
+    if (!is_numeric($fid) && is_string(($fid))) {
+      //multifile
+      $i = 1;
+      $fids = unserialize($fid);
+      foreach($fids as $id) {
+        $this->saveFileAsDocument($id, $subject.' '.$i, $component);
+        $i++;
+      }
+      return;
+    }
+    
     $file = file_load($fid);
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $filepath = $wrapper->realpath();
@@ -144,14 +171,18 @@ class WebformCiviCRMDocuments {
    */
   protected function createDocument($subject, $component) {
     $existingAction = $this->getExistingAction($component);
+    $contacts = $this->getContactsForSave($component);
+    
     if ($existingAction == 'new_document') {
       $doc = new CRM_Documents_Entity_Document();
     } else {
       $doc = $this->findDocument($subject);
     }
     
-    foreach($this->submission->civicrm['contact_id'] as $contact_id) {
-      $doc->addContactId($contact_id);
+    foreach ($contacts as $key) {
+      if (isset($this->submission->civicrm['contact_id'][$key])) {
+        $doc->addContactId($this->submission->civicrm['contact_id'][$key]);
+      }
     }
     
     if ($this->caseId) {
