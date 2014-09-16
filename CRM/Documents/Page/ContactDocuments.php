@@ -16,7 +16,11 @@ class CRM_Documents_Page_ContactDocuments extends CRM_Core_Page {
     
     $this->assign('documents', $documents);
     
-    $this->assign('permission', 'edit');
+    $this->assign('permission', 'view');
+    if (CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)) {
+      $this->assign('permission', 'edit');
+    }
+    
     parent::run();
   }
   

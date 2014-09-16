@@ -19,7 +19,10 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
     
     $this->assign('versions', $this->document->getVersions());
     
-    $this->assign('permission', 'edit');
+    $this->assign('permission', 'view');
+    if ($this->_contactId && CRM_Contact_BAO_Contact_Permission::allow(CRM_Core_Permission::EDIT, $this->_contactId)) {
+      $this->assign('permission', 'edit');
+    }
     parent::run();
   }
   

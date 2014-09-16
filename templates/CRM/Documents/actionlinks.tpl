@@ -31,9 +31,15 @@
 {/if}
 <span class="btn-slide">More
 <ul class="panel">
+{if $permission EQ 'edit'}
 <li><a href="{$newVersionUrl}" class="action-item">{ts}Upload new version{/ts}</a></li>
+{/if}
+{if $permission EQ 'edit'}
 <li><a href="{$editDocumentURL}" class="action-item">{ts}Edit{/ts}</a></li>
+{/if}
 <li><a href="{$viewVersionsURL}" class="action-item">{ts}View versions{/ts}</a></li>
+{if $permission EQ 'edit'}
 <li><a href="{$delDocumentURL}" class="action-item">{ts}Delete{/ts}</a></li>
+{/if}
 </ul>
 </span>
