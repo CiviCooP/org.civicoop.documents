@@ -55,6 +55,7 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     
     $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'home');
     $this->action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, CRM_Core_Action::VIEW);
+    $this->assign('context', $this->context);
     
     $this->setUserContext();
   }

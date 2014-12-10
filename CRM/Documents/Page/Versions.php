@@ -9,6 +9,8 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   
   protected $_contactId;
   
+  protected $caseId;
+  
   protected $document;
 
   
@@ -28,7 +30,9 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   
   protected function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, false, false);
+    $this->caseId = CRM_Utils_Request::retrieve('caseId', 'Positive', $this, false, false);
     $this->assign('contactId', $this->_contactId);
+    $this->assign('caseId', $this->caseId);
     
     $docId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
@@ -46,7 +50,13 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   
   protected function setUserContext() {
     $session = CRM_Core_Session::singleton();
-    $userContext = CRM_Utils_System::url('civicrm/contact/versions', 'cid='.$this->_contactId.'&id='&$this->document->getId().'&reset=1');
+    if ($this->caseId) {
+      $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'home');
+      $action = CRM_Core_Action::description(CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, CRM_Core_Action::VIEW));
+      $userContext = CRM_Utils_System::url('civicrm/contact/view/case', 'action='.$action.'&cid='.$this->_contactId.'&reset=1&id='.$this->caseId.'&context='.$context);
+    } else {
+      $userContext = CRM_Utils_System::url('civicrm/contact/versions', 'cid='.$this->_contactId.'&id='&$this->document->getId().'&reset=1');
+    }
     $session->pushUserContext($userContext);
   }
 }

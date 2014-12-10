@@ -20,7 +20,11 @@
 {assign var=version value=$doc->getCurrentVersion()}
 {capture assign=newVersionUrl}{crmURL p="civicrm/documents/newversion" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
 {capture assign=editDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`&entity=`$entity`&entity_id=`$entity_id`"}{/capture}
-{capture assign=viewVersionsURL}{crmURL p="civicrm/documents/versions" q="reset=1&cid=`$contactId`&id=`$document_id`"}{/capture}
+{if $caseId}
+    {capture assign=viewVersionsURL}{crmURL p="civicrm/documents/versions" q="reset=1&cid=`$contactId`&id=`$document_id`&caseId=`$caseId`&action=view&context=`$context`"}{/capture}
+{else}
+    {capture assign=viewVersionsURL}{crmURL p="civicrm/documents/versions" q="reset=1&cid=`$contactId`&id=`$document_id`"}{/capture}
+{/if}
 {capture assign=delDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=delete&cid=`$contactId`&id=`$document_id`&entity=`$entity`&entity_id=`$entity_id`"}{/capture}
 {assign var=attachment value=$version->getAttachment()}
 
