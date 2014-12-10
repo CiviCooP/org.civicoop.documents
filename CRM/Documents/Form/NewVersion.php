@@ -80,7 +80,7 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     $this->addCheckBox(
         'replaceCurrent', 
         ts('Replace current version'), 
-        array(ts('Replace current version') => '1')
+        array('' => '1')
     );
     
     $this->addButtons(array(
