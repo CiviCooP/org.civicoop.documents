@@ -8,8 +8,12 @@ class views_handler_field_document extends views_handler_field_numeric {
     }
 
     function query() {
-        $this->ensure_my_table();
-        $this->add_additional_fields();
+        if ($this->real_field == 'id') {
+            parent::query();
+        } else {
+            $this->ensure_my_table();
+            $this->add_additional_fields();
+        }
     }
 
     function option_definition() {
