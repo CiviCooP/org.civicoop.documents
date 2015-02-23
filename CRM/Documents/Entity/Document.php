@@ -290,6 +290,15 @@ class CRM_Documents_Entity_Document {
     ksort($this->versions);
     return $this->versions;
   }
+
+  public function getVersionByVersionId($versionId) {
+    foreach($this->versions as $version) {
+      if ($version->getId() == $versionId) {
+        return $version;
+      }
+    }
+    return false;
+  }
   
   public function addVersion(CRM_Documents_Entity_DocumentVersion $version) {
     $vid = $version->getVersion();

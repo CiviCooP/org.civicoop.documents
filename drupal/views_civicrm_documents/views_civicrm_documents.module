@@ -1,0 +1,336 @@
+<?php
+
+function views_civicrm_documents_views_api() {
+    return array('api' => 3.0);
+}
+
+function views_civicrm_documents_views_data() {
+    $data = array();
+
+    $data['civicrm_document']['table']['group'] = t('CiviCRM Document');
+    $data['civicrm_document']['table']['base'] = array(
+        'field' => 'id', // This is the identifier field for the view.
+        'title' => t('CiviCRM Document'),
+        'help' => t('CiviCRM Document'),
+        'weight' => -10,
+    );
+
+    $data['civicrm_document']['table']['join']['added_by'] = array(
+        'left_table' => 'civicrm_contact',
+        'left_field' => 'id',
+        'field' => 'added_by',
+    );
+
+    $data['civicrm_document']['table']['join']['updated_by'] = array(
+        'left_table' => 'civicrm_contact',
+        'left_field' => 'id',
+        'field' => 'updated_by',
+    );
+
+    $data['civicrm_document']['id'] = array(
+        'title' => t('Document ID'),
+        'field' => array(
+            'handler' => 'views_handler_field_document',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+    );
+
+    $data['civicrm_document']['subject'] = array(
+        'title' => t('Subject'),
+        'field' => array(
+            'handler' => 'views_handler_field',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_string',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_string',
+        ),
+    );
+
+    $data['civicrm_document']['added_by'] = array(
+        'title' => t('Added by'),
+        'relationship' => array(
+            'base' => 'civicrm_contact',
+            'left_field' => 'id',
+            'field' => 'added_by',
+            'handler' => 'views_handler_relationship',
+            'label' => t('CiviCRM Contact, with custom fields'),
+        ),
+    );
+
+    $data['civicrm_document']['date_added'] = array(
+        'title' => t('Date added'),
+        'field' => array(
+            'handler' => 'civicrm_handler_field_datetime',
+            'click sortable' => TRUE,
+        ),
+        'filter' => array(
+            'handler' => 'civicrm_handler_filter_datetime',
+            'is date' => TRUE,
+        ),
+        'sort' => array(
+            'handler' => 'civicrm_handler_sort_date',
+        ),
+    );
+
+    $data['civicrm_document']['updated_by'] = array(
+        'title' => t('Updated by'),
+        'relationship' => array(
+            'base' => 'civicrm_contact',
+            'left_field' => 'id',
+            'field' => 'updated_by',
+            'handler' => 'views_handler_relationship',
+            'label' => t('CiviCRM Contact, with custom fields'),
+        ),
+    );
+
+    $data['civicrm_document']['date_updated'] = array(
+        'title' => t('Date updated'),
+        'field' => array(
+            'handler' => 'civicrm_handler_field_datetime',
+            'click sortable' => TRUE,
+        ),
+        'filter' => array(
+            'handler' => 'civicrm_handler_filter_datetime',
+            'is date' => TRUE,
+        ),
+        'sort' => array(
+            'handler' => 'civicrm_handler_sort_date',
+        ),
+    );
+
+    $data['civicrm_document']['download_link'] = array(
+        'title' => t('Document Download link'),
+        'field' => array(
+            'handler' => 'views_handler_field_document',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+    );
+
+
+    $data['civicrm_document_contact']['table']['group'] = t('CiviCRM Document contact');
+    $data['civicrm_document_contact']['table']['base'] = array(
+        'field' => 'id', // This is the identifier field for the view.
+        'title' => t('CiviCRM Document contact'),
+        'help' => t('CiviCRM Document contact'),
+        'weight' => -10,
+    );
+    $data['civicrm_document_contact']['table']['join'] = array(
+        'civicrm_contact' => array(
+            'left_field' => 'id',
+            'field' => 'contact_id',
+        ),
+        'civicrm_document' => array(
+            'left_field' => 'id',
+            'field' => 'document_id',
+        ),
+    );
+    $data['civicrm_document_contact']['contact_id'] = array(
+        'title' => t('Contact ID of document contact'),
+        'help' => t('Contact ID of document contact'),
+
+        // Define a relationship to the {node} table, so example_table views can
+        // add a relationship to nodes. If you want to define a relationship the
+        // other direction, use hook_views_data_alter(), or use the 'implicit' join
+        // method described above.
+        'relationship' => array(
+            'base' => 'civicrm_contact', // The name of the table to join with.
+            'base field' => 'id', // The name of the field on the joined table.
+            'handler' => 'views_handler_relationship',
+            'label' => t('Contact ID of document contact'),
+            'title' => t('Contact ID of document contact'),
+        ),
+    );
+
+    $data['civicrm_document_contact']['document_id'] = array(
+        'title' => t('Document ID of document contact'),
+        'help' => t('Document ID of document contact'),
+
+        'field' => array(
+            'handler' => 'views_handler_field_numeric',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+
+        // Define a relationship to the {node} table, so example_table views can
+        // add a relationship to nodes. If you want to define a relationship the
+        // other direction, use hook_views_data_alter(), or use the 'implicit' join
+        // method described above.
+        'relationship' => array(
+            'base' => 'civicrm_document', // The name of the table to join with.
+            'base field' => 'id', // The name of the field on the joined table.
+            'handler' => 'views_handler_relationship',
+            'label' => t('Document ID of document contact'),
+            'title' => t('Document ID of document contact'),
+        ),
+    );
+
+    $data['civicrm_document_version']['table']['group'] = t('CiviCRM Document versions');
+    $data['civicrm_document_version']['table']['base'] = array(
+        'field' => 'id', // This is the identifier field for the view.
+        'title' => t('CiviCRM Document versions'),
+        'help' => t('CiviCRM Document versions'),
+        'weight' => -10,
+    );
+    $data['civicrm_document_version']['table']['join'] = array(
+        'civicrm_document' => array(
+            'left_field' => 'id',
+            'field' => 'document_id',
+        ),
+    );
+
+    $data['civicrm_document_version']['table']['join']['updated_by'] = array(
+        'left_table' => 'civicrm_contact',
+        'left_field' => 'id',
+        'field' => 'updated_by',
+    );
+
+    $data['civicrm_document_version']['id'] = array(
+        'title' => t('Document version ID'),
+        'field' => array(
+            'handler' => 'views_handler_field_document_version',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+    );
+
+    $data['civicrm_document_version']['document_id'] = array(
+        'title' => t('Document ID'),
+        'field' => array(
+            'handler' => 'views_handler_field_numeric',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+        'relationship' => array(
+            'base' => 'civicrm_document', // The name of the table to join with.
+            'base field' => 'id', // The name of the field on the joined table.
+            'handler' => 'views_handler_relationship',
+            'label' => t('Document ID of document contact'),
+            'title' => t('Document ID of document contact'),
+        ),
+    );
+
+    $data['civicrm_document_version']['description'] = array(
+        'title' => t('Description'),
+        'field' => array(
+            'handler' => 'views_handler_field',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_string',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_string',
+        ),
+    );
+
+    $data['civicrm_document_version']['updated_by'] = array(
+        'title' => t('Updated by'),
+        'relationship' => array(
+            'base' => 'civicrm_contact',
+            'left_field' => 'id',
+            'field' => 'updated_by',
+            'handler' => 'views_handler_relationship',
+            'label' => t('CiviCRM Contact, with custom fields'),
+        ),
+    );
+
+    $data['civicrm_document_version']['date_updated'] = array(
+        'title' => t('Date updated'),
+        'field' => array(
+            'handler' => 'civicrm_handler_field_datetime',
+            'click sortable' => TRUE,
+        ),
+        'filter' => array(
+            'handler' => 'civicrm_handler_filter_datetime',
+            'is date' => TRUE,
+        ),
+        'sort' => array(
+            'handler' => 'civicrm_handler_sort_date',
+        ),
+    );
+
+    $data['civicrm_document_version']['version'] = array(
+        'title' => t('Document version number'),
+        'field' => array(
+            'handler' => 'views_handler_field_numeric',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+    );
+
+    $data['civicrm_document_version']['download_link'] = array(
+        'title' => t('Document version Download link'),
+        'field' => array(
+            'handler' => 'views_handler_field_document_version',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+    );
+
+
+    return $data;
+}
+
+
+function views_civicrm_documents_enable() {
+    $maxWeight = db_query("SELECT MAX(weight) FROM {system} where type = 'module' AND (name = 'civicrm' OR  name = 'views') ")->fetchField();
+    $maxWeight++;
+
+    //make sure that our module has a higher weight than the civicrm and civicrm_entity module
+    //if not our changes to the available fields for views wont occur
+    //because the hook should be runned after the civicrm and civcirm_entity has runned their relevant hooks
+    db_update('system')
+        ->fields(array('weight' => $maxWeight))
+        ->condition('type', 'module')
+        ->condition('name', 'pum_civicrm_views')
+        ->execute();
+}

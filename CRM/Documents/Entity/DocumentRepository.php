@@ -25,7 +25,7 @@ class CRM_Documents_Entity_DocumentRepository {
   /**
    * Constructor and getter for the singleton instance
    *
-   * @return instance of $config->userHookClass
+   * @return CRM_Documents_Entity_DocumentRepository
    */
   static function singleton($fresh = FALSE) {
     if (self::$_singleton == NULL || $fresh) {
@@ -145,6 +145,11 @@ class CRM_Documents_Entity_DocumentRepository {
     }
     
     return $documents;
+  }
+
+  public function getDocumentByVersionId($versionId) {
+    $doc_id = CRM_Core_DAO::singleValueQuery("SELECT `document_id` FROM `civicrm_document_version` WHERE `id` = %1", array(1 => array($versionId, 'Integer')));
+    return $this->getDocumentById($doc_id);
   }
   
   /**
