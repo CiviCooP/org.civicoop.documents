@@ -187,6 +187,71 @@ function views_civicrm_documents_views_data() {
         ),
     );
 
+    $data['civicrm_document_case']['table']['group'] = t('CiviCRM Document case');
+    $data['civicrm_document_case']['table']['base'] = array(
+        'field' => 'id', // This is the identifier field for the view.
+        'title' => t('CiviCRM Document case'),
+        'help' => t('CiviCRM Document case'),
+        'weight' => -10,
+    );
+    $data['civicrm_document_case']['table']['join'] = array(
+        'civicrm_case' => array(
+            'left_field' => 'id',
+            'field' => 'case_id',
+        ),
+        'civicrm_document' => array(
+            'left_field' => 'id',
+            'field' => 'document_id',
+        ),
+    );
+    $data['civicrm_document_case']['case_id'] = array(
+        'title' => t('Case ID of document case'),
+        'help' => t('Case ID of document case'),
+
+        // Define a relationship to the {node} table, so example_table views can
+        // add a relationship to nodes. If you want to define a relationship the
+        // other direction, use hook_views_data_alter(), or use the 'implicit' join
+        // method described above.
+        'relationship' => array(
+            'base' => 'civicrm_case', // The name of the table to join with.
+            'base field' => 'id', // The name of the field on the joined table.
+            'handler' => 'views_handler_relationship',
+            'label' => t('Case ID of document case'),
+            'title' => t('Case ID of document case'),
+        ),
+    );
+
+    $data['civicrm_document_case']['document_id'] = array(
+        'title' => t('Document ID of document case'),
+        'help' => t('Document ID of document case'),
+
+        'field' => array(
+            'handler' => 'views_handler_field_numeric',
+            'click sortable' => TRUE, // This is use by the table display plugin.
+        ),
+        'sort' => array(
+            'handler' => 'views_handler_sort',
+        ),
+        'filter' => array(
+            'handler' => 'views_handler_filter_numeric',
+        ),
+        'argument' => array(
+            'handler' => 'views_handler_argument_numeric',
+        ),
+
+        // Define a relationship to the {node} table, so example_table views can
+        // add a relationship to nodes. If you want to define a relationship the
+        // other direction, use hook_views_data_alter(), or use the 'implicit' join
+        // method described above.
+        'relationship' => array(
+            'base' => 'civicrm_document', // The name of the table to join with.
+            'base field' => 'id', // The name of the field on the joined table.
+            'handler' => 'views_handler_relationship',
+            'label' => t('Document ID of document contact'),
+            'title' => t('Document ID of document contact'),
+        ),
+    );
+
     $data['civicrm_document_version']['table']['group'] = t('CiviCRM Document versions');
     $data['civicrm_document_version']['table']['base'] = array(
         'field' => 'id', // This is the identifier field for the view.
