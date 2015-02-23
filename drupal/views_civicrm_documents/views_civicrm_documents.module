@@ -4,6 +4,22 @@ function views_civicrm_documents_views_api() {
     return array('api' => 3.0);
 }
 
+function views_civicrm_documents_views_default_views() {
+    $files = file_scan_directory(drupal_get_path('module', 'views_civicrm_documents'). '/views', '/.inc/');
+    foreach ($files as $filepath => $file) {
+        try {
+            require $filepath;
+            if (isset($view)) {
+                $views[$view->name] = $view;
+            }
+        } catch (Exception $e) {
+            //do nothing
+        }
+    }
+    return $views;
+}
+
+
 function views_civicrm_documents_views_data() {
     $data = array();
 
