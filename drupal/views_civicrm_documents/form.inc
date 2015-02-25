@@ -35,11 +35,13 @@ function views_civicrm_documents_new_case_document($form, &$form_state, $case_id
 function views_civicrm_documents_new_case_document_submit($form, &$form_state) {
     civicrm_initialize();
     $case_id = $form_state['values']['case_id'];
+    $case = civicrm_api3('Case', 'getsingle', array("case_id"=>$case_id ));
 
     $repository = CRM_Documents_Entity_DocumentRepository::singleton();
     $document = new CRM_Documents_Entity_Document();
     $document->setSubject($form_state['values']['subject']);
-    $document->setCaseIds(array($case_id));
+    $document->addCaseid($case_id);
+    $document->setContactIds($case['client_id']);
     $version = $document->getCurrentVersion();
     $version->setDescription($form_state['values']['subject']);
     $repository->persist($document);

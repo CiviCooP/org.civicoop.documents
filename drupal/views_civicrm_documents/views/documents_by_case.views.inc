@@ -96,7 +96,7 @@ $handler->display->display_options['header']['area']['id'] = 'area';
 $handler->display->display_options['header']['area']['table'] = 'views';
 $handler->display->display_options['header']['area']['field'] = 'area';
 $handler->display->display_options['header']['area']['empty'] = TRUE;
-$handler->display->display_options['header']['area']['content'] = '<a href="/case-documents/new-document/!1" class="button">Add new document</a>';
+$handler->display->display_options['header']['area']['content'] = '<a href="/case-documents/new-document/!1?destination=/case-documents/!1" class="button">Add new document</a>';
 $handler->display->display_options['header']['area']['format'] = 'filtered_html';
 $handler->display->display_options['header']['area']['tokenize'] = TRUE;
 /* Relationship: CiviCRM Document contact: Contact ID of document contact */
@@ -172,7 +172,7 @@ $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
 $handler->display->display_options['fields']['nothing']['label'] = 'Versions';
 $handler->display->display_options['fields']['nothing']['alter']['text'] = 'View versions';
 $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
-$handler->display->display_options['fields']['nothing']['alter']['path'] = 'documents/versions/[id]';
+$handler->display->display_options['fields']['nothing']['alter']['path'] = 'case-documents/versions/[id]/!1';
 $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
 /* Contextual filter: CiviCRM Cases: Case ID */
 $handler->display->display_options['arguments']['id']['id'] = 'id';

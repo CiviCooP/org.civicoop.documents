@@ -16,7 +16,7 @@ function views_civicrm_documents_menu() {
         'title' => 'Upload new document', //page title
         'description' => '',
         'page callback' => 'drupal_get_form', //this is the function that will be called when the page is accessed.  for a form, use drupal_get_form
-        'page arguments' => array('views_civicrm_documents_new_document', 2), //put the name of the form here
+        'page arguments' => array('views_civicrm_documents_new_case_document', 2), //put the name of the form here
         'access callback' => '_views_civicrm_documents_user_has_role',
         'access arguments' => array(array('authenticated user')), // arg 1 loads the user, arg 2 is the role name
     );
