@@ -12,6 +12,14 @@ function views_civicrm_documents_menu() {
         'access callback' => '_views_civicrm_documents_user_has_role',
         'access arguments' => array(array('authenticated user')), // arg 1 loads the user, arg 2 is the role name
     );
+    $items['case-documents/new-document/%'] = array( //this creates a URL that will call this form at "examples/form-example"
+        'title' => 'Upload new document', //page title
+        'description' => '',
+        'page callback' => 'drupal_get_form', //this is the function that will be called when the page is accessed.  for a form, use drupal_get_form
+        'page arguments' => array('views_civicrm_documents_new_document', 2), //put the name of the form here
+        'access callback' => '_views_civicrm_documents_user_has_role',
+        'access arguments' => array(array('authenticated user')), // arg 1 loads the user, arg 2 is the role name
+    );
     return $items;
 }
 

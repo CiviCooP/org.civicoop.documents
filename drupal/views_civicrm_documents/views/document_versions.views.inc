@@ -60,6 +60,14 @@ $handler->display->display_options['style_options']['info'] = array(
         'empty_column' => 0,
     ),
 );
+/* Header: Global: Text area */
+$handler->display->display_options['header']['area']['id'] = 'area';
+$handler->display->display_options['header']['area']['table'] = 'views';
+$handler->display->display_options['header']['area']['field'] = 'area';
+$handler->display->display_options['header']['area']['empty'] = TRUE;
+$handler->display->display_options['header']['area']['content'] = '<a href="/documents/new-version/!1" class="button">Add new version</a>';
+$handler->display->display_options['header']['area']['format'] = 'filtered_html';
+$handler->display->display_options['header']['area']['tokenize'] = TRUE;
 /* Relationship: CiviCRM Document versions: Updated by */
 $handler->display->display_options['relationships']['updated_by']['id'] = 'updated_by';
 $handler->display->display_options['relationships']['updated_by']['table'] = 'civicrm_document_version';
