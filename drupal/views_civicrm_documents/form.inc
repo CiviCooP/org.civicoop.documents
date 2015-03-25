@@ -15,8 +15,7 @@ function views_civicrm_documents_new_case_document($form, &$form_state, $case_id
     );
 
     $form['upload'] = array(
-        '#type' => 'managed_file',
-        '#required' => true,
+        '#type' => 'file',
         '#title' => t('File'),
     );
 
@@ -25,11 +24,24 @@ function views_civicrm_documents_new_case_document($form, &$form_state, $case_id
         '#value' => t('Save'),
     );
 
+    $form['#validate'] = array(
+      'views_civicrm_documents_new_case_document_validate'
+    );
+
     $form_state['redirect'] = array(
         array('query' => drupal_get_destination()),
     );
 
     return $form;
+}
+
+function views_civicrm_documents_new_case_document_validate($form, &$form_state) {
+  $file = file_save_upload('upload');
+  if ($file) {
+    $form_state['upload']['file'] = $file;
+  } else {
+    form_set_error('upload', 'You should upload a document');
+  }
 }
 
 function views_civicrm_documents_new_case_document_submit($form, &$form_state) {
@@ -46,7 +58,8 @@ function views_civicrm_documents_new_case_document_submit($form, &$form_state) {
     $version->setDescription($form_state['values']['subject']);
     $repository->persist($document);
     //save file upload
-    $file = file_load($form_state['values']['upload']);
+    //$file = file_load($form_state['values']['upload']);
+    $file = $form_state['upload']['file'];
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $filepath = $wrapper->realpath();
     CRM_Documents_Utils_File::copyFileToDocument($filepath, $file->filemime, $document);
@@ -67,8 +80,7 @@ function views_civicrm_documents_new_version($form, &$form_state, $document_id) 
     );
 
     $form['upload'] = array(
-        '#type' => 'managed_file',
-        '#required' => true,
+        '#type' => 'file',
         '#title' => t('File'),
     );
 
@@ -77,11 +89,24 @@ function views_civicrm_documents_new_version($form, &$form_state, $document_id) 
         '#value' => t('Save'),
     );
 
+    $form['#validate'] = array(
+      'views_civicrm_documents_new_version_validate'
+    );
+
     $form_state['redirect'] = array(
         array('query' => drupal_get_destination()),
     );
 
     return $form;
+}
+
+function views_civicrm_documents_new_version_validate($form, &$form_state) {
+  $file = file_save_upload('upload');
+  if ($file) {
+    $form_state['upload']['file'] = $file;
+  } else {
+    form_set_error('upload', 'You should upload a document');
+  }
 }
 
 function views_civicrm_documents_new_version_submit($form, &$form_state) {
@@ -94,7 +119,7 @@ function views_civicrm_documents_new_version_submit($form, &$form_state) {
     $version->setDescription($form_state['values']['description']);
     $repository->persist($document);
     //save file upload
-    $file = file_load($form_state['values']['upload']);
+    $file = $form_state['upload']['file'];
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $filepath = $wrapper->realpath();
     CRM_Documents_Utils_File::copyFileToDocument($filepath, $file->filemime, $document);
