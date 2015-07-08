@@ -12,7 +12,7 @@ class CRM_Documents_Page_ContactDocuments extends CRM_Core_Page {
     CRM_Utils_System::setTitle(ts('Documents'));
     
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-    $documents = $documentRepo->getDocumentsByContactId($this->_contactId);
+    $documents = $documentRepo->getDocumentsByContactId($this->_contactId, false);
     
     $this->assign('documents', $documents);
     

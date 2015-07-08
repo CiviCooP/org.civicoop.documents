@@ -64,7 +64,7 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
       );
     }
     
-    $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+    $selector = new CRM_Documents_Selector_Search($this->_queryParams,
       $this->_action,
       NULL,
       $this->_limit,

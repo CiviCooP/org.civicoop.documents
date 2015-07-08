@@ -41,13 +41,21 @@ class CRM_Documents_Entity_DocumentRepository {
    * When no documents are found an empty array is returns
    * 
    * @param int $contactId
+   * @param bool $includeEditted include documents which are editted by the user
    * @return array
    */
-  public function getDocumentsByContactId($contactId) {
+  public function getDocumentsByContactId($contactId, $includeEditted=true) {
     $documents = array();
     
     $dao = new CRM_Documents_DAO_Document();
-    $sql = "SELECT DISTINCT `doc`.`id`, `doc`.* FROM `civicrm_document` `doc` INNER JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id` WHERE `doc`.`added_by` = %1 OR `doc`.`updated_by` = %1 OR `doc_contact`.`contact_id` = %1";
+    $sql = "SELECT DISTINCT `doc`.`id`, `doc`.*
+            FROM `civicrm_document` `doc`
+            INNER JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id`
+            WHERE `doc_contact`.`contact_id` = %1";
+    if ($includeEditted) {
+      $sql .= " OR `doc`.`added_by` = %1 OR `doc`.`updated_by` = %1";
+    }
+
     $docsDao = $dao->executeQuery(
         $sql, array(
           '1' => array($contactId, 'Integer')
