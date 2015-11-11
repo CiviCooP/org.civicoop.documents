@@ -133,7 +133,7 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
     
     //Count number of documents
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-    $DocumentCount = count($documentRepo->getDocumentsByContactId($contactID));
+    $DocumentCount = count($documentRepo->getDocumentsByContactId($contactID, false));
     
     $tabs[] = array( 'id'    => 'contact_documents',
                      'url'   => $url,
