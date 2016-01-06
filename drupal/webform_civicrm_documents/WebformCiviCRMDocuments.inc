@@ -111,7 +111,7 @@ class WebformCiviCRMDocuments {
       return false;
     }
     
-    if (count($this->submission->civicrm['contact_id']) == 0 && count($this->submission->civicrm['contact']) == 0) {
+    if ( (isset($this->submission->civicrm['contact_id']) && count($this->submission->civicrm['contact_id']) == 0) && (isset($this->submission->civicrm['contact']) && count($this->submission->civicrm['contact']) == 0)) {
       return false;
     }
     
