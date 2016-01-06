@@ -94,3 +94,17 @@ function _webform_civicrm_documents_get_existing(array $component) {
   }
   return $existing;
 }
+
+function webform_civicrm_documents_enable() {
+  $maxWeight = db_query("SELECT MAX(weight) FROM {system} where type = 'module' AND (name = 'webform_civicrm') ")->fetchField();
+  $maxWeight++;
+
+  //make sure that our module has a higher weight than the civicrm and civicrm_entity module
+  //if not our changes to the available fields for views wont occur
+  //because the hook should be runned after the civicrm and civcirm_entity has runned their relevant hooks
+  db_update('system')
+      ->fields(array('weight' => $maxWeight))
+      ->condition('type', 'module')
+      ->condition('name', 'webform_civicrm_documents')
+      ->execute();
+}
