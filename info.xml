@@ -20,7 +20,7 @@
   <compatibility>
     <ver>4.4</ver>
   </compatibility>
-  <comments>This is a new, undeveloped module</comments>
+  <comments>Extension is live at several clients</comments>
   <civix>
     <namespace>CRM/Documents</namespace>
   </civix>
