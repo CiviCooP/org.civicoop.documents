@@ -140,20 +140,6 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
       $this->_formValues = $this->controller->exportValues($this->_name);
     }
 
-    /*$config = CRM_Core_Config::singleton();
-    $tags = CRM_Utils_Array::value('contact_tags', $this->_formValues);
-    if ($tags && !is_array($tags)) {
-      unset($this->_formValues['contact_tags']);
-      $this->_formValues['contact_tags'][$tags] = 1;
-    }
-
-    if ($tags && is_array($tags)) {
-      unset($this->_formValues['contact_tags']);
-      foreach($tags as $notImportant => $tagID) {
-          $this->_formValues['contact_tags'][$tagID] = 1;
-      }
-    }*/
-
     $this->_queryParams = CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -190,6 +176,13 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
     if ($this->_context == 'basic' || $this->_context == 'user') {
       $prefix = $this->_prefix;
     }*/
+
+    $userContext = CRM_Utils_System::url('civicrm/documents/search', array(
+      '_qf_Search_display'=>true,
+      'qfKey' =>$this->controller->_key
+    ));
+    $session = CRM_Core_Session::singleton();
+    $session->pushUserContext($userContext);
 
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),

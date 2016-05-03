@@ -30,7 +30,7 @@ class CRM_Documents_Entity_DocumentStatus {
   /**
    * Constructor and getter for the singleton instance
    *
-   * @return instance of $config->userHookClass
+   * @return CRM_Documents_Entity_DocumentStatus
    */
   static function singleton($fresh = FALSE) {
     if (self::$_singleton == NULL || $fresh) {
@@ -43,15 +43,13 @@ class CRM_Documents_Entity_DocumentStatus {
    * Returns the status of a documents
    * 
    * @param CRM_Documents_Entity_Document $doc
+   * @return int 0 for not in use and 1 for is used.
    */
   public function getStatusOfDocument(CRM_Documents_Entity_Document $doc) {
     
     $hookStatus = CRM_Documents_Entity_DocumentStatus::UNUSED;
-    $hooks = CRM_Utils_Hook::singleton();
-    $hooks->invoke(2,
-      $doc, $hookStatus, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject,
-      'civicrm_documents_get_status'
-      );
+    $hooks = CRM_Documents_Utils_HookInvoker::singleton();
+    $hooks->hook_civicrm_documents_get_status($doc, $hookStatus);
     
     $status = CRM_Documents_Entity_DocumentStatus::UNUSED;
     

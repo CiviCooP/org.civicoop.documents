@@ -14,45 +14,16 @@
             <span class="description">{ts}Browse to the <strong>file</strong> you want to upload.{/ts}{if $maxAttachments GT 1} {ts 1=$maxAttachments}You can have a maximum of %1 attachment(s).{/ts}{/if} Each file must be less than {$config->maxFileSize}M in size. You can also add a short description.</span>
           </td>
         </tr>
-        {if $form.tag_1.html}
-          <tr>
-            <td></td>
-            <td><label>{$form.tag_1.label}</label> <div class="crm-select-container crm-attachment-tags">{$form.tag_1.html}</div></td>
-          </tr>
-        {/if}
-        {if $tagsetInfo_attachment}
-          <tr><td></td><td>{include file="CRM/common/Tag.tpl" tagsetType='attachment' tagsetNumber=1 }</td></tr>
-        {/if}
         {section name=attachLoop start=2 loop=$numAttachments+1}
           {assign var=index value=$smarty.section.attachLoop.index}
           {assign var=attachName value="attachFile_"|cat:$index}
           {assign var=attachDesc value="attachDesc_"|cat:$index}
-          {assign var=tagElement value="tag_"|cat:$index}
             <tr class="attachment-fieldset"><td colspan="2"></td></tr>
             <tr>
                 <td class="label">{$form.attachFile_1.label}</td>
                 <td>{$form.$attachName.html}&nbsp;<span class="crm-clear-link">(<a href="#" onclick="clearAttachment( '#{$attachName}' ); return false;">{ts}clear{/ts}</a>)</span></td>
             </tr>
-            <tr>
-              <td></td>
-              <td><label>{$form.$tagElement.label}</label> <div class="crm-select-container crm-attachment-tags">{$form.$tagElement.html}</div></td>
-            </tr>
-            {if $tagsetInfo_attachment}
-              <tr><td></td><td>{include file="CRM/common/Tag.tpl" tagsetType='attachment' tagsetNumber=$index}</td></tr>
-            {/if}
         {/section}
-
-        {literal}
-          <script type="text/javascript">
-            cj(".crm-attachment-tags select[multiple]").crmasmSelect({
-              addItemTarget: 'bottom',
-              animate: true,
-              highlight: true,
-              sortable: true,
-              respectParents: true
-            });
-          </script>
-        {/literal}
       {/if}
       {if $currentAttachmentInfo}
         
@@ -66,11 +37,6 @@
                   {if $attVal.description}&nbsp;-&nbsp;{$attVal.description}{/if}
                   {if $attVal.deleteURLArgs && $showDelete}
                    <a href="#" onclick="showDeleteAttachment('{$attVal.cleanName}', '{$attVal.deleteURLArgs}', {$attVal.fileID}, '#attachStatusMesg', '#attachFileRecord_{$attVal.fileID}'); return false;" title="{ts}Delete this attachment{/ts}"><span class="icon red-icon delete-icon" style="margin:0px 0px -5px 20px" title="{ts}Delete this attachment{/ts}"></span></a>
-                  {/if}
-                  {if !empty($attVal.tag)}
-                    <br/>
-                    {ts}Tags{/ts}: {$attVal.tag}
-                    <br/>
                   {/if}
                 </div>
           {/foreach}
@@ -89,15 +55,6 @@
     </div>
   </div><!-- /.crm-accordion-body -->
   </div><!-- /.crm-accordion-wrapper -->
-  {if !$noexpand}
-    {literal}
-    <script type="text/javascript">
-    cj(function() {
-       cj().crmAccordions();
-    });
-    </script>
-    {/literal}
-  {/if}
     {literal}
     <script type="text/javascript">
       function clearAttachment( element, desc ) {

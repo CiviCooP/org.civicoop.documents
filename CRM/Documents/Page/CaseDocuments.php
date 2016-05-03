@@ -35,6 +35,7 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     $this->assign('clientId', $this->clientId);
     $this->assign('documents', $documents);    
     $this->assign('permission', 'edit');
+    $this->assign('isCivi44', CRM_Documents_Utils_CiviVersion::is44());
     
     //render the template
     $content = self::$_template->fetch($pageTemplateFile);

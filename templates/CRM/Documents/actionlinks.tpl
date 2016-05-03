@@ -30,7 +30,7 @@
 
 {assign var=first value="action-item-first"}
 {if $attachment && $attachment->url}
-    <span><a href="{$attachment->url}" title="{$attachment->cleanname}" class="action-item {$first}">{ts}Download{/ts}</a></span>
+    <span><a href="{$attachment->url}" title="{$attachment->cleanname}" class="{$first}">{ts}Download{/ts}</a></span>
     {assign var=first value=""}
 {/if}
 <span class="btn-slide">More

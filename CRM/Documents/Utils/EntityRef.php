@@ -59,8 +59,8 @@ class CRM_Documents_Utils_EntityRef {
   protected function loadEntityRefs() {
     unset($this->entity_refs);
     $this->entity_refs = array();
-    $hooks = CRM_Utils_Hook::singleton();
-    $return = $hooks->invoke(0, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, 'civicrm_documents_entity_ref_spec');
+    $hooks = CRM_Documents_Utils_HookInvoker::singleton();
+    $return = $hooks->hook_civicrm_documents_entity_ref_spec();
     if (is_array($return)) {
       foreach($return as $ref) {
         if ($ref instanceof CRM_Documents_Interface_EntityRefSpec) {

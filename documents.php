@@ -151,7 +151,7 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
 function documents_civicrm_caseSummary($caseId) {
   $page = new CRM_Documents_Page_CaseDocuments($caseId);
   $content = $page->run();
-  return array('documents' => array('value' => $content));
+  return array('documents' => array('value' => $content, 'label' => ts('Documents')));
 }
 
 /**

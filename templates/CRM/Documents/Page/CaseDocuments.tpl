@@ -50,7 +50,11 @@
 {literal}
 cj(function() {
     var caseDocs = cj('#case-documents').detach();
+    {/literal}{if ($isCivi44)}{literal}
     cj('#view-related-cases').after(caseDocs);
+    {/literal}{else}{literal}
+    cj('#case_custom_edit').after(caseDocs);
+    {/literal}{/if}{literal}
 });
 {/literal}
 </script>

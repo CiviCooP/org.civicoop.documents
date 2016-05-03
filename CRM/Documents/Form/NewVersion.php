@@ -51,7 +51,7 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     $this->assign('document', $this->document);
     
     //Set page title based on action
-    $this->setPageTitle();
+    CRM_Utils_System::setTitle(ts('Upload new version'));
     
   }
   
@@ -158,9 +158,5 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
       }
     }
     return $elementNames;
-  }
-  
-  protected function setPageTitle() {
-    CRM_Utils_System::setTitle(ts('Upload new version'));
   }
 }

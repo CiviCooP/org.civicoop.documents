@@ -24,9 +24,11 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   function preProcess() {
     parent::preProcess();
     
+    $this->assign('is44', CRM_Documents_Utils_CiviVersion::is44());
+
     $session = CRM_Core_Session::singleton();
     $entityRefs = CRM_Documents_Utils_EntityRef::singleton();
-    
+
     $this->context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'contact');
     $this->add('hidden', 'context', $this->context);
     
@@ -97,8 +99,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $this->assign('selectedContacts', implode(",", $this->document->getContactIds()));
     
     //Set page title based on action
-    $this->setPageTitle();
-    
+    $this->setPageTitleBasedOnAction();
+
   }
   
   function setDefaultValues() {
@@ -115,7 +117,11 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
         }
       }
     }
-    
+
+    if (!CRM_Documents_Utils_CiviVersion::is44()) {
+      $return['contacts'] = $this->document->getContactIds();
+    }
+
     return $return;
   }
   
@@ -163,7 +169,11 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     // export form elements
     $this->assign('elementNames', $this->getRenderableElementNames());
     
-   CRM_Contact_Form_NewContact::buildQuickForm($this);
+    if (CRM_Documents_Utils_CiviVersion::is44()) {
+      CRM_Contact_Form_NewContact::buildQuickForm($this);
+    } else {
+      $this->addEntityRef('contacts', ts('Contacts'), array('multiple' => TRUE, 'create' => TRUE), true);
+    }
    
    CRM_Core_BAO_File::buildAttachment($this, 'civicrm_document_version', $this->document->getCurrentVersion()->getId(), 1, TRUE);
     
@@ -186,6 +196,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     // format with contact (target contact) values
     if (isset($values['contact'][1])) {
       $contact_ids = explode(',', $values['contact'][1]);
+    } elseif (!CRM_Documents_Utils_CiviVersion::is44()) {
+      $contact_ids = explode(",", $values['contacts']);
     }
 
     $this->document->setSubject($this->exportValue('subject'));
@@ -223,7 +235,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
         }
       }
     }
-        
+
     $params = array(); //used for attachments
     // add attachments as needed
     CRM_Core_BAO_File::formatAttachment($values,
@@ -231,7 +243,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       'civicrm_document_version',
       $this->document->getCurrentVersion()->getId()
     );
-    
+
     //save document
     $documentsRepo->persist($this->document);
     CRM_Core_BAO_File::processAttachment($params, 'civicrm_document_version', $this->document->getCurrentVersion()->getId());
@@ -260,7 +272,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     return $elementNames;
   }
   
-  protected function setPageTitle() {
+  protected function setPageTitleBasedOnAction() {
     CRM_Utils_System::setTitle(ts('Add new document'));
     if ($this->_action == CRM_Core_Action::DELETE) {
       CRM_Utils_System::setTitle(ts("Delete document '".$this->document->getSubject()."'"));

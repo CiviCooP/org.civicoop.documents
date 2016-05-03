@@ -12,7 +12,8 @@ class CRM_Documents_StateMachine_Search extends CRM_Core_StateMachine {
 
   /**
    * class constructor
-   */ function __construct($controller, $action = CRM_Core_Action::NONE) {
+   */
+  function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = array();
