@@ -15,8 +15,6 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
   
   protected $documentId = false;
   
-  protected $_action;
-  
   protected $replaceCurrent = false;
   
   function preProcess() {
