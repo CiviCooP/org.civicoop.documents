@@ -15,8 +15,6 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   
   protected $documentId = false;
   
-  protected $_action;
-  
   protected $context;
   
   protected $entity = false;
