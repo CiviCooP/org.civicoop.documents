@@ -111,7 +111,7 @@ class WebformCiviCRMDocuments {
       return false;
     }
     
-    if ( (isset($this->submission->civicrm['contact_id']) && count($this->submission->civicrm['contact_id']) == 0) && (isset($this->submission->civicrm['contact']) && count($this->submission->civicrm['contact']) == 0)) {
+    if ( (isset($this->submission->civicrm['contact_id']) && count($this->submission->civicrm['contact_id']) == 0) || (isset($this->submission->civicrm['contact']) && count($this->submission->civicrm['contact']) == 0)) {
       return false;
     }
     
@@ -218,16 +218,20 @@ class WebformCiviCRMDocuments {
         return reset($docs); //return the first document
       }
     } else {
-      foreach($this->submission->civicrm['contact_id'] as $contact_id) {
-        $docs = $repo->getDocumentsByContactIdAndSubject($contact_id, $subject);
-        if (count($docs) == 1) {
-          return reset($docs); //return the first document
+      if (isset($this->submission->civicrm['contact_id'])) {
+        foreach ($this->submission->civicrm['contact_id'] as $contact_id) {
+          $docs = $repo->getDocumentsByContactIdAndSubject($contact_id, $subject);
+          if (count($docs) == 1) {
+            return reset($docs); //return the first document
+          }
         }
       }
-      foreach($this->submission->civicrm['contact'] as $contact) {
-        $docs = $repo->getDocumentsByContactIdAndSubject($contact['id'], $subject);
-        if (count($docs) == 1) {
-          return reset($docs); //return the first document
+      if (isset($this->submission->civicrm['contact'])) {
+        foreach ($this->submission->civicrm['contact'] as $contact) {
+          $docs = $repo->getDocumentsByContactIdAndSubject($contact['id'], $subject);
+          if (count($docs) == 1) {
+            return reset($docs); //return the first document
+          }
         }
       }
     }
