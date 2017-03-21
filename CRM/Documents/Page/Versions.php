@@ -17,7 +17,7 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   function run() {
     $this->preProcess();
     
-    CRM_Utils_System::setTitle(ts("All versios for '".$this->document->getSubject()."'"));
+    CRM_Utils_System::setTitle(ts("All versions for '".$this->document->getSubject()."'"));
     
     $this->assign('versions', $this->document->getVersions());
     
