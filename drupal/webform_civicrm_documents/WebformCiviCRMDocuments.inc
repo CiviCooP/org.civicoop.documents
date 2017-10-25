@@ -116,7 +116,25 @@ class WebformCiviCRMDocuments {
     }
     
     $this->caseId = false;
-    if (isset($this->submission->civicrm['activity_id'])) {
+		if (isset($this->submission->civicrm['case'])) {
+			foreach ($this->submission->civicrm['case'] as $case) {
+				if (isset($case['id'])) {
+					$this->caseId = $caseId;
+					break;
+				}
+			}
+		} 		
+		if (isset($this->submission->civicrm['activity'])) {
+			foreach ($this->submission->civicrm['activity'] as $activity) {
+				$caseActivity = new CRM_Case_DAO_CaseActivity();
+				$caseActivity->activity_id = $activity['id'];
+				if ($caseActivity->find(TRUE)) {
+					$this->caseId = $caseActivity->case_id;
+					break;						
+      	}
+			}
+		}
+    if (empty($this->caseId) && isset($this->submission->civicrm['activity_id'])) {
       $caseActivity = new CRM_Case_DAO_CaseActivity();
       $caseActivity->activity_id = $this->submission->civicrm['activity_id']; 
       if ($caseActivity->find(TRUE)) {
