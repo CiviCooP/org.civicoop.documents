@@ -19,6 +19,12 @@ which is a **civicrm_entity_file** item.
 
 See [available hooks](doc/hooks.md) for the documentation of the hooks in this extension
 
+## Drupal modules
+
+This extension includes two Drupal modules
+* views_civicrm_documents
+* webform_civicrm_documents
+
 ## Roadmap
 
 ### Next beta release
