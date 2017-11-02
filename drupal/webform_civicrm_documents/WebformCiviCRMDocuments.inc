@@ -119,7 +119,7 @@ class WebformCiviCRMDocuments {
 		if (isset($this->submission->civicrm['case'])) {
 			foreach ($this->submission->civicrm['case'] as $case) {
 				if (isset($case['id'])) {
-					$this->caseId = $caseId;
+					$this->caseId = $case['id'];
 					break;
 				}
 			}
