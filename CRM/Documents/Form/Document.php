@@ -274,9 +274,13 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   protected function setPageTitleBasedOnAction() {
     CRM_Utils_System::setTitle(E::ts('Add new document'));
     if ($this->_action == CRM_Core_Action::DELETE) {
-      CRM_Utils_System::setTitle(E::ts("Delete document '".$this->document->getSubject()."'"));
+      CRM_Utils_System::setTitle(E::ts("Delete document '%1'", array(
+        1 => $this->document->getSubject()
+      )));
     } else if ($this->document->getId()) {
-      CRM_Utils_System::setTitle(E::ts("Edit document '".$this->document->getSubject()."'"));
+      CRM_Utils_System::setTitle(E::ts("Edit document '%1'", array(
+        1 => $this->document->getSubject()
+      )));
     }
   }
 }
