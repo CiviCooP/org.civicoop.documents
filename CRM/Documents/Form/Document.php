@@ -1,6 +1,7 @@
 <?php
 
 require_once 'CRM/Core/Form.php';
+use CRM_Documents_ExtensionUtil as E;
 
 /**
  * Form controller class
@@ -128,13 +129,13 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       $this->addButtons(array(
         array(
           'type' => 'next',
-          'name' => ts('Delete'),
+          'name' => E::ts('Delete'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE
         ),
         array(
           'type' => 'cancel',
-          'name' => ts('Cancel')
+          'name' => E::ts('Cancel')
         )
       ));
       return;
@@ -142,7 +143,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $this->add(
          'text', 
         'subject', 
-        ts('Subject'), 
+        E::ts('Subject'),
         array(
           'value' => $this->document->getSubject(),
           'maxlength' => 255,
@@ -154,12 +155,12 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $this->addButtons(array(
       array(
         'type' => 'upload',
-        'name' => ts('Submit'),
+        'name' => E::ts('Submit'),
         'isDefault' => TRUE,
       ),
       array(
         'type' => 'cancel',
-        'name' => ts('Cancel'),
+        'name' => E::ts('Cancel'),
         'isDefault' => TRUE,
       ),
     ));
@@ -170,7 +171,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     if (CRM_Documents_Utils_CiviVersion::is44()) {
       CRM_Contact_Form_NewContact::buildQuickForm($this);
     } else {
-      $this->addEntityRef('contacts', ts('Contacts'), array('multiple' => TRUE, 'create' => TRUE), true);
+      $this->addEntityRef('contacts', E::ts('Contacts'), array('multiple' => TRUE, 'create' => TRUE), true);
     }
    
    CRM_Core_BAO_File::buildAttachment($this, 'civicrm_document_version', $this->document->getCurrentVersion()->getId(), 1, TRUE);
@@ -184,7 +185,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       //delete the document
       $documentsRepo->remove($this->document);
       
-      CRM_Core_Session::setStatus(ts("Selected document has been successfully deleted."), ts('Record Deleted'), 'success');
+      CRM_Core_Session::setStatus(E::ts("Selected document has been successfully deleted."), E::ts('Record Deleted'), 'success');
       return;
     }
     
@@ -271,11 +272,11 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
   }
   
   protected function setPageTitleBasedOnAction() {
-    CRM_Utils_System::setTitle(ts('Add new document'));
+    CRM_Utils_System::setTitle(E::ts('Add new document'));
     if ($this->_action == CRM_Core_Action::DELETE) {
-      CRM_Utils_System::setTitle(ts("Delete document '".$this->document->getSubject()."'"));
+      CRM_Utils_System::setTitle(E::ts("Delete document '".$this->document->getSubject()."'"));
     } else if ($this->document->getId()) {
-      CRM_Utils_System::setTitle(ts("Edit document '".$this->document->getSubject()."'"));
+      CRM_Utils_System::setTitle(E::ts("Edit document '".$this->document->getSubject()."'"));
     }
   }
 }

@@ -1,5 +1,7 @@
 {* HEADER *}
 
+{crmScope extensionKey='org.civicoop.documents'}
+
 <div class="crm-block crm-form-block crm-document-form-block">
 
     <table class="form-layout">
@@ -28,3 +30,5 @@
     </div>
 
 </div>
+
+{/crmScope}

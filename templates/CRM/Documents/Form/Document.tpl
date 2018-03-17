@@ -1,5 +1,7 @@
 {* HEADER *}
 
+{crmScope extensionKey='org.civicoop.documents'}
+
 <div class="crm-block crm-form-block crm-document-form-block">
 
 {if $action eq 8} {* Delete action. *}
@@ -66,3 +68,5 @@
     </div>
 
 </div>
+
+{/crmScope}

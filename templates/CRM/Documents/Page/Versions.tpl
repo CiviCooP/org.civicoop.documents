@@ -1,3 +1,5 @@
+{crmScope extensionKey='org.civicoop.documents'}
+
 {assign var=document_id value=$document->getId()}
 <div class="action-link">
 {if $permission EQ 'edit'}
@@ -41,3 +43,5 @@
         {/foreach}
     </tbody>
 </table>
+
+{/crmScope}

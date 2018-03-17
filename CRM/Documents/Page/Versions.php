@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
 /* 
  * This file shows all the versions of a document
  */
@@ -17,7 +19,9 @@ class CRM_Documents_Page_Versions extends CRM_Core_Page {
   function run() {
     $this->preProcess();
     
-    CRM_Utils_System::setTitle(ts("All versions for '".$this->document->getSubject()."'"));
+    CRM_Utils_System::setTitle(E::ts("All versions for '%1'", array(
+      1 => $this->document->getSubject()
+    )));
     
     $this->assign('versions', $this->document->getVersions());
     

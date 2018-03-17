@@ -1,6 +1,8 @@
 <?php
 
 require_once 'documents.civix.php';
+use CRM_Documents_ExtensionUtil as E;
+
 
 /**
  * Implementation of hook_civicrm_config
@@ -92,7 +94,7 @@ function documents_civicrm_managed(&$entities) {
  */
 function documents_civicrm_navigationMenu( &$params ) {  
   $item = array (
-    "name"=> ts('Find documents'),
+    "name"=> E::ts('Find documents'),
     "url"=> "civicrm/documents/search",
     "permission" => "administer CiviCRM",
     "weight" => 5,
@@ -138,7 +140,7 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
     $tabs[] = array( 'id'    => 'contact_documents',
                      'url'   => $url,
                      'count' => $DocumentCount,
-                     'title' => ts('Documents'),
+                     'title' => E::ts('Documents'),
                      'weight' => 1 );
 }
 
@@ -151,7 +153,7 @@ function documents_civicrm_tabs( &$tabs, $contactID ) {
 function documents_civicrm_caseSummary($caseId) {
   $page = new CRM_Documents_Page_CaseDocuments($caseId);
   $content = $page->run();
-  return array('documents' => array('value' => $content, 'label' => ts('Documents')));
+  return array('documents' => array('value' => $content, 'label' => E::ts('Documents')));
 }
 
 /**

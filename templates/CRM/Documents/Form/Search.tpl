@@ -1,3 +1,5 @@
+{crmScope extensionKey='org.civicoop.documents'}
+
 {* Search form and results for Documents *}
 {assign var="showBlock" value="'searchForm'"}
 {assign var="hideBlock" value="'searchForm_show'"}
@@ -91,3 +93,4 @@ cj(function() {
 </script>
 {/literal}
 
+{/crmScope}
