@@ -1,6 +1,8 @@
 <?php
 
 require_once 'CRM/Core/Page.php';
+use CRM_Documents_ExtensionUtil as E;
+
 
 class CRM_Documents_Page_ContactDocuments extends CRM_Core_Page {
   
@@ -9,7 +11,7 @@ class CRM_Documents_Page_ContactDocuments extends CRM_Core_Page {
   function run() {
     $this->preProcess();
     
-    CRM_Utils_System::setTitle(ts('Documents'));
+    CRM_Utils_System::setTitle(E::ts('Documents'));
     
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
     $documents = $documentRepo->getDocumentsByContactId($this->_contactId, false);

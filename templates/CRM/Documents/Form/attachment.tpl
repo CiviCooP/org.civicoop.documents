@@ -1,6 +1,9 @@
 {*
 
 *}
+
+{crmScope extensionKey='org.civicoop.documents'}
+
 {if $form.attachFile_1 OR $currentAttachmentInfo}
 
     {capture assign=attachTitle}{ts}Attachment(s){/ts}{/capture}
@@ -69,4 +72,6 @@
 {/if}
 
 {/if} {* top level if *}
+
+{/crmScope}
 

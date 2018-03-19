@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
 /* 
  * This file holds the search functionality for documents
  */
@@ -87,17 +89,17 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
   function buildQuickForm() {
     $this->addElement('text',
       'sort_name',
-      ts('Contact Name or Email'),
+      E::ts('Contact Name or Email'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact',
         'sort_name'
       )
     );
     
-    CRM_Core_Form_Date::buildDateRange($this, 'document_date', 1, '_low', '_high', ts('From:'), FALSE);
+    CRM_Core_Form_Date::buildDateRange($this, 'document_date', 1, '_low', '_high', E::ts('From:'), FALSE);
     
     $this->add('text',
       'subject',
-      ts('Subject'),
+      E::ts('Subject'),
       TRUE
     );
     
@@ -105,7 +107,7 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
     $this->addButtons(array(
         array(
           'type' => 'refresh',
-          'name' => ts('Search'),
+          'name' => E::ts('Search'),
           'isDefault' => TRUE,
         ),
       )

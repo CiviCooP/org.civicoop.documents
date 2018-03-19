@@ -1,5 +1,8 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
+
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -185,7 +188,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
    * @access public
    */
   function getPagerParams($action, &$params) {
-    $params['status'] = ts('Documents') . ' %%StatusMessage%%';
+    $params['status'] = E::ts('Documents') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
       $params['rowCount'] = $this->_limit;
@@ -275,31 +278,31 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
     if (!isset(self::$_columnHeaders)) {
       self::$_columnHeaders = array(
         array(
-          'name' => ts('Document ID'),
+          'name' => E::ts('Document ID'),
           'field' => 'document_id',
         ),
         array(
-          'name' => ts('Contacts'),
+          'name' => E::ts('Contacts'),
           'field'      => 'contacts',
         ),
         array(
-          'name' => ts('Subject'),
+          'name' => E::ts('Subject'),
           'field' => 'subject',
         ),
         array(
-          'name' => ts('Date added'),
+          'name' => E::ts('Date added'),
           'field' => 'date_added',
         ),
         array(
-          'name' => ts('Added by'),
+          'name' => E::ts('Added by'),
           'field' => 'added by',
         ),
         array(
-          'name' => ts('Date updated'),
+          'name' => E::ts('Date updated'),
           'field' => 'date_updated',
         ),
         array(
-          'name' => ts('Updated by'),
+          'name' => E::ts('Updated by'),
           'field' => 'updated_by',
         ),
       );
@@ -316,7 +319,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
    * @return string name of the file
    */
   function getExportFileName($output = 'csv') {
-    return ts('CiviCRM Documents Search');
+    return E::ts('CiviCRM Documents Search');
   }
   
   function sortName(&$values) {
@@ -511,13 +514,13 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
 
       if ($name == $fieldName . '_low') {
         $firstOP = '>=';
-        $firstPhrase = ts('greater than or equal to');
+        $firstPhrase = E::ts('greater than or equal to');
         $firstDate = CRM_Utils_Date::processDate($value);
 
         $secondValues = $this->getWhereValues("{$fieldName}_high", $grouping);
         if (!empty($secondValues) && $secondValues[2]) {
           $secondOP = '<=';
-          $secondPhrase = ts('less than or equal to');
+          $secondPhrase = E::ts('less than or equal to');
           $secondValue = $secondValues[2];
 
           if ($appendTimeStamp && strlen($secondValue) == 10) {
@@ -528,7 +531,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
       }
       elseif ($name == $fieldName . '_high') {
         $firstOP = '<=';
-        $firstPhrase = ts('less than or equal to');
+        $firstPhrase = E::ts('less than or equal to');
 
         if ($appendTimeStamp && strlen($value) == 10) {
           $value .= ' 23:59:59';
@@ -538,7 +541,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
         $secondValues = $this->getWhereValues("{$fieldName}_low", $grouping);
         if (!empty($secondValues) && $secondValues[2]) {
           $secondOP = '>=';
-          $secondPhrase = ts('greater than or equal to');
+          $secondPhrase = E::ts('greater than or equal to');
           $secondValue = $secondValues[2];
           $secondDate = CRM_Utils_Date::processDate($secondValue);
         }

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'CRM/Core/Form.php';
+use CRM_Documents_ExtensionUtil as E;
 
 /**
  * Form controller class
@@ -49,7 +50,7 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     $this->assign('document', $this->document);
     
     //Set page title based on action
-    CRM_Utils_System::setTitle(ts('Upload new version'));
+    CRM_Utils_System::setTitle(E::ts('Upload new version'));
     
   }
   
@@ -67,7 +68,7 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     $this->add(
          'text', 
         'description', 
-        ts('Description'), 
+        E::ts('Description'), 
         array(
           'value' => $version->getDescription(),
           'maxlength' => 255,
@@ -77,19 +78,19 @@ class CRM_Documents_Form_NewVersion extends CRM_Core_Form {
     );
     $this->addCheckBox(
         'replaceCurrent', 
-        ts('Replace current version'), 
+        E::ts('Replace current version'), 
         array('' => '1')
     );
     
     $this->addButtons(array(
       array(
         'type' => 'upload',
-        'name' => ts('Submit'),
+        'name' => E::ts('Submit'),
         'isDefault' => TRUE,
       ),
       array(
         'type' => 'cancel',
-        'name' => ts('Cancel'),
+        'name' => E::ts('Cancel'),
         'isDefault' => TRUE,
       ),
     ));

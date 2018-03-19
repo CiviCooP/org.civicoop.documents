@@ -1,5 +1,8 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
+
 Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
   
   /**
@@ -67,14 +70,14 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
         'entity_table' => array(
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table') ,
+          'title' => E::ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
         ) ,
         'entity_id' => array(
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Entity ID') ,
+          'title' => E::ts('Entity ID') ,
           'required' => true,
         ) ,
 

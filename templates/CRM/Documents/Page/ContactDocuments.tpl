@@ -1,3 +1,5 @@
+{crmScope extensionKey='org.civicoop.documents'}
+
 {if $permission EQ 'edit'}
   {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$contactId`"}{/capture}
   <div class="action-link">
@@ -33,3 +35,5 @@
     {/foreach}
   </tbody>
 </table>
+
+{/crmScope}

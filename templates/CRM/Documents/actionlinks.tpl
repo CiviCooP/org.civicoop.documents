@@ -9,6 +9,8 @@
  * - $doc: the Document
  *}
 
+{crmScope extensionKey='org.civicoop.documents'}
+
 {if (!isset($entity))}
     {assign var=entity value=''}
 {/if}
@@ -33,7 +35,7 @@
     <span><a href="{$attachment->url}" title="{$attachment->cleanname}" class="{$first}">{ts}Download{/ts}</a></span>
     {assign var=first value=""}
 {/if}
-<span class="btn-slide">More
+<span class="btn-slide">{ts}More{/ts}
 <ul class="panel">
 {if $permission EQ 'edit'}
 <li><a href="{$newVersionUrl}" class="action-item">{ts}Upload new version{/ts}</a></li>
@@ -47,3 +49,5 @@
 {/if}
 </ul>
 </span>
+
+{/crmScope}

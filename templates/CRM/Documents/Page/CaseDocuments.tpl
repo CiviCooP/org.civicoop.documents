@@ -3,6 +3,8 @@
  *
  *}
 
+{crmScope extensionKey='org.civicoop.documents'}
+
 <div id="case-documents" class="crm-accordion-wrapper collapsed">
 
 <div class="crm-accordion-header">{ts}Documents{/ts}</div>
@@ -58,3 +60,5 @@ cj(function() {
 });
 {/literal}
 </script>
+
+{/crmScope}

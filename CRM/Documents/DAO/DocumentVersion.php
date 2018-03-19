@@ -1,5 +1,8 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
+
 Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
   
   /**
@@ -44,7 +47,7 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
         'description' => array(
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Description') ,
+          'title' => E::ts('Description') ,
           'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
@@ -57,7 +60,7 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
         'date_updated' => array(
           'name' => 'date_updated',
           'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Date Added') ,
+          'title' => E::ts('Date Added') ,
         ) ,
         'document_id' => array(
           'name' => 'document_id',
