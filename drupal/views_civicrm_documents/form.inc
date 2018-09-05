@@ -17,6 +17,9 @@ function views_civicrm_documents_new_case_document($form, &$form_state, $case_id
     $form['upload'] = array(
         '#type' => 'file',
         '#title' => t('File'),
+        '#upload_validators' => array(
+          'file_validate_extensions' => array('jpg png txt rtf odf pdf doc docx ppt pptx xls xlsx gz rar zip')
+        )
     );
 
     $form['submit_button'] = array(
@@ -36,7 +39,7 @@ function views_civicrm_documents_new_case_document($form, &$form_state, $case_id
 }
 
 function views_civicrm_documents_new_case_document_validate($form, &$form_state) {
-  $file = file_save_upload('upload');
+  $file = file_save_upload('upload', $form['upload']['#upload_validators']);
   if ($file) {
     $form_state['upload']['file'] = $file;
   } else {
@@ -82,6 +85,9 @@ function views_civicrm_documents_new_version($form, &$form_state, $document_id) 
     $form['upload'] = array(
         '#type' => 'file',
         '#title' => t('File'),
+        '#upload_validators' => array(
+          'file_validate_extensions' => array('jpg png txt rtf odf pdf doc docx ppt pptx xls xlsx gz rar zip')
+        )
     );
 
     $form['submit_button'] = array(
@@ -101,7 +107,7 @@ function views_civicrm_documents_new_version($form, &$form_state, $document_id) 
 }
 
 function views_civicrm_documents_new_version_validate($form, &$form_state) {
-  $file = file_save_upload('upload');
+  $file = file_save_upload('upload', $form['upload']['#upload_validators']);
   if ($file) {
     $form_state['upload']['file'] = $file;
   } else {

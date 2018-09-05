@@ -1,5 +1,6 @@
 name = CiviCRM Documents views integeration
 description = Integrates CiviCRM Documents with views
+version = 7.x-1.9
 core = 7.x
 package = CiviCRM
 dependencies[] = civicrm (>=4.4)
