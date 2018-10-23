@@ -5,7 +5,7 @@
 {if $permission EQ 'edit'}
     {capture assign=newDocumentURL}{crmURL p="civicrm/documents/newversion" q="reset=1&action=add&cid=`$contactId`&id=`$document_id`"}{/capture}
     <a accesskey="N" href="{$newDocumentURL}" class="button">
-        <span><div class="icon add-icon"></div>{ts}Upload new version{/ts}</span>
+        <span><i class="crm-i fa-plus-circle"></i> {ts}Upload new version{/ts}</span>
     </a>
 {/if}
 {if $goBackUrl}
