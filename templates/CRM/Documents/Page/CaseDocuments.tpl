@@ -33,7 +33,7 @@
         
         {foreach from=$documents item=doc}
             <tr class="{cycle values="odd,even"}">
-                <td>{$doc->getSubject()}</td>
+                <td><i class="crm-i {$doc->getIcon()}"></i> {$doc->getSubject()}</td>
                 <td>{$doc->getFormattedContacts()}</td>
                 <td>{$doc->getFormattedDateUpdated()}</td>
                 <td>{$doc->getFormattedUpdatedBy()}</td>
