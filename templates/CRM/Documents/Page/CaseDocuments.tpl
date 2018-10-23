@@ -14,7 +14,7 @@
     {capture assign=newDocumentURL}{crmURL p="civicrm/documents/document" q="reset=1&action=add&cid=`$clientId`&context=case&case_id=`$caseId`"}{/capture}
     <div class="action-link">
         <a accesskey="N" href="{$newDocumentURL}" class="button">
-            <span><div class="icon add-icon"></div>{ts}New document{/ts}</span>
+            <span><i class="crm-i fa-plus-circle"></i> {ts}New document{/ts}</span>
         </a>
     </div>
 
