@@ -333,6 +333,10 @@ class CRM_Documents_Entity_Document {
     $version->setVersion($vid);
     $this->versions[$vid] = $version;
     return $version; 
-  } 
+  }
+
+  public function getIcon() {
+    return CRM_Utils_File::getIconFromMimeType($this->getCurrentVersion()->getAttachment()->mime_type);
+  }
   
 }
