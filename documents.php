@@ -125,23 +125,24 @@ function documents_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 }
 
 /**
- * Implementatio of hook__civicrm_tabs
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
+ * Implementation of hook_civicrm_tabset
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_tabset
  */
-function documents_civicrm_tabs( &$tabs, $contactID ) { 
-    // add a tab with the linked cities
-    $url = CRM_Utils_System::url( 'civicrm/contact/view/documents',
-                                  "cid=$contactID&snippet=1" );
+function documents_civicrm_tabset($path, &$tabs, $context) {
+  if ($path === 'civicrm/contact/view') {
+    // add a tab to the contact summary screen
+    $url = CRM_Utils_System::url('civicrm/contact/view/documents', ['cid' => $context['contact_id']]);
     
     //Count number of documents
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-    $DocumentCount = count($documentRepo->getDocumentsByContactId($contactID, false));
+    $DocumentCount = count($documentRepo->getDocumentsByContactId($context['contact_id'], FALSE));
     
     $tabs[] = array( 'id'    => 'contact_documents',
                      'url'   => $url,
                      'count' => $DocumentCount,
                      'title' => E::ts('Documents'),
                      'weight' => 1 );
+  }
 }
 
 /**
