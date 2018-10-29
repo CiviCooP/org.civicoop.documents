@@ -136,12 +136,15 @@ function documents_civicrm_tabset($path, &$tabs, $context) {
     //Count number of documents
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
     $DocumentCount = count($documentRepo->getDocumentsByContactId($context['contact_id'], FALSE));
-    
-    $tabs[] = array( 'id'    => 'contact_documents',
-                     'url'   => $url,
-                     'count' => $DocumentCount,
-                     'title' => E::ts('Documents'),
-                     'weight' => 1 );
+
+    $tabs[] = array(
+      'id' => 'contact_documents',
+      'url' => $url,
+      'count' => $DocumentCount,
+      'title' => E::ts('Documents'),
+      'weight' => 1,
+      'icon' => 'crm-i fa-files-o',
+    );
   }
 }
 
