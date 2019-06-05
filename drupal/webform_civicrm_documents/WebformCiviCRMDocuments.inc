@@ -170,9 +170,12 @@ class WebformCiviCRMDocuments {
     if (!is_numeric($fid) && is_string(($fid))) {
       //multifile
       $i = 1;
-      $fids = unserialize($fid);
+      $fids = json_decode($fid, true);
       if (!is_array($fids)) {
-        return;
+        $fids = unserialize($fid);
+        if (!is_array($fids)) {
+          return;
+        }
       }
       foreach($fids as $id) {
         $this->saveFileAsDocument($id, $subject.' '.$i, $component);
