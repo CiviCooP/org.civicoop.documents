@@ -21,7 +21,7 @@ function webform_civicrm_documents_form_webform_component_edit_form_alter(&$form
   if (!isset($form['#node']->webform_civicrm)) {
     return;
   }
-  
+
   $form['webform_civicrm_documents'] = array(
     '#type' => 'fieldset',
     '#title' => t('CiviCRM Documents'),
@@ -30,8 +30,19 @@ function webform_civicrm_documents_form_webform_component_edit_form_alter(&$form
   $form['webform_civicrm_documents']['enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Save this file as a document in civicrm'),
-    '#description' => t("The file is saved as document in civicrm by its name"),
+    '#description' => t("The file is saved as document in civicrm."),
     '#default_value' => _webform_civicrm_documents_get_enabled($component),
+  );
+  $form['webform_civicrm_documents']['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject.'),
+    '#description' => t("Default to the title of the field.").' '.theme('webform_token_help', array('groups' => array('node', 'submission'))),
+    '#default_value' => _webform_civicrm_documents_get_subject($component),
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="webform_civicrm_documents[enabled]"]' => array('checked' => false),
+      ),
+    ),
   );
   $form['webform_civicrm_documents']['existing'] = array(
     '#type' => 'select',
@@ -67,6 +78,7 @@ function webform_civicrm_documents_webform_component_presave(&$component) {
     return;
   }
   $component['extra']['webform_civicrm_documents_enabled'] = $component['webform_civicrm_documents']['enabled'] ? true : false;
+  $component['extra']['webform_civicrm_documents_subject'] = $component['webform_civicrm_documents']['subject'];
   $component['extra']['webform_civicrm_documents_existing'] = $component['webform_civicrm_documents']['existing'];
   $component['extra']['webform_civicrm_documents_contacts'] = serialize($component['webform_civicrm_documents']['contact']);
 }
@@ -77,6 +89,14 @@ function _webform_civicrm_documents_get_enabled(array $component) {
     $enabled = (bool) $component['extra']['webform_civicrm_documents_enabled'];
   }
   return $enabled;
+}
+
+function _webform_civicrm_documents_get_subject(array $component) {
+  $subject = '';
+  if (isset($component['extra']['webform_civicrm_documents_subject'])) {
+    $subject = $component['extra']['webform_civicrm_documents_subject'];
+  }
+  return $subject;
 }
 
 function _webform_civicrm_documents_get_contact(array $component) {

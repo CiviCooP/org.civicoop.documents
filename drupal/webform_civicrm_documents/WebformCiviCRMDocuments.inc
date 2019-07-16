@@ -28,7 +28,14 @@ class WebformCiviCRMDocuments {
 
     foreach ($this->node->webform['components'] as $cid => $field) {
       if ($this->checkComponentForDocument($cid, $field)) {
-        $this->saveFiles($field['name'], $this->submission->data[$cid], $field);
+        $subject = _webform_civicrm_documents_get_subject($field);
+        if ($subject) {
+          $subject = webform_replace_tokens($subject, $this->node, $this->submission);
+        }
+        if (!$subject) {
+          $subject = $field['name'];
+        }
+        $this->saveFiles($subject, $this->submission->data[$cid], $field);
       }
     }
   }
