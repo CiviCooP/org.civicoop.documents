@@ -3,7 +3,7 @@
 use CRM_Documents_ExtensionUtil as E;
 
 
-Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
+Class CRM_Documents_DAO_DocumentCase extends CRM_Core_DAO {
 
   /**
    * static instance to hold the field values
@@ -26,32 +26,30 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
    * empty definition for virtual function
    */
   static function getTableName() {
-    return 'civicrm_document_entity';
+    return 'civicrm_document_case';
   }
 
   /**
    * Returns localized title of this entity.
    */
   public static function getEntityTitle() {
-    return E::ts('Document Entity');
+    return E::ts('Document Case');
   }
 
   /**
-   * return foreign keys and entity references
+   * Returns foreign keys and entity references.
    *
-   * @static
-   * @access public
-   * @return array of CRM_Core_EntityReference
+   * @return array
+   *   [CRM_Core_Reference_Interface]
    */
-  static function getReferenceColumns()
-  {
-    if (!self::$_links) {
-      self::$_links = array(
-        new CRM_Core_EntityReference(self::getTableName() , 'document_id', 'civicrm_document', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table') ,
-      );
+  public static function getReferenceColumns() {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'case_id', 'civicrm_case', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'document_id', 'civicrm_document', 'id');
+      CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'links_callback', Civi::$statics[__CLASS__]['links']);
     }
-    return self::$_links;
+    return Civi::$statics[__CLASS__]['links'];
   }
 
   /**
@@ -66,7 +64,7 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
-          'title' => E::ts('ID'),
+          'title' => E::ts('ID') ,
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
@@ -76,18 +74,12 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Documents_DAO_Document',
         ) ,
-        'entity_table' => array(
-          'name' => 'entity_table',
-          'type' => CRM_Utils_Type::T_STRING,
-          'title' => E::ts('Entity Table') ,
-          'maxlength' => 64,
-          'size' => CRM_Utils_Type::BIG,
-        ) ,
-        'entity_id' => array(
-          'name' => 'entity_id',
+        'case_id' => array(
+          'name' => 'case_id',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => E::ts('Entity ID') ,
+          'title' => E::ts('Case ID') ,
           'required' => true,
+          'FKClassName' => 'CRM_Case_DAO_Case',
         ) ,
 
       );
@@ -107,8 +99,7 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
       self::$_fieldKeys = array(
         'id' => 'id',
         'document_id' => 'document_id',
-        'entity_table' => 'entity_table',
-        'entity_id' => 'entity_id',
+        'case_id' => 'case_id',
       );
     }
     return self::$_fieldKeys;
@@ -124,5 +115,4 @@ Class CRM_Documents_DAO_DocumentEntity extends CRM_Core_DAO {
   {
     return self::$_log;
   }
-
 }

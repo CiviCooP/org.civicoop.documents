@@ -21,6 +21,9 @@
     <ver>4.7</ver>
   </compatibility>
   <comments>Extension is live at several clients</comments>
+  <classloader>
+    <psr4 prefix="Civi\" path="Civi"/>
+  </classloader>
   <civix>
     <namespace>CRM/Documents</namespace>
   </civix>

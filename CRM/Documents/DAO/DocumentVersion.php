@@ -4,7 +4,7 @@ use CRM_Documents_ExtensionUtil as E;
 
 
 Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
-  
+
   /**
    * static instance to hold the field values
    *
@@ -12,7 +12,7 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
    * @static
    */
   static $_fields = null;
-  
+
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -21,14 +21,21 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
    * @static
    */
   static $_log = false;
-  
+
   /**
    * empty definition for virtual function
    */
   static function getTableName() {
     return 'civicrm_document_version';
   }
-  
+
+  /**
+   * Returns localized title of this entity.
+   */
+  public static function getEntityTitle() {
+    return E::ts('Document Version');
+  }
+
   /**
    * returns all the column names of this table
    *
@@ -41,6 +48,7 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
+          'title' => E::ts('ID'),
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ) ,
@@ -54,22 +62,25 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
         ) ,
         'updated_by' => array(
           'name' => 'updated_by',
+          'title' => E::ts('Updated by'),
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
         ) ,
         'date_updated' => array(
           'name' => 'date_updated',
           'type' => CRM_Utils_Type::T_DATE,
-          'title' => E::ts('Date Added') ,
+          'title' => E::ts('Date Updated') ,
         ) ,
         'document_id' => array(
           'name' => 'document_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Documents_DAO_Document',
+          'title' => E::ts('Document ID'),
         ) ,
         'version' => array(
           'name' => 'version',
           'type' => CRM_Utils_Type::T_INT,
+          'title' => E::ts('Version'),
         ) ,
 
       );
@@ -97,7 +108,7 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
     }
     return self::$_fieldKeys;
   }
-  
+
   /**
    * returns if this table needs to be logged
    *
@@ -108,5 +119,5 @@ Class CRM_Documents_DAO_DocumentVersion extends CRM_Core_DAO {
   {
     return self::$_log;
   }
-  
+
 }

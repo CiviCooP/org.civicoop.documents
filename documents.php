@@ -3,6 +3,17 @@
 require_once 'documents.civix.php';
 use CRM_Documents_ExtensionUtil as E;
 
+use \Symfony\Component\DependencyInjection\ContainerBuilder;
+
+/**
+ * Implements hook_civicrm_container()
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_container/
+ */
+function documents_civicrm_container(ContainerBuilder $container) {
+  $container->addCompilerPass(new Civi\Documents\CompilerPass());
+}
+
 
 /**
  * Implementation of hook_civicrm_config
@@ -88,11 +99,49 @@ function documents_civicrm_managed(&$entities) {
 }
 
 /**
+ * Implements hook_civicrm_entityTypes().
+ *
+ * Declare entity types provided by this module.
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
+ */
+function documents_civicrm_entityTypes(&$entityTypes) {
+  $entityTypes = array_merge($entityTypes, [
+    [
+      'name' => 'Document',
+      'class' => 'CRM_Documents_DAO_Document',
+      'table' => 'civicrm_document',
+    ],
+    [
+      'name' => 'DocumentVersion',
+      'class' => 'CRM_Documents_DAO_DocumentVersion',
+      'table' => 'civicrm_document_version',
+    ],
+    [
+      'name' => 'DocumentEntity',
+      'class' => 'CRM_Documents_DAO_DocumentEntity',
+      'table' => 'civicrm_document_entity',
+    ],
+    [
+      'name' => 'DocumentContact',
+      'class' => 'CRM_Documents_DAO_DocumentContact',
+      'table' => 'civicrm_document_contact',
+    ],
+    [
+      'name' => 'DocumentCase',
+      'class' => 'CRM_Documents_DAO_DocumentCase',
+      'table' => 'civicrm_document_case',
+    ],
+  ]);
+  _documents_civix_civicrm_entityTypes($entityTypes);
+}
+
+/**
  * Implementation of hook_civicrm_navigationMenu
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  */
-function documents_civicrm_navigationMenu( &$params ) {  
+function documents_civicrm_navigationMenu( &$params ) {
   $item = array (
     "name"=> E::ts('Find documents'),
     "url"=> "civicrm/documents/search",
@@ -132,7 +181,7 @@ function documents_civicrm_tabset($path, &$tabs, $context) {
   if ($path === 'civicrm/contact/view') {
     // add a tab to the contact summary screen
     $url = CRM_Utils_System::url('civicrm/contact/view/documents', ['cid' => $context['contact_id']]);
-    
+
     //Count number of documents
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
     $DocumentCount = count($documentRepo->getDocumentsByContactId($context['contact_id'], FALSE));
@@ -150,7 +199,7 @@ function documents_civicrm_tabset($path, &$tabs, $context) {
 
 /**
  * Display the documents linked to a case
- * 
+ *
  * Implementatio of hook_civicrm_caseSummary
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseSummary
  */
@@ -162,7 +211,7 @@ function documents_civicrm_caseSummary($caseId) {
 
 /**
  * Removes the contact from a document as soon as a contact is deleted permanently.
- * 
+ *
  * @param type $op
  * @param type $objectName
  * @param type $id
@@ -185,7 +234,7 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
       }
     }
   }
-  
+
   if ($op == 'delete') {
     $refspec = CRM_Documents_Utils_EntityRef::singleton();
     $ref = $refspec->getRefByObjectName($objectName);
@@ -196,7 +245,7 @@ function documents_civicrm_pre( $op, $objectName, $id, &$params ) {
         $entity->setEntityId($id);
         $entity->setEntityTable($ref->getEntityTableName());
         $doc->removeEntity($entity);
-        
+
         $repo->persist($doc);
       }
     }
@@ -220,23 +269,23 @@ function documents_civicrm_postSave_civicrm_case($dao) {
       } else {
         $doc->addContactId($cid);
       }
-    }        
+    }
     $repo->persist($doc);
   }
 }
 
 /**
  * This hook is available through a patch from issue #CRM-14409
- * 
+ *
  * @link https://issues.civicrm.org/jira/browse/CRM-14409
- * 
+ *
  * @param type $mainContactId
  * @param type $mainCaseId
  * @param type $otherContactId
  * @param type $otherCaseId
  * @param type $changeClient
  */
-function documents_civicrm_post_case_merge($mainContactId, $mainCaseId = NULL, $otherContactId = NULL, $otherCaseId = NULL, $changeClient = FALSE) { 
+function documents_civicrm_post_case_merge($mainContactId, $mainCaseId = NULL, $otherContactId = NULL, $otherCaseId = NULL, $changeClient = FALSE) {
   $repo = CRM_Documents_Entity_DocumentRepository::singleton();
   if (!empty($mainCaseId) && !empty($otherCaseId)) {
     $docs = $repo->getDocumentsByCaseId($otherCaseId);
@@ -248,7 +297,7 @@ function documents_civicrm_post_case_merge($mainContactId, $mainCaseId = NULL, $
       }
       foreach($case['client_id'] as $cid) {
         $doc->addContactId($cid);
-      }      
+      }
       $repo->persist($doc);
     }
   }
