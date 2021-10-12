@@ -62,6 +62,27 @@ class CompilerPass implements CompilerPassInterface {
         E::ts('Document Download Link'),
       ]);
     }
+    if ($container->hasDefinition('action_provider')) {
+      $actionTypeFactoryDefinition = $container->getDefinition('action_provider');
+      $actionTypeFactoryDefinition->addMethodCall('addAction', [
+        'document_upload_new_document',
+        'Civi\Documents\ActionProvider\Action\UploadNewDocument',
+        E::ts('Documents: upload new document'),
+        [
+          AbstractAction::DATA_MANIPULATION_TAG,
+          AbstractAction::MULTIPLE_CONTACTS_ACTION_TAG
+        ],
+      ]);
+      $actionTypeFactoryDefinition->addMethodCall('addAction', [
+        'document_upload_new_version',
+        'Civi\Documents\ActionProvider\Action\UploadNewVersion',
+        E::ts('Documents: upload new version'),
+        [
+          AbstractAction::DATA_MANIPULATION_TAG,
+          AbstractAction::WITHOUT_CONTACT_ACTION_TAG
+        ],
+      ]);
+    }
   }
 
 }
