@@ -23,13 +23,7 @@
         {/if}
         <tr>
             <td class="label">{ts}Contacts{/ts}</td>
-            <td>
-                {if ($is44)}
-                    {include file="CRM/Contact/Form/NewContact.tpl" noLabel=true skipBreak=true multiClient=true parent="document" showNewSelect=false}
-                {else}
-                    {$form.contacts.html}
-                {/if}
-            </td>
+            <td>{$form.contacts.html}</td>
        </tr>
 
         {foreach from=$elementNames item=elementName}
@@ -46,20 +40,6 @@
         </tr>
     </table>
 
-    <script type="ẗext/javascript">
-        {literal}
-        CRM.$(function($) {
-            var $contactField = $("#contacts[type=text]");
-            var api = {params: {}};
-            $contactField.val('')
-                .prop('disabled', false)
-                .data('api-params', api)
-                .data('user-filter', {})
-                .attr('placeholder', '')
-            .change();
-        });
-        {/literal}
-    </script>
 {/if}
 
     {* FOOTER *}

@@ -30,7 +30,7 @@
         </tr>
      </thead>
      <tbody>
-        
+
         {foreach from=$documents item=doc}
             <tr class="{cycle values="odd,even"}">
                 <td><i class="crm-i {$doc->getIcon()}"></i> {$doc->getSubject()}</td>
@@ -52,11 +52,7 @@
 {literal}
 cj(function() {
     var caseDocs = cj('#case-documents').detach();
-    {/literal}{if ($isCivi44)}{literal}
-    cj('#view-related-cases').after(caseDocs);
-    {/literal}{else}{literal}
     cj('#case_custom_edit').after(caseDocs);
-    {/literal}{/if}{literal}
 });
 {/literal}
 </script>
