@@ -40,6 +40,8 @@ class CRM_Documents_Form_CaseDocuments extends CRM_Core_Form {
     $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
     $documents = $documentRepo->getDocumentsByCaseId($this->caseId, $type_ids, $status_ids);
     $this->assign('documents', $documents);
+    $this->assign('clientId', $this->clientId);
+    $this->assign('permission', 'edit');
   }
 
   public function buildQuickForm() {

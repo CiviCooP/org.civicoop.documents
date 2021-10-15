@@ -20,6 +20,10 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
 
   protected $entity = false;
 
+  public function getEntityId() {
+    return $this->documentId;
+  }
+
   function preProcess() {
     parent::preProcess();
     $session = CRM_Core_Session::singleton();
@@ -29,6 +33,7 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $this->add('hidden', 'context', $this->context);
 
     $this->documentId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+    $this->assign('id', $this->documentId);
     $this->add('hidden', 'id', $this->documentId);
 
     $this->cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
@@ -96,6 +101,13 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
 
     //Set page title based on action
     $this->setPageTitleBasedOnAction();
+
+    if (!empty($_POST['hidden_custom'])) {
+      $type_id = $this->getSubmitValue('type_id');
+      CRM_Custom_Form_CustomData::preProcess($this, NULL, $type_id, 1, 'Document', $this->getEntityId());
+      CRM_Custom_Form_CustomData::buildQuickForm($this);
+      CRM_Custom_Form_CustomData::setDefaultValues($this);
+    }
 
   }
 
@@ -236,6 +248,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
       'civicrm_document_version',
       $this->document->getCurrentVersion()->getId()
     );
+
+    $this->document->setCustomData(\CRM_Core_BAO_CustomField::postProcess($values, $this->document->getId(), 'Document'));
 
     //save document
     $documentsRepo->persist($this->document);

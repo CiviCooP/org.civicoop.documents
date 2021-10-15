@@ -76,6 +76,8 @@ class CRM_Documents_Entity_Document {
 
   protected $status_id;
 
+  protected $customData;
+
   public function __construct() {
     $this->setDefaults();
   }
@@ -96,6 +98,14 @@ class CRM_Documents_Entity_Document {
     $this->versions = array();
     $this->entities = array();
     $this->removedEntities = array();
+  }
+
+  public function setCustomData($customData) {
+    $this->customData = $customData;
+  }
+
+  public function getCustomData() {
+    return $this->customData;
   }
 
   public function getId() {

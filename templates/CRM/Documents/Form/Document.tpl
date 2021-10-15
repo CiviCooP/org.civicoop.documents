@@ -40,6 +40,8 @@
         </tr>
     </table>
 
+    {include file="CRM/Documents/common/customDataBlock.tpl" customDataType='Document' entityID=$id}
+
 {/if}
 
     {* FOOTER *}

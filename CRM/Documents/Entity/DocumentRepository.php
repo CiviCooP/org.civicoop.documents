@@ -389,6 +389,9 @@ class CRM_Documents_Entity_DocumentRepository {
     //pre hook: copy values into array
     $params = array();
     CRM_Documents_DAO_Document::storeValues($dao, $params);
+    if ($document->getCustomData()) {
+      $params['custom'] = $document->getCustomData();
+    }
     //call pre hook
     CRM_Utils_Hook::pre($op, 'Document', $dao->id, $params);
     //pre hook: copy array back to dao
@@ -396,6 +399,12 @@ class CRM_Documents_Entity_DocumentRepository {
 
     //do the actuall save
     $dao->save();
+    if (!empty($params['custom']) &&
+      is_array($params['custom'])
+    ) {
+      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_document', $dao->id);
+    }
+
     $document->setId($dao->id);
 
     $this->persistContacts($document);
