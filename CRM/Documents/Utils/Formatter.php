@@ -1,12 +1,12 @@
 <?php
 
-/* 
+/*
  * This class holds formatting functions for formatting contacts and dates etc.
- * 
+ *
  */
 
 class CRM_Documents_Utils_Formatter {
-  
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -16,11 +16,11 @@ class CRM_Documents_Utils_Formatter {
    * @static
    */
   static private $_singleton = NULL;
-  
+
   protected function __construct() {
-    
+
   }
-  
+
   /**
    * Constructor and getter for the singleton instance
    *
@@ -32,10 +32,10 @@ class CRM_Documents_Utils_Formatter {
     }
     return self::$_singleton;
   }
-  
+
   /**
    * Format a contact ID to a displayanem and eventually a link
-   * 
+   *
    * @param int contactId
    * @param bool $link
    * @return String
@@ -52,19 +52,19 @@ class CRM_Documents_Utils_Formatter {
     }
     return $return;
   }
-  
+
   /**
    * Formats a caseId to a text (subject of the case)
-   * 
+   *
    * @param type $caseId
    */
   public function formatCaseId($caseId) {
     return CRM_Core_DAO::getFieldValue('CRM_Case_BAO_Case', $caseId, 'subject');
   }
-  
+
   /**
    * Format a date
-   * 
+   *
    * @param DateTime $date
    * @return String
    */
@@ -76,6 +76,22 @@ class CRM_Documents_Utils_Formatter {
     }
     return $return;
   }
-  
+
+  public function formatType($type_id) {
+    static $types = [];
+    if (!isset($types[$type_id])) {
+      $types[$type_id] = civicrm_api3('OptionValue', 'getvalue', ['value' => $type_id, 'option_group_id' => 'document_type', 'return' => 'label']);
+    }
+    return $types[$type_id];
+  }
+
+  public function formatStatus($status_id) {
+    static $statuses = [];
+    if (!isset($statuses[$status_id])) {
+      $statuses[$status_id] = civicrm_api3('OptionValue', 'getvalue', ['value' => $status_id, 'option_group_id' => 'document_status', 'return' => 'label']);
+    }
+    return $statuses[$status_id];
+  }
+
 }
 

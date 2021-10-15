@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Documents</base>
+  <class>DocumentEntity</class>
+  <name>civicrm_document_entity</name>
+  <comment>FIXME</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique DocumentEntity ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>document_id</name>
+    <title>Document</title>
+    <type>int unsigned</type>
+    <comment>FK to Document</comment>
+    <required>true</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>document_id</name>
+    <table>civicrm_document</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>entity_table</name>
+    <title>Entity Table</title>
+    <type>varchar</type>
+    <length>64</length>
+    <comment>physical tablename for entity being joined to file, e.g. civicrm_contact</comment>
+  </field>
+  <field>
+    <name>entity_id</name>
+    <title>Entity ID</title>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to entity table specified in entity_table column.</comment>
+  </field>
+  <dynamicForeignKey>
+    <idColumn>entity_id</idColumn>
+    <typeColumn>entity_table</typeColumn>
+  </dynamicForeignKey>
+
+</table>

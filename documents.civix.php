@@ -449,5 +449,31 @@ function _documents_civix_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
 function _documents_civix_civicrm_entityTypes(&$entityTypes) {
-  $entityTypes = array_merge($entityTypes, []);
+  $entityTypes = array_merge($entityTypes, [
+    'CRM_Documents_DAO_Document' => [
+      'name' => 'Document',
+      'class' => 'CRM_Documents_DAO_Document',
+      'table' => 'civicrm_document',
+    ],
+    'CRM_Documents_DAO_DocumentCase' => [
+      'name' => 'DocumentCase',
+      'class' => 'CRM_Documents_DAO_DocumentCase',
+      'table' => 'civicrm_document_case',
+    ],
+    'CRM_Documents_DAO_DocumentContact' => [
+      'name' => 'DocumentContact',
+      'class' => 'CRM_Documents_DAO_DocumentContact',
+      'table' => 'civicrm_document_contact',
+    ],
+    'CRM_Documents_DAO_DocumentEntity' => [
+      'name' => 'DocumentEntity',
+      'class' => 'CRM_Documents_DAO_DocumentEntity',
+      'table' => 'civicrm_document_entity',
+    ],
+    'CRM_Documents_DAO_DocumentVersion' => [
+      'name' => 'DocumentVersion',
+      'class' => 'CRM_Documents_DAO_DocumentVersion',
+      'table' => 'civicrm_document_version',
+    ],
+  ]);
 }

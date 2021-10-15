@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Documents_ExtensionUtil as E;
+
 /**
  * Collection of upgrade steps
  */
@@ -12,42 +14,39 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
    * Install the Document activity (if it doesn't exist already
    */
   public function install() {
-    $this->executeSqlFile('sql/install.sql');
+    civicrm_api3('OptionValue', 'create', [
+      'option_group_id' => "cg_extend_objects",
+      'label' => E::ts('Document'),
+      'value' => 'Document',
+      'name' => 'civicrm_document',
+      'description' => 'CRM_Document_Utils_Type::getTypes;',
+    ]);
+    civicrm_api3('OptionValue', 'create', [
+      'option_group_id' => "cg_extend_objects",
+      'label' => E::ts('Document Version'),
+      'value' => 'DocumentVersion',
+      'name' => 'civicrm_document_version',
+      'description' => 'CRM_Document_Utils_Type::getTypes;',
+    ]);
+
+    $statusOptionGroupId = civicrm_api3('OptionGroup', 'create', ['name' => 'document_status', 'title' => E::ts('Document Status')]);
+    $statusOptionGroupId = $statusOptionGroupId['id'];
+    civicrm_api3('OptionValue', 'create', ['value' => 1, 'is_default' => '1', 'name' => 'Submitted', 'label' => E::ts('Submitted'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 2, 'name' => 'Approved', 'label' => E::ts('Approved'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 3, 'name' => 'Rejected', 'label' => E::ts('Rejected'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 4, 'name' => 'Draft', 'label' => E::ts('Draft'), 'option_group_id' => $statusOptionGroupId]);
+
+    $typeOptionGroupId = civicrm_api3('OptionGroup', 'create', ['name' => 'document_type', 'title' => E::ts('Document Type')]);
+    $typeOptionGroupId = $typeOptionGroupId['id'];
+    civicrm_api3('OptionValue', 'create', ['value' => 1, 'is_default' => '1', 'name' => 'General', 'label' => E::ts('General'), 'option_group_id' => $typeOptionGroupId]);
   }
-  
-  /**
-   * Example: Run an external SQL script when the module is uninstalled
-   *
+
   public function uninstall() {
-   $this->executeSqlFile('sql/myuninstall.sql');
+    $this->removeCustomExtend('DocumentVersion');
+    $this->removeCustomExtend('Document');
+    $this->removeOptionGroup('document_status');
+    $this->removeOptionGroup('document_type');
   }
-
-  /**
-   * Example: Run a simple query when a module is enabled
-   *
-  public function enable() {
-    CRM_Core_DAO::executeQuery('UPDATE foo SET is_active = 1 WHERE bar = "whiz"');
-  }
-
-  /**
-   * Example: Run a simple query when a module is disabled
-   *
-  public function disable() {
-    CRM_Core_DAO::executeQuery('UPDATE foo SET is_active = 0 WHERE bar = "whiz"');
-  }
-
-  /**
-   * Example: Run a couple simple queries
-   *
-   * @return TRUE on success
-   * @throws Exception
-   *
-  public function upgrade_4200() {
-    $this->ctx->log->info('Applying update 4200');
-    CRM_Core_DAO::executeQuery('UPDATE foo SET bar = "whiz"');
-    CRM_Core_DAO::executeQuery('DELETE FROM bang WHERE willy = wonka(2)');
-    return TRUE;
-  } // */
 
 
   /**
@@ -62,7 +61,7 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     $this->executeSqlFile('sql/upgrade_1001.sql');
     return TRUE;
   } //
-  
+
   /**
    * Example: Run an external SQL script
    *
@@ -75,7 +74,7 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     $this->executeSqlFile('sql/upgrade_1002.sql');
     return TRUE;
   } //
-  
+
   /**
    * Example: Run an external SQL script
    *
@@ -88,7 +87,7 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     $this->executeSqlFile('sql/upgrade_1003.sql');
     return TRUE;
   } //
-  
+
   /**
    * Example: Run an external SQL script
    *
@@ -102,54 +101,76 @@ class CRM_Documents_Upgrader extends CRM_Documents_Upgrader_Base {
     return TRUE;
   } //
 
-
   /**
-   * Example: Run a slow upgrade process by breaking it up into smaller chunk
+   * Example: Run an external SQL script
    *
    * @return TRUE on success
    * @throws Exception
-  public function upgrade_4202() {
-    $this->ctx->log->info('Planning update 4202'); // PEAR Log interface
+   */
+  public function upgrade_1005() {
+    $this->ctx->log->info('Applying update 1005');
+    // this path is relative to the extension base dir
+    $this->executeSqlFile('sql/upgrade_1005.sql');
 
-    $this->addTask(ts('Process first step'), 'processPart1', $arg1, $arg2);
-    $this->addTask(ts('Process second step'), 'processPart2', $arg3, $arg4);
-    $this->addTask(ts('Process second step'), 'processPart3', $arg5);
+    civicrm_api3('OptionValue', 'create', [
+      'option_group_id' => "cg_extend_objects",
+      'label' => E::ts('Document'),
+      'value' => 'Document',
+      'name' => 'civicrm_document',
+      'description' => 'CRM_Document_Utils_Type::getTypes;',
+    ]);
+    civicrm_api3('OptionValue', 'create', [
+      'option_group_id' => "cg_extend_objects",
+      'label' => E::ts('Document Version'),
+      'value' => 'DocumentVersion',
+      'name' => 'civicrm_document_version',
+      'description' => 'CRM_Document_Utils_Type::getTypes;',
+    ]);
+
+    $statusOptionGroupId = civicrm_api3('OptionGroup', 'create', ['name' => 'document_status', 'title' => E::ts('Document Status')]);
+    $statusOptionGroupId = $statusOptionGroupId['id'];
+    civicrm_api3('OptionValue', 'create', ['value' => 1, 'is_default' => '1', 'name' => 'Submitted', 'label' => E::ts('Submitted'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 2, 'name' => 'Approved', 'label' => E::ts('Approved'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 3, 'name' => 'Rejected', 'label' => E::ts('Rejected'), 'option_group_id' => $statusOptionGroupId]);
+    civicrm_api3('OptionValue', 'create', ['value' => 4, 'name' => 'Draft', 'label' => E::ts('Draft'), 'option_group_id' => $statusOptionGroupId]);
+
+    $typeOptionGroupId = civicrm_api3('OptionGroup', 'create', ['name' => 'document_type', 'title' => E::ts('Document Type')]);
+    $typeOptionGroupId = $typeOptionGroupId['id'];
+    civicrm_api3('OptionValue', 'create', ['value' => 1, 'is_default' => '1', 'name' => 'General', 'label' => E::ts('General'), 'option_group_id' => $typeOptionGroupId]);
+
     return TRUE;
   }
-  public function processPart1($arg1, $arg2) { sleep(10); return TRUE; }
-  public function processPart2($arg3, $arg4) { sleep(10); return TRUE; }
-  public function processPart3($arg5) { sleep(10); return TRUE; }
-  // */
 
-
-  /**
-   * Example: Run an upgrade with a query that touches many (potentially
-   * millions) of records by breaking it up into smaller chunks.
-   *
-   * @return TRUE on success
-   * @throws Exception
-  public function upgrade_4203() {
-    $this->ctx->log->info('Planning update 4203'); // PEAR Log interface
-
-    $minId = CRM_Core_DAO::singleValueQuery('SELECT coalesce(min(id),0) FROM civicrm_contribution');
-    $maxId = CRM_Core_DAO::singleValueQuery('SELECT coalesce(max(id),0) FROM civicrm_contribution');
-    for ($startId = $minId; $startId <= $maxId; $startId += self::BATCH_SIZE) {
-      $endId = $startId + self::BATCH_SIZE - 1;
-      $title = ts('Upgrade Batch (%1 => %2)', array(
-        1 => $startId,
-        2 => $endId,
-      ));
-      $sql = '
-        UPDATE civicrm_contribution SET foobar = whiz(wonky()+wanker)
-        WHERE id BETWEEN %1 and %2
-      ';
-      $params = array(
-        1 => array($startId, 'Integer'),
-        2 => array($endId, 'Integer'),
-      );
-      $this->addTask($title, 'executeSql', $sql, $params);
+  protected function removeOptionGroup($name) {
+    $optionGroupId = civicrm_api3('OptionGroup', 'getvalue', ['return' => 'id', 'name' => $name]);
+    $optionValues = civicrm_api3('OptionValue', 'get', ['option_group_id' => $optionGroupId, 'options' => ['limit' => 0]]);
+    foreach($optionValues['values'] as $optionValue) {
+      civicrm_api3('OptionValue', 'delete', ['id' => $optionValue['id']]);
     }
-    return TRUE;
-  } // */
+    civicrm_api3('OptionGroup', 'delete', ['id' => $optionGroupId]);
+  }
+
+  protected function removeCustomExtend($entity) {
+    $customGroups = civicrm_api3('CustomGroup', 'get', [
+      'extends' => $entity,
+      'options' => ['limit' => 0],
+    ]);
+    foreach($customGroups['values'] as $customGroup) {
+      $customFields = civicrm_api3('CustomField', 'get', [
+        'custom_group_id' => $customGroup['id'],
+        'options' => ['limit' => 0],
+      ]);
+      foreach($customFields['values'] as $customField) {
+        civicrm_api3('CustomField', 'delete', ['id' => $customField['id']]);
+      }
+      civicrm_api3('CustomGroup', 'delete', ['id' => $customGroup['id']]);
+    }
+    $cgExtendOptionId = civicrm_api3('OptionValue', 'getvalue', [
+      'option_group_id' => "cg_extend_objects",
+      'value' => $entity,
+      'return' => 'id',
+    ]);
+    civicrm_api3('OptionValue', 'delete', ['id' => $cgExtendOptionId]);
+  }
 
 }

@@ -2,7 +2,7 @@
 
 use CRM_Documents_ExtensionUtil as E;
 
-/* 
+/*
  * This file holds the search functionality for documents
  */
 
@@ -15,7 +15,7 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
    * @var boolean
    */
   protected $_done;
-  
+
   /**
    * name of search button
    *
@@ -31,10 +31,10 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
    * @access protected
    */
   protected $_actionButtonName;
-  
-  
+
+
   protected $_limit = NULL;
-  
+
   /**
    * what context are we being invoked from
    *
@@ -42,37 +42,37 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
    * @var string
    */
   protected $_context = NULL;
-  
+
   function preProcess() {
-    
+
     /**
      * set the button names
      */
     $this->_searchButtonName = $this->getButtonName('refresh');
     $this->_actionButtonName = $this->getButtonName('next', 'action');
-    
+
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
     $this->assign("context", $this->_context);
-    
+
     $this->_limit   = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->assign("limit", $this->_limit);
-    
+
     $this->_done = FALSE;
-    
+
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
       $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
-    
+
     $selector = new CRM_Documents_Selector_Search($this->_queryParams,
       $this->_action,
       NULL,
       $this->_limit,
       $this->_context
     );
-    
+
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
@@ -81,11 +81,11 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
       CRM_Core_Selector_Controller::TRANSFER,
       NULL
     );
-    
+
     $controller->setEmbedded(TRUE);
     $controller->moveFromSessionToTemplate();
   }
-  
+
   function buildQuickForm() {
     $this->addElement('text',
       'sort_name',
@@ -94,15 +94,27 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
         'sort_name'
       )
     );
-    
+
     CRM_Core_Form_Date::buildDateRange($this, 'document_date', 1, '_low', '_high', E::ts('From:'), FALSE);
-    
+
     $this->add('text',
       'subject',
       E::ts('Subject'),
       TRUE
     );
-    
+
+    $this->add('text',
+      'subject',
+      E::ts('Subject'),
+      TRUE
+    );
+
+    $types = CRM_Core_OptionGroup::values('document_type');
+    $this->add('select', 'type_id', E::ts('Type'), $types, FALSE, ['class' => 'huge crm-select2', 'data-option-edit-path' => 'civicrm/admin/options/document_type', 'multiple' => true]);
+
+    $statuses = CRM_Core_OptionGroup::values('document_status');
+    $this->add('select', 'status_id', E::ts('Status'), $statuses, FALSE, ['class' => 'huge crm-select2', 'data-option-edit-path' => 'civicrm/admin/options/document_status', 'multiple' => true]);
+
     // add buttons
     $this->addButtons(array(
         array(
@@ -113,7 +125,7 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
       )
     );
   }
-  
+
   /**
    * The post processing of the form gets done here.
    *
@@ -198,5 +210,5 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
 
     $controller->run();
   }
-  
+
 }

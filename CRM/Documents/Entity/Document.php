@@ -1,81 +1,85 @@
 <?php
 
-/* 
+/*
  * This class holds all information for a document
- * 
+ *
  */
 
 class CRM_Documents_Entity_Document {
-  
+
   protected $id;
-  
+
   /**
    *
-   * @var array 
+   * @var array
    */
   protected $contactIds = array();
-  
+
   /**
    *
-   * @var DateTime 
+   * @var DateTime
    */
   protected $dateAdded;
-  
+
   /**
    *
-   * @var int ContactId of the contact who added this document 
+   * @var int ContactId of the contact who added this document
    */
   protected $addedBy;
-  
+
   /**
    *
-   * @var DateTime 
+   * @var DateTime
    */
   protected $dateUpdated;
-  
+
   /**
    *
-   * @var int ContactId of the contact who updated this document 
+   * @var int ContactId of the contact who updated this document
    */
   protected $updatedBy;
-  
+
   /**
    *
-   * @var String 
+   * @var String
    */
   protected $subject;
-  
+
   /**
    *
-   * @var int 
+   * @var int
    */
   protected $caseIds;
-  
+
   /**
    *
-   * 
-   * @var array of CRM_Documents_Entity_DocumentEntity 
+   *
+   * @var array of CRM_Documents_Entity_DocumentEntity
    */
   protected $entities;
-  
+
   /**
    *
-   * 
-   * @var array of CRM_Documents_Entity_DocumentEntity 
+   *
+   * @var array of CRM_Documents_Entity_DocumentEntity
    */
   protected $removedEntities;
-  
-  
+
+
   /**
    *
-   * @var array of CRM_Documents_Entity_DocumentVersion 
+   * @var array of CRM_Documents_Entity_DocumentVersion
    */
   protected $versions;
-  
+
+  protected $type_id;
+
+  protected $status_id;
+
   public function __construct() {
     $this->setDefaults();
   }
-  
+
   /**
    * Set default values for object
    */
@@ -93,7 +97,7 @@ class CRM_Documents_Entity_Document {
     $this->entities = array();
     $this->removedEntities = array();
   }
-  
+
   public function getId() {
     if (!empty($this->id)) {
       return $this->id;
@@ -101,11 +105,11 @@ class CRM_Documents_Entity_Document {
       return NULL;
     }
   }
-  
+
   public function setId($id) {
     $this->id = (int) $id;
   }
-  
+
   public function setContactIds($contact_ids) {
     if (is_array($contact_ids)) {
       $this->contactIds = $contact_ids;
@@ -113,27 +117,27 @@ class CRM_Documents_Entity_Document {
       $this->contactIds = explode(",".$contact_ids);
     }
   }
-  
+
   public function addContactId($contact_id) {
     if (!in_array($contact_id, $this->contactIds)) {
       $this->contactIds[] = $contact_id;
     }
   }
-  
+
   public function removeContactId($contact_id) {
     if(($key = array_search($contact_id, $this->contactIds)) !== false) {
       unset($this->contactIds[$key]);
     }
   }
-  
+
   public function getContactIds() {
     return $this->contactIds;
   }
-  
+
   public function getCaseIds() {
     return $this->caseIds;
   }
-  
+
   public function setCaseIds($case_ids) {
     if (is_array($case_ids)) {
       $this->case_ids = $case_ids;
@@ -141,19 +145,19 @@ class CRM_Documents_Entity_Document {
       $this->case_ids = explode(",".$case_ids);
     }
   }
-  
+
   public function addCaseId($caseId) {
     if (!in_array($caseId, $this->caseIds)) {
-     $this->caseIds[] = $caseId; 
+     $this->caseIds[] = $caseId;
     }
   }
-  
+
   public function removeCaseId($caseId) {
     if(($key = array_search($caseId, $this->caseIds)) !== false) {
       unset($this->caseIds[$key]);
     }
   }
-  
+
   public function getCaseIdsFormatted() {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     $return = '';
@@ -165,24 +169,24 @@ class CRM_Documents_Entity_Document {
     }
     return $return;
   }
-  
-  
+
+
   public function setAddedBy($addedBy) {
     $this->addedBy = $addedBy;
   }
-  
+
   public function getAddedBy() {
     return $this->addedBy;
   }
-  
+
   public function setDateAdded(DateTime $date) {
     $this->dateAdded = $date;
   }
-  
+
   public function getDateAdded() {
     return $this->dateAdded;
   }
-  
+
   public function getUpdatedBy() {
     if (isset($this->updatedBy)) {
       return $this->updatedBy;
@@ -190,11 +194,11 @@ class CRM_Documents_Entity_Document {
       return NULL;
     }
   }
-  
+
   public function setUpdatedBy($updatedBy) {
     $this->updatedBy = $updatedBy;
   }
-  
+
   public function getDateUpdated() {
     if (isset($this->dateUpdated)) {
       return $this->dateUpdated;
@@ -202,19 +206,19 @@ class CRM_Documents_Entity_Document {
       return NULL;
     }
   }
-  
+
   public function setDateUpdated(DateTime $date) {
     $this->dateUpdated = $date;
   }
-  
+
   public function getSubject() {
     return $this->subject;
   }
-  
+
   public function setSubject($subject) {
     $this->subject = $subject;
   }
-  
+
   public function getFormattedContacts() {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     $contacts = '';
@@ -226,38 +230,54 @@ class CRM_Documents_Entity_Document {
     }
     return $contacts;
   }
-  
+
   public function getFormattedDateAdded() {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     return $formatter->formateDate($this->getDateAdded());
   }
-  
+
   public function getFormattedDateUpdated() {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     return $formatter->formateDate($this->getDateUpdated());
   }
-  
+
   public function getFormattedAddedBy($link=TRUE) {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     return $formatter->formatContact($this->getAddedBy(), $link);
   }
-  
+
   public function getFormattedUpdatedBy($link=TRUE) {
     $formatter = CRM_Documents_Utils_Formatter::singleton();
     return $formatter->formatContact($this->getUpdatedBy(), $link);
   }
-  
+
+  public function getFormattedTypeId() {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    if ($this->type_id) {
+      return $formatter->formatType($this->type_id);
+    }
+    return '';
+  }
+
+  public function getFormattedStatusId() {
+    $formatter = CRM_Documents_Utils_Formatter::singleton();
+    if ($this->status_id) {
+      return $formatter->formatStatus($this->status_id);
+    }
+    return '';
+  }
+
   public function getEntities() {
     return $this->entities;
   }
-  
+
   public function addNewEntity($entity_table, $entity_id) {
     $entity = new CRM_Documents_Entity_DocumentEntity($this);
     $entity->setEntityId($entity_id);
     $entity->setEntityTable($entity_table);
-    $this->addEntity($entity); 
+    $this->addEntity($entity);
   }
-  
+
   public function addEntity(CRM_Documents_Entity_DocumentEntity $entity) {
     foreach($this->entities as $e) {
       if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
@@ -272,7 +292,7 @@ class CRM_Documents_Entity_Document {
     }
     $this->entities[] = $entity;
   }
-  
+
   public function removeEntity(CRM_Documents_Entity_DocumentEntity $entity) {
     foreach($this->entities as $key => $e) {
       if ($e->getEntityTable() == $entity->getEntityTable() && $e->getEntityId() == $entity->getEntityId()) {
@@ -281,11 +301,11 @@ class CRM_Documents_Entity_Document {
       }
     }
   }
-  
+
   public function getRemovedEntities() {
     return $this->removedEntities;
   }
-  
+
   public function getVersions() {
     ksort($this->versions);
     return $this->versions;
@@ -299,7 +319,7 @@ class CRM_Documents_Entity_Document {
     }
     return false;
   }
-  
+
   public function addVersion(CRM_Documents_Entity_DocumentVersion $version) {
     $vid = $version->getVersion();
     if ((!$vid) || isset($this->versions[$vid])) {
@@ -307,7 +327,7 @@ class CRM_Documents_Entity_Document {
     }
     $this->versions[$vid] = $version;
   }
-  
+
   public function getCurrentVersion() {
     $lastVersion = false;
     if (ksort($this->versions)) {
@@ -315,11 +335,11 @@ class CRM_Documents_Entity_Document {
     }
 
     if ($lastVersion === false) {
-     $lastVersion = $this->addNewVersion(); 
+     $lastVersion = $this->addNewVersion();
     }
     return $lastVersion;
   }
-  
+
   public function addNewVersion() {
     $version = new CRM_Documents_Entity_DocumentVersion($this);
     $vid = 1;
@@ -332,11 +352,27 @@ class CRM_Documents_Entity_Document {
     }
     $version->setVersion($vid);
     $this->versions[$vid] = $version;
-    return $version; 
+    return $version;
   }
 
   public function getIcon() {
     return CRM_Utils_File::getIconFromMimeType($this->getCurrentVersion()->getAttachment()->mime_type);
   }
-  
+
+  public function setStatusId($status_id) {
+    $this->status_id = $status_id;
+  }
+
+  public function setTypeId($type_id) {
+    $this->type_id = $type_id;
+  }
+
+  public function getTypeId() {
+    return $this->type_id;
+  }
+
+  public function getStatusId() {
+    return $this->status_id;
+  }
+
 }

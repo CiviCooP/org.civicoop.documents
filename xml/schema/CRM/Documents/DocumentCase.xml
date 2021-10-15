@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Documents</base>
+  <class>DocumentCase</class>
+  <name>civicrm_document_case</name>
+  <log>false</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique DocumentCase ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>document_id</name>
+    <title>Document</title>
+    <type>int unsigned</type>
+    <comment>FK to Document</comment>
+    <required>true</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>document_id</name>
+    <table>civicrm_document</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>case_id</name>
+    <title>Case</title>
+    <type>int unsigned</type>
+    <comment>FK to Case</comment>
+    <required>false</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>case_id</name>
+    <table>civicrm_case</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+</table>

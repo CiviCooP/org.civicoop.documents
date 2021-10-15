@@ -44,7 +44,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
    * @access protected
    */
   protected $_action;
-  
+
   /**
    * the where clause
    *
@@ -79,7 +79,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
     $this->_where = array();
   }
   //end of constructor
-  
+
   function select() {
     return "SELECT
       `doc`.`id` as `id`,
@@ -90,14 +90,14 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
       `doc`.`date_updated` as `date_updated`,
       `doc`.`updated_by` as `updated_by`";
   }
-  
+
   function from() {
-    return "FROM `civicrm_document` `doc` 
+    return "FROM `civicrm_document` `doc`
       LEFT JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id`
       LEFT JOIN `civicrm_contact` `contact_a` ON `doc_contact`.`contact_id` = `contact_a`.`id`
       LEFT JOIN `civicrm_email` ON `contact_a`.`id` = `civicrm_email`.`contact_id`";
   }
-  
+
   function where() {
     $this->where[0] = array();
     //var_dump($this->_queryParams); exit();
@@ -109,8 +109,8 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
         $this->whereClauseSingle($this->_queryParams[$id]);
       }
     }
-    
-    
+
+
     $clauses = array();
     $andClauses[] = "1";
 
@@ -130,12 +130,12 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
     }
 
     return ' WHERE '.implode(' AND ', $andClauses). ' ';
-    
+
   }
-  
+
   function whereClauseSingle(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
-    
+
     switch ($values[0]) {
       /*case 'tag':
       case 'contact_tags':
@@ -173,9 +173,25 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
         $this->_where[$grouping][] = " $wc $op $value";
         return;
         break;
+      case 'type_id':
+        $wc = "doc.type_id";
+        if (is_array($value)) {
+          $value = "(".implode(",", $value).")";
+        }
+        $this->_where[$grouping][] = " $wc $op $value";
+        return;
+        break;
+      case 'status_id':
+        $wc = "doc.status_id";
+        if (is_array($value)) {
+          $value = "(".implode(",", $value).")";
+        }
+        $this->_where[$grouping][] = " $wc $op $value";
+        return;
+        break;
     }
   }
-  
+
   function groupBy() {
     //return "";
     return "GROUP BY `doc`.`id`";
@@ -230,32 +246,34 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {    
+  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $sql = $this->select().$this->from() . $this->where() . $this->groupBy();
     $result = CRM_Core_DAO::executeQuery($sql);
-    
+
     // process the result of the query
     $rows = array();
 
     $session = CRM_Core_Session::singleton();
     $cid = $session->get('userID');
-    
+
     $repo = CRM_Documents_Entity_DocumentRepository::singleton();
     While ($result->fetch()) {
       $doc = $repo->getDocumentById($result->id);
-          
+
       $row = array();
       $row['document_id'] = $doc->getId();
       $row['subject'] = $doc->getSubject();
+      $row['type_id'] = $doc->getFormattedTypeId();
+      $row['status_id'] = $doc->getFormattedStatusId();
       $row['date_added'] = $doc->getFormattedDateAdded();
       $row['added_by'] = $doc->getFormattedAddedBy();
       $row['updated_by'] = $doc->getFormattedUpdatedBy();
       $row['date_updated'] = $doc->getFormattedDateUpdated();
-    
+
       $row['contacts'] = $doc->getFormattedContacts();
       $row['doc'] = $doc;
       $row['cid'] = $cid;
-      
+
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $doc->getId();
 
       $rows[] = $row;
@@ -290,6 +308,14 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
           'field' => 'subject',
         ),
         array(
+          'name' => E::ts('Type'),
+          'field' => 'type_id',
+        ),
+        array(
+          'name' => E::ts('Status'),
+          'field' => 'status_id',
+        ),
+        array(
           'name' => E::ts('Date added'),
           'field' => 'date_added',
         ),
@@ -321,7 +347,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
   function getExportFileName($output = 'csv') {
     return E::ts('CiviCRM Documents Search');
   }
-  
+
   function sortName(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
@@ -465,7 +491,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
 
     $this->_where[$grouping][] = $sub;
   }
-  
+
   function nameNullOrEmptyOp($name, $op, $grouping) {
     switch ( $op ) {
       case 'IS NULL':
@@ -485,12 +511,12 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
         return false;
     }
   }
-  
+
   static function caseImportant( $op ) {
     return
       in_array($op, array('LIKE', 'IS NULL', 'IS NOT NULL', 'IS EMPTY', 'IS NOT EMPTY')) ? FALSE : TRUE;
   }
-  
+
   function dateQueryBuilder(
     &$values, $tableName, $fieldName,
     $dbFieldName,
@@ -585,7 +611,7 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
       }
     }
   }
-  
+
   function &getWhereValues($name, $grouping) {
     $result = NULL;
     foreach ($this->_queryParams as $values) {

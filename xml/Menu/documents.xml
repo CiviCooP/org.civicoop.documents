@@ -32,4 +32,10 @@
     <page_type>1</page_type>
     <weight>510</weight>
   </item>
+  <item>
+    <path>civicrm/contact/view/casedocument</path>
+    <page_callback>CRM_Documents_Form_CaseDocuments</page_callback>
+    <title>Documents</title>
+    <access_arguments>access my cases and activities;access all cases and activities</access_arguments>
+  </item>
 </menu>

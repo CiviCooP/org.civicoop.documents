@@ -30,7 +30,7 @@
                         respectParents: true
                     });
                     </script>
-                    {/literal}   
+                    {/literal}
                 </td>
               {else}
                 <td>&nbsp;</td>
@@ -48,7 +48,17 @@
                 {$form.subject.html|crmAddClass:twenty}
               </td>
               <td>
-                &nbsp;
+                  &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td>
+                  {$form.type_id.label} <br />
+                  {$form.type_id.html}
+              </td>
+              <td>
+                  {$form.status_id.label} <br />
+                  {$form.status_id.html}
               </td>
             </tr>
             <tr>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Documents</base>
+  <class>DocumentVersion</class>
+  <name>civicrm_document_version</name>
+  <log>false</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique DocumentVersion ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>document_id</name>
+    <title>Document</title>
+    <type>int unsigned</type>
+    <comment>FK to Document</comment>
+    <required>true</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>document_id</name>
+    <table>civicrm_document</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>description</name>
+    <title>Description</title>
+    <type>varchar</type>
+    <required>false</required>
+    <length>255</length>
+  </field>
+
+  <field>
+    <name>updated_by</name>
+    <title>Updated by</title>
+    <type>int unsigned</type>
+    <comment>FK to Contact</comment>
+    <required>false</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>updated_by</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>date_updated</name>
+    <title>Date Updated</title>
+    <type>datetime</type>
+    <required>false</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>version</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <html>
+      <type>Number</type>
+    </html>
+    <default>1</default>
+  </field>
+
+</table>

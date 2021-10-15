@@ -27,13 +27,12 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     //get template file name
     $pageTemplateFile = $this->getHookedTemplateFileName();
 
-    //do the magic
-    $documentRepo = CRM_Documents_Entity_DocumentRepository::singleton();
-    $documents = $documentRepo->getDocumentsByCaseId($this->caseId);
-
+    $types = CRM_Core_OptionGroup::values('expense_type');
+    $statuses = CRM_Core_OptionGroup::values('expense_status');
+    $this->assign('document_types', $types);
+    $this->assign('document_statuses', $statuses);
     $this->assign('caseId', $this->caseId);
     $this->assign('clientId', $this->clientId);
-    $this->assign('documents', $documents);
     $this->assign('permission', 'edit');
 
     //render the template

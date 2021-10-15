@@ -148,7 +148,7 @@ function documents_civicrm_navigationMenu( &$params ) {
     "permission" => "administer CiviCRM",
     "weight" => 5,
   );
-  _documents_civix_insert_navigation_menu($params, "Search...", $item);
+  _documents_civix_insert_navigation_menu($params, "Search", $item);
 }
 
 /**

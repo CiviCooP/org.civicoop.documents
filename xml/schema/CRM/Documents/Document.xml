@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Documents</base>
+  <class>Document</class>
+  <name>civicrm_document</name>
+  <comment>Document</comment>
+  <log>false</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique Document ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>subject</name>
+    <title>Subject</title>
+    <type>varchar</type>
+    <required>false</required>
+    <length>255</length>
+  </field>
+
+  <field>
+    <name>type_id</name>
+    <title>Type</title>
+    <type>int</type>
+    <length>3</length>
+    <default>NULL</default>
+    <pseudoconstant>
+      <optionGroupName>document_type</optionGroupName>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>status_id</name>
+    <title>Status</title>
+    <type>int</type>
+    <length>3</length>
+    <default>NULL</default>
+    <pseudoconstant>
+      <optionGroupName>document_status</optionGroupName>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>added_by</name>
+    <title>Added by</title>
+    <type>int unsigned</type>
+    <comment>FK to Contact</comment>
+    <required>false</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>added_by</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>date_added</name>
+    <title>Date Added</title>
+    <type>datetime</type>
+    <required>false</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>updated_by</name>
+    <title>Updated by</title>
+    <type>int unsigned</type>
+    <comment>FK to Contact</comment>
+    <required>false</required>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>updated_by</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>date_updated</name>
+    <title>Date Updated</title>
+    <type>datetime</type>
+    <required>false</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+</table>

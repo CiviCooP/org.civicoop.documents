@@ -147,6 +147,12 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
         true
     );
 
+    $types = CRM_Core_OptionGroup::values('document_type');
+    $this->add('select', 'type_id', E::ts('Type'), $types, TRUE, ['class' => 'huge crm-select2', 'data-option-edit-path' => 'civicrm/admin/options/document_type']);
+
+    $statuses = CRM_Core_OptionGroup::values('document_status');
+    $this->add('select', 'status_id', E::ts('Status'), $statuses, TRUE, ['class' => 'huge crm-select2', 'data-option-edit-path' => 'civicrm/admin/options/document_status']);
+
     $this->addButtons(array(
       array(
         'type' => 'upload',
@@ -186,6 +192,8 @@ class CRM_Documents_Form_Document extends CRM_Core_Form {
     $contact_ids = explode(",", $values['contacts']);
 
     $this->document->setSubject($this->exportValue('subject'));
+    $this->document->setTypeId($this->exportValue('type_id'));
+    $this->document->setStatusId($this->exportValue('status_id'));
     $this->document->setContactIds($contact_ids);
 
     $entityRefs = CRM_Documents_Utils_EntityRef::singleton();
