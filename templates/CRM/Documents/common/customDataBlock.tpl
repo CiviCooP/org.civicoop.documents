@@ -1,13 +1,13 @@
 {if $customDataType}
   <div id="customData_{$customDataType}"></div>
   {*include custom data js file*}
-  {include file="CRM/Expenses/common/customData.tpl"}
+  {include file="CRM/Documents/common/customData.tpl"}
   {assign var='cid' value=$cid|default:'false'}
   {literal}
   <script type="text/javascript">
     CRM.$(function($) {
       function updateCustomData{/literal}{$customDataType}{literal}() {
-        var subType = '{/literal}{$expense_type_id}{literal}';
+        var subType = '';
         if ($('#type_id').length) {
           subType = $('#type_id').val();
         }

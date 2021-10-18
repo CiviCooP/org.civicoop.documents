@@ -27,8 +27,8 @@ class CRM_Documents_Page_CaseDocuments extends CRM_Core_Page {
     //get template file name
     $pageTemplateFile = $this->getHookedTemplateFileName();
 
-    $types = CRM_Core_OptionGroup::values('expense_type');
-    $statuses = CRM_Core_OptionGroup::values('expense_status');
+    $types = CRM_Core_OptionGroup::values('document_type');
+    $statuses = CRM_Core_OptionGroup::values('document_status');
     $this->assign('document_types', $types);
     $this->assign('document_statuses', $statuses);
     $this->assign('caseId', $this->caseId);
