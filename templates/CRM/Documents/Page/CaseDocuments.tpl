@@ -49,6 +49,7 @@
       cj(function() {
 
         var caseDocuments = cj('#case-documents').detach();
+        var caseDocumentsSection = cj('#documents_summary_section').detach();
         cj('#case_custom_edit').after(caseDocuments);
 
         function loadDocuments() {

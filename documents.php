@@ -206,7 +206,7 @@ function documents_civicrm_tabset($path, &$tabs, $context) {
 function documents_civicrm_caseSummary($caseId) {
   $page = new CRM_Documents_Page_CaseDocuments($caseId);
   $content = $page->run();
-  return array('documents' => array('value' => $content, 'label' => E::ts('Documents')));
+  return array('documents_summary_section' => array('value' => $content, 'label' => E::ts('Documents')));
 }
 
 /**
