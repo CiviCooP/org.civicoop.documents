@@ -42,9 +42,12 @@ class CRM_Documents_Entity_DocumentRepository {
    *
    * @param int $contactId
    * @param bool $includeEditted include documents which are editted by the user
+   * @param bool $includeCaseDocuments
+   * @param int[] $typeIds
+   * @param int[] $statusIds
    * @return array
    */
-  public function getDocumentsByContactId($contactId, $includeEditted=true, $includeCaseDocuments=false) {
+  public function getDocumentsByContactId($contactId, $includeEditted=true, $includeCaseDocuments=false, $typeIds=null, $statusIds=null) {
     $documents = array();
 
     $dao = new CRM_Documents_DAO_Document();
@@ -58,6 +61,12 @@ class CRM_Documents_Entity_DocumentRepository {
     $sql .= ")";
     if (!$includeCaseDocuments) {
       $sql .= " AND `doc`.`id` NOT IN (SELECT `document_id` FROM `civicrm_document_case`)";
+    }
+    if (is_array($typeIds) && count($typeIds)) {
+      $sql .= " AND `doc`.`type_id` IN (" . implode(", ", $typeIds).")";
+    }
+    if (is_array($statusIds) && count($statusIds)) {
+      $sql .= " AND `doc`.`status_id` IN (" . implode(", ", $statusIds).")";
     }
 
     $docsDao = $dao->executeQuery(
