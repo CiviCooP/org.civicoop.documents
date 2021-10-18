@@ -92,10 +92,47 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
   }
 
   function from() {
+    $_cfIDs = [];
+    foreach ($this->_queryParams as $value) {
+      if (empty($value[0])) {
+        continue;
+      }
+      $cfID = CRM_Core_BAO_CustomField::getKeyID(str_replace(['_relative', '_low', '_high', '_to', '_high'], '', $value[0]));
+      if ($cfID) {
+        if (!array_key_exists($cfID, $_cfIDs)) {
+          $_cfIDs[$cfID] = [];
+        }
+        // Set wildcard value based on "and/or" selection
+        foreach ($this->_queryParams as $key => $param) {
+          if ($param[0] == $value[0] . '_operator') {
+            $value[4] = $param[2] == 'or';
+            break;
+          }
+        }
+        $_cfIDs[$cfID][] = $value;
+      }
+    }
+
+    if (count($_cfIDs)) {
+      $extends = ['Document'];
+      $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
+      if ($groupDetails) {
+        foreach($groupDetails as $groupDetail) {
+          if ($groupDetail['extends'] == 'Document') {
+            $customFieldJoins[] = "LEFT JOIN `{$groupDetail['table_name']}` ON `{$groupDetail['table_name']}`.`entity_id` = `doc`.`id`";
+          }
+        }
+      }
+    }
+
+    $customFieldJoinStatement = implode("\r\n", $customFieldJoins);
+
     return "FROM `civicrm_document` `doc`
       LEFT JOIN `civicrm_document_contact` `doc_contact` ON `doc`.`id` = `doc_contact`.`document_id`
       LEFT JOIN `civicrm_contact` `contact_a` ON `doc_contact`.`contact_id` = `contact_a`.`id`
-      LEFT JOIN `civicrm_email` ON `contact_a`.`id` = `civicrm_email`.`contact_id`";
+      LEFT JOIN `civicrm_email` ON `contact_a`.`id` = `civicrm_email`.`contact_id`
+      {$customFieldJoinStatement}
+      ";
   }
 
   function where() {
@@ -126,6 +163,36 @@ class CRM_Documents_Selector_Search extends CRM_Core_Selector_Base implements CR
       }
       if (!empty($clauses)) {
         $andClauses[] = ' ( ' . implode(' OR ', $clauses) . ' ) ';
+      }
+    }
+
+    // Parse custom data and add it to the query.
+    $_cfIDs = [];
+    foreach ($this->_queryParams as $value) {
+      if (empty($value[0])) {
+        continue;
+      }
+      $cfID = CRM_Core_BAO_CustomField::getKeyID(str_replace(['_relative', '_low', '_high', '_to', '_high'], '', $value[0]));
+      if ($cfID) {
+        if (!array_key_exists($cfID, $_cfIDs)) {
+          $_cfIDs[$cfID] = [];
+        }
+        // Set wildcard value based on "and/or" selection
+        foreach ($this->_queryParams as $key => $param) {
+          if ($param[0] == $value[0] . '_operator') {
+            $value[4] = $param[2] == 'or';
+            break;
+          }
+        }
+        $_cfIDs[$cfID][] = $value;
+      }
+    }
+
+    if (count($_cfIDs)) {
+      $customQueryBAO = new CRM_Core_BAO_CustomQuery($_cfIDs);
+      $customQuery = $customQueryBAO->query();
+      if (isset($customQuery[2]) && !empty($customQuery)) {
+        $andClauses[] = $customQuery[2];
       }
     }
 

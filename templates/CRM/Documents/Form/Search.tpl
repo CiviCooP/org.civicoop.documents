@@ -61,6 +61,15 @@
                   {$form.status_id.html}
               </td>
             </tr>
+
+              {if $documentGroupTree}
+                <tr id="documentCustom">
+                  <td id="documentCustomData" colspan="3">
+                      {include file="CRM/Custom/Form/Search.tpl" groupTree=$documentGroupTree showHideLinks=false}
+                  </td>
+                </tr>
+              {/if}
+
             <tr>
                <td colspan="2">{$form.buttons.html}</td>
             </tr>

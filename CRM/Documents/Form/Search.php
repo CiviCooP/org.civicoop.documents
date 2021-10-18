@@ -115,6 +115,8 @@ class CRM_Documents_Form_Search extends CRM_Core_Form {
     $statuses = CRM_Core_OptionGroup::values('document_status');
     $this->add('select', 'status_id', E::ts('Status'), $statuses, FALSE, ['class' => 'huge crm-select2', 'data-option-edit-path' => 'civicrm/admin/options/document_status', 'multiple' => true]);
 
+    CRM_Core_BAO_Query::addCustomFormFields($this, ['Document']);
+
     // add buttons
     $this->addButtons(array(
         array(
