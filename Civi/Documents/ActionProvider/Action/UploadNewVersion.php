@@ -100,7 +100,7 @@ class UploadNewVersion extends AbstractAction {
    */
   public function getConfigurationSpecification() {
     return new SpecificationBag([
-      new Specification('replace_current', 'Bool', E::ts('Replace current version'), TRUE),
+      new Specification('replace_current', 'Boolean', E::ts('Replace current version'), TRUE),
     ]);
   }
 

@@ -9,6 +9,7 @@
 
   <field>
     <name>id</name>
+    <title>ID</title>
     <type>int unsigned</type>
     <required>true</required>
     <comment>Unique Document ID</comment>

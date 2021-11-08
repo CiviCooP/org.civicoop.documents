@@ -8,6 +8,7 @@
 
   <field>
     <name>id</name>
+    <title>ID</title>
     <type>int unsigned</type>
     <required>true</required>
     <comment>Unique DocumentContact ID</comment>
@@ -39,6 +40,7 @@
 
   <field>
     <name>contact_id</name>
+    <title>Contact ID</title>
     <type>int unsigned</type>
     <comment>FK to Contact</comment>
   </field>

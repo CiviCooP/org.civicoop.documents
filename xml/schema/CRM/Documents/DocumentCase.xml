@@ -8,6 +8,7 @@
 
   <field>
     <name>id</name>
+    <title>ID</title>
     <type>int unsigned</type>
     <required>true</required>
     <comment>Unique DocumentCase ID</comment>
