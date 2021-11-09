@@ -1,3 +1,7 @@
+# Moved to Gitlab
+
+See https://lab.civicrm.org/extensions/documents
+
 # Document storage in CiviCRM
 
 ## Functionality
